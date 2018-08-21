@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   preserveAspectRatio="xMinYMin meet"
+   width="118.41087mm"
+   height="78.816483mm"
+   viewBox="-5.3887184e+10 0 0 102686170"
+   version="1.1"
+   id="svg2"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="mp_newlogo3.svg"
+   inkscape:export-filename="/Users/anne-sophiedubarry/Documents/3_Dev/A_SignalProcessing/MARSPOWER/MarsPower2016/mp_newlogo3.png"
+   inkscape:export-xdpi="150.09074"
+   inkscape:export-ydpi="150.09074">
+  <metadata
+     id="metadata242">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs240">
+    <clipPath
+       id="ID000001">
+      <rect
+         x="82.875"
+         y="39.375"
+         width="494.06201"
+         height="427.875"
+         id="rect11" />
+    </clipPath>
+    <clipPath
+       id="ID000001-6">
+      <rect
+         id="rect11-9"
+         height="427.875"
+         width="494.06201"
+         y="39.375"
+         x="82.875" />
+    </clipPath>
+    <clipPath
+       id="clipPath4165"
+       clipPathUnits="userSpaceOnUse">
+      <rect
+         transform="matrix(0.99908169,0.04284605,-0.09482675,0.99549379,0,0)"
+         y="491.05875"
+         x="-80.281845"
+         height="187.87112"
+         width="579.60931"
+         id="rect4167"
+         style="opacity:1;fill:#333333;fill-opacity:1;stroke:#153307;stroke-width:8.69593811;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </clipPath>
+    <clipPath
+       id="clipPath4184"
+       clipPathUnits="userSpaceOnUse">
+      <rect
+         transform="matrix(0.99908169,0.04284605,-0.09482675,0.99549379,0,0)"
+         y="205.07716"
+         x="-114.24332"
+         height="285.9816"
+         width="577.34521"
+         id="rect4186"
+         style="opacity:1;fill:#333333;fill-opacity:1;stroke:#153307;stroke-width:8.69593811;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </clipPath>
+    <clipPath
+       id="clipPath4222"
+       clipPathUnits="userSpaceOnUse">
+      <g
+         id="g4224"
+         transform="matrix(0.4402842,-0.02055338,0.04193971,0.47926246,-2.0682838,388.57675)">
+        <g
+           id="g4226" />
+        <g
+           id="g4228" />
+        <g
+           id="g4230" />
+        <polyline
+           style="opacity:1;fill:none;fill-opacity:1;stroke:#f63307;stroke-width:5.98170948;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+           id="polyline4232"
+           points="105.58897,275.22882 112.37022,275.42513 119.15147,276.07747 125.93272,277.31113 132.71397,279.19826 139.49522,281.71613 146.27647,284.70617 153.05772,287.84307 159.83897,290.62503 166.62022,292.39637 173.40147,292.41030 180.18272,289.93451 186.96397,284.39340 193.74522,275.53090 200.52647,263.56788 207.30772,249.32100 214.08897,234.24752 220.87022,220.38520 227.65147,210.16924 234.43272,206.12835 241.21397,210.48630 247.99522,224.72104 254.77647,249.15310 261.55772,282.64547 268.33897,322.49194 275.12022,364.54960 281.90147,403.63524 288.68272,434.15854 295.46397,450.91689 302.24522,449.93600 309.02647,429.21694 315.80772,389.25060 322.58897,333.18804 329.37022,266.60617 336.15147,196.87544 342.93272,132.20726 349.71397,80.52025 356.49522,48.30333 363.27647,39.66121 370.05772,55.70209 376.83897,94.37134 383.62022,150.75953 390.40147,217.83236 397.18272,287.45902 403.96397,351.56813 410.74522,403.24411 417.52647,437.59507 424.30772,452.26960 431.08897,447.56604 437.87022,426.14883 444.65147,392.45005 451.43272,351.87889 458.21397,309.98086 464.99522,271.68124 471.77647,240.71782 478.55772,219.32381 485.33897,208.17318 492.12022,206.55662 498.90147,212.72407 505.68272,224.31359 512.46397,238.78626 519.24522,253.80038 526.02647,267.48043 532.80772,278.56203 539.58897,286.41767 546.37022,290.98588 553.15147,292.63694 559.93272,292.01055 566.71397,289.85693 573.49522,286.90453 580.27647,283.76711 587.05772,280.89374 593.83897,278.55705 600.62022,276.87054 607.40147,275.82369 614.18272,275.32405 "
+           transform="matrix(-0.9935564,-0.0414516,0.17604983,-0.99914051,455.55478,704.60488)" />
+      </g>
+    </clipPath>
+    <clipPath
+       id="clipPath4252"
+       clipPathUnits="userSpaceOnUse">
+      <rect
+         transform="matrix(0.99908169,0.04284605,-0.09482675,0.99549379,0,0)"
+         y="561.09125"
+         x="100.74037"
+         height="103.32384"
+         width="131.27869"
+         id="rect4254"
+         style="opacity:1;fill:#3e3333;fill-opacity:0.37724556;stroke:none;stroke-width:4;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </clipPath>
+    <clipPath
+       id="clipPath4292"
+       clipPathUnits="userSpaceOnUse">
+      <g
+         id="g4294"
+         transform="translate(-367.69553,-54.447222)">
+        <g
+           clip-path="url(#clipPath4165)"
+           id="g4296"
+           transform="matrix(0.44622559,-0.03051083,0.05394306,0.18799099,266.51907,328.18264)">
+          <g
+             id="g4298" />
+          <g
+             id="g4300" />
+          <g
+             id="g4302" />
+          <polyline
+             style="opacity:1;fill:none;fill-opacity:1;stroke:#f63307;stroke-width:5.98170948;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polyline4304"
+             points="105.58897,275.22882 112.37022,275.42513 119.15147,276.07747 125.93272,277.31113 132.71397,279.19826 139.49522,281.71613 146.27647,284.70617 153.05772,287.84307 159.83897,290.62503 166.62022,292.39637 173.40147,292.41030 180.18272,289.93451 186.96397,284.39340 193.74522,275.53090 200.52647,263.56788 207.30772,249.32100 214.08897,234.24752 220.87022,220.38520 227.65147,210.16924 234.43272,206.12835 241.21397,210.48630 247.99522,224.72104 254.77647,249.15310 261.55772,282.64547 268.33897,322.49194 275.12022,364.54960 281.90147,403.63524 288.68272,434.15854 295.46397,450.91689 302.24522,449.93600 309.02647,429.21694 315.80772,389.25060 322.58897,333.18804 329.37022,266.60617 336.15147,196.87544 342.93272,132.20726 349.71397,80.52025 356.49522,48.30333 363.27647,39.66121 370.05772,55.70209 376.83897,94.37134 383.62022,150.75953 390.40147,217.83236 397.18272,287.45902 403.96397,351.56813 410.74522,403.24411 417.52647,437.59507 424.30772,452.26960 431.08897,447.56604 437.87022,426.14883 444.65147,392.45005 451.43272,351.87889 458.21397,309.98086 464.99522,271.68124 471.77647,240.71782 478.55772,219.32381 485.33897,208.17318 492.12022,206.55662 498.90147,212.72407 505.68272,224.31359 512.46397,238.78626 519.24522,253.80038 526.02647,267.48043 532.80772,278.56203 539.58897,286.41767 546.37022,290.98588 553.15147,292.63694 559.93272,292.01055 566.71397,289.85693 573.49522,286.90453 580.27647,283.76711 587.05772,280.89374 593.83897,278.55705 600.62022,276.87054 607.40147,275.82369 614.18272,275.32405 "
+             transform="matrix(-0.9935564,-0.0414516,0.17604983,-0.99914051,455.55478,704.60488)" />
+        </g>
+        <g
+           clip-path="url(#clipPath4184)"
+           id="g4306"
+           transform="matrix(0.4402842,-0.02055338,0.04193971,0.47926246,273.16722,183.37156)">
+          <g
+             id="g4308" />
+          <g
+             id="g4310" />
+          <g
+             id="g4312" />
+          <polyline
+             style="opacity:1;fill:none;fill-opacity:1;stroke:#f63307;stroke-width:5.98170948;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+             id="polyline4314"
+             points="105.58897,275.22882 112.37022,275.42513 119.15147,276.07747 125.93272,277.31113 132.71397,279.19826 139.49522,281.71613 146.27647,284.70617 153.05772,287.84307 159.83897,290.62503 166.62022,292.39637 173.40147,292.41030 180.18272,289.93451 186.96397,284.39340 193.74522,275.53090 200.52647,263.56788 207.30772,249.32100 214.08897,234.24752 220.87022,220.38520 227.65147,210.16924 234.43272,206.12835 241.21397,210.48630 247.99522,224.72104 254.77647,249.15310 261.55772,282.64547 268.33897,322.49194 275.12022,364.54960 281.90147,403.63524 288.68272,434.15854 295.46397,450.91689 302.24522,449.93600 309.02647,429.21694 315.80772,389.25060 322.58897,333.18804 329.37022,266.60617 336.15147,196.87544 342.93272,132.20726 349.71397,80.52025 356.49522,48.30333 363.27647,39.66121 370.05772,55.70209 376.83897,94.37134 383.62022,150.75953 390.40147,217.83236 397.18272,287.45902 403.96397,351.56813 410.74522,403.24411 417.52647,437.59507 424.30772,452.26960 431.08897,447.56604 437.87022,426.14883 444.65147,392.45005 451.43272,351.87889 458.21397,309.98086 464.99522,271.68124 471.77647,240.71782 478.55772,219.32381 485.33897,208.17318 492.12022,206.55662 498.90147,212.72407 505.68272,224.31359 512.46397,238.78626 519.24522,253.80038 526.02647,267.48043 532.80772,278.56203 539.58897,286.41767 546.37022,290.98588 553.15147,292.63694 559.93272,292.01055 566.71397,289.85693 573.49522,286.90453 580.27647,283.76711 587.05772,280.89374 593.83897,278.55705 600.62022,276.87054 607.40147,275.82369 614.18272,275.32405 "
+             transform="matrix(-0.9935564,-0.0414516,0.17604983,-0.99914051,455.55478,704.60488)" />
+        </g>
+      </g>
+    </clipPath>
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4396">
+      <g
+         transform="matrix(0.43999054,-0.02812188,0.04191174,0.65574441,-274.24974,-100.81284)"
+         id="g4398">
+        <g
+           id="g4400" />
+        <g
+           id="g4402" />
+        <g
+           id="g4404" />
+        <polyline
+           transform="matrix(-0.9935564,-0.0414516,0.17604983,-0.99914051,455.55478,704.60488)"
+           points="105.58897,275.22882 112.37022,275.42513 119.15147,276.07747 125.93272,277.31113 132.71397,279.19826 139.49522,281.71613 146.27647,284.70617 153.05772,287.84307 159.83897,290.62503 166.62022,292.39637 173.40147,292.41030 180.18272,289.93451 186.96397,284.39340 193.74522,275.53090 200.52647,263.56788 207.30772,249.32100 214.08897,234.24752 220.87022,220.38520 227.65147,210.16924 234.43272,206.12835 241.21397,210.48630 247.99522,224.72104 254.77647,249.15310 261.55772,282.64547 268.33897,322.49194 275.12022,364.54960 281.90147,403.63524 288.68272,434.15854 295.46397,450.91689 302.24522,449.93600 309.02647,429.21694 315.80772,389.25060 322.58897,333.18804 329.37022,266.60617 336.15147,196.87544 342.93272,132.20726 349.71397,80.52025 356.49522,48.30333 363.27647,39.66121 370.05772,55.70209 376.83897,94.37134 383.62022,150.75953 390.40147,217.83236 397.18272,287.45902 403.96397,351.56813 410.74522,403.24411 417.52647,437.59507 424.30772,452.26960 431.08897,447.56604 437.87022,426.14883 444.65147,392.45005 451.43272,351.87889 458.21397,309.98086 464.99522,271.68124 471.77647,240.71782 478.55772,219.32381 485.33897,208.17318 492.12022,206.55662 498.90147,212.72407 505.68272,224.31359 512.46397,238.78626 519.24522,253.80038 526.02647,267.48043 532.80772,278.56203 539.58897,286.41767 546.37022,290.98588 553.15147,292.63694 559.93272,292.01055 566.71397,289.85693 573.49522,286.90453 580.27647,283.76711 587.05772,280.89374 593.83897,278.55705 600.62022,276.87054 607.40147,275.82369 614.18272,275.32405 "
+           id="polyline4406"
+           style="opacity:1;fill:none;fill-opacity:1;stroke:#f63307;stroke-width:5.98170948;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      </g>
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1440"
+     inkscape:window-height="856"
+     id="namedview238"
+     showgrid="false"
+     inkscape:zoom="0.50000003"
+     inkscape:cx="98.94704"
+     inkscape:cy="183.19108"
+     inkscape:window-x="60"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="mm" />
+  <desc
+     id="desc4">Matlab Figure Converted by PLOT2SVG written by Juerg Schwizer</desc>
+  <rect
+     style="fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:3.36899996;stroke-miterlimit:1;stroke-dasharray:none;stroke-opacity:1"
+     id="rect5255"
+     width="441.26004"
+     height="295.02151"
+     x="3.1961389"
+     y="-8.5054474"
+     inkscape:export-xdpi="499.85001"
+     inkscape:export-ydpi="499.85001" />
+  <rect
+     style="opacity:0.505;fill:#fed33b;fill-opacity:1;stroke:none;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect4394"
+     width="224.85995"
+     height="280.01428"
+     x="-305.47012"
+     y="45.218662"
+     clip-path="url(#clipPath4396)"
+     transform="translate(304.76301,-33.941125)"
+     inkscape:export-xdpi="499.85001"
+     inkscape:export-ydpi="499.85001" />
+  <g
+     id="g19-3"
+     transform="matrix(0.43999054,-0.02812188,0.04191174,0.65574441,30.513279,-136.87529)"
+     inkscape:export-xdpi="499.85001"
+     inkscape:export-ydpi="499.85001">
+    <g
+       id="ID000002-1" />
+    <g
+       id="ID000003" />
+    <g
+       id="ID000004" />
+    <polyline
+       style="opacity:1;fill:none;fill-opacity:1;stroke:#f63307;stroke-width:9.28957354;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="polyline25"
+       points="105.58897,275.22882 112.37022,275.42513 119.15147,276.07747 125.93272,277.31113 132.71397,279.19826 139.49522,281.71613 146.27647,284.70617 153.05772,287.84307 159.83897,290.62503 166.62022,292.39637 173.40147,292.41030 180.18272,289.93451 186.96397,284.39340 193.74522,275.53090 200.52647,263.56788 207.30772,249.32100 214.08897,234.24752 220.87022,220.38520 227.65147,210.16924 234.43272,206.12835 241.21397,210.48630 247.99522,224.72104 254.77647,249.15310 261.55772,282.64547 268.33897,322.49194 275.12022,364.54960 281.90147,403.63524 288.68272,434.15854 295.46397,450.91689 302.24522,449.93600 309.02647,429.21694 315.80772,389.25060 322.58897,333.18804 329.37022,266.60617 336.15147,196.87544 342.93272,132.20726 349.71397,80.52025 356.49522,48.30333 363.27647,39.66121 370.05772,55.70209 376.83897,94.37134 383.62022,150.75953 390.40147,217.83236 397.18272,287.45902 403.96397,351.56813 410.74522,403.24411 417.52647,437.59507 424.30772,452.26960 431.08897,447.56604 437.87022,426.14883 444.65147,392.45005 451.43272,351.87889 458.21397,309.98086 464.99522,271.68124 471.77647,240.71782 478.55772,219.32381 485.33897,208.17318 492.12022,206.55662 498.90147,212.72407 505.68272,224.31359 512.46397,238.78626 519.24522,253.80038 526.02647,267.48043 532.80772,278.56203 539.58897,286.41767 546.37022,290.98588 553.15147,292.63694 559.93272,292.01055 566.71397,289.85693 573.49522,286.90453 580.27647,283.76711 587.05772,280.89374 593.83897,278.55705 600.62022,276.87054 607.40147,275.82369 614.18272,275.32405 "
+       transform="matrix(-0.9935564,-0.0414516,0.17604983,-0.99914051,455.55478,704.60488)" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:47.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr;text-anchor:start;fill:#ff0000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="231.7036"
+     y="155.38216"
+     id="text4835"
+     sodipodi:linespacing="125%"
+     inkscape:export-xdpi="499.85001"
+     inkscape:export-ydpi="499.85001"
+     transform="matrix(1,0,-0.09689622,1,0,0)"><tspan
+       sodipodi:role="line"
+       id="tspan4837"
+       x="231.7036"
+       y="155.38216">ultipatient </tspan><tspan
+       sodipodi:role="line"
+       x="231.7036"
+       y="221.00716"
+       id="tspan4198" /></text>
+  <g
+     transform="matrix(0.59129631,-0.02055338,0.05632452,0.47926246,96.4879,454.18426)"
+     id="g4234"
+     clip-path="url(#clipPath4252)"
+     style="stroke-width:3.78605151;stroke-miterlimit:4;stroke-dasharray:none">
+    <g
+       id="g4236"
+       style="stroke-width:3.78605151;stroke-miterlimit:4;stroke-dasharray:none" />
+    <g
+       id="g4238"
+       style="stroke-width:3.78605151;stroke-miterlimit:4;stroke-dasharray:none" />
+    <g
+       id="g4240"
+       style="stroke-width:3.78605151;stroke-miterlimit:4;stroke-dasharray:none" />
+  </g>
+  <flowRoot
+     xml:space="preserve"
+     id="flowRoot4180"
+     style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:sans-serif;font-style:normal;font-weight:normal;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px"><flowRegion
+       id="flowRegion4182"><rect
+         id="rect4184"
+         width="28.284269"
+         height="246.07315"
+         x="398.8082"
+         y="171.79077" /></flowRegion><flowPara
+       id="flowPara4186"></flowPara></flowRoot>  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:47.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="230.9465"
+     y="214.55672"
+     id="text4206"
+     sodipodi:linespacing="125%"
+     transform="matrix(1,0,-0.09689622,1,0,0)"><tspan
+       sodipodi:role="line"
+       id="tspan4208"
+       x="230.9465"
+       y="214.55672"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:47.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Light';text-align:start;writing-mode:lr;text-anchor:start;fill:#ff0000;fill-opacity:1;"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:52.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Bold';text-align:start;writing-mode:lr;text-anchor:start"
+   id="tspan4216">I</tspan>ntracerebral data </tspan><tspan
+       sodipodi:role="line"
+       x="230.9465"
+       y="280.1817"
+       id="tspan4210"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:47.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Light';text-align:start;writing-mode:lr;text-anchor:start;fill:#ff0000;fill-opacity:1;" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:47.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Light';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+     x="228.45399"
+     y="275.75629"
+     id="text4212"
+     sodipodi:linespacing="125%"
+     transform="matrix(1,0,-0.09689622,1,0,0)"><tspan
+       sodipodi:role="line"
+       id="tspan4214"
+       x="228.45399"
+       y="275.75629"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:47.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Light';text-align:start;writing-mode:lr;text-anchor:start;fill:#ff0000;fill-opacity:1;"><tspan
+   style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:52.5px;line-height:125%;font-family:'Kohinoor Bangla';-inkscape-font-specification:'Kohinoor Bangla, Bold';text-align:start;writing-mode:lr;text-anchor:start"
+   id="tspan4218">A</tspan>nalysis</tspan></text>
+</svg>
