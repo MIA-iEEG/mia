@@ -29,7 +29,7 @@ idx_ganalysisloc = [] ;
 all_labels = [] ;
 s = [];
 smask = [];
-Fs = 1/(ganalysis{1}.Time(2)-ganalysis{2}.Time(1)) ; 
+Fs = 1/(ganalysis{1}.Time(2)-ganalysis{1}.Time(1)) ; 
 
 % Adds 'p' for left contact in labels %% for CLC
 % m_table_as(strcmp(m_table_as(:,4),'L'),2) = strcat(m_table_as(strcmp(m_table_as(:,4),'L'),2),'p') ; 
