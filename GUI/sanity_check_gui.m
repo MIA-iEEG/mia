@@ -59,17 +59,17 @@ guidata(hObject, handles);
 % --- Initialize the GUI
 function handles = initialize_gui(fig_handle, handles, isreset)
 
-
-% Fix for preivous files that were not saved with avg
-if ismember('Favg',who('-file', handles.fname))
+% New File structure : optimization to load only average 
+if ismember('Favg',who('-file', handles.fname))&&ismember('df',who('-file', handles.fname))
     % Loads data to display
-    d = load(handles.fname,'Time','labels','Favg') ;
+    d = load(handles.fname,'Time','labels','Favg','df') ;
+  
 else
     % FIX OLD FILES
     d = load(handles.fname,'Time','labels','F') ;
     d.Favg = mean(d.F,3); Favg = d.Favg ;
-    save(handles.fname,'-append','Favg');
-
+    d.df = size(d.F,3) ; df = d.df ;
+    save(handles.fname,'-append','Favg','df');
 end
 
 % Get patient name
@@ -79,6 +79,7 @@ end
 handles.Pt_name = pt;
 handles.Fmono = d.Favg ;
 handles.Labelsmono= d.labels ;
+handles.df =d.df ; 
 
 % Compute once for all bipolar montage
 [handles.Fbi, handles.Labelsbi, handles.idx1, handles.idx2] = mia_make_bipolarmtg(d.Favg,d.labels)   ;
@@ -248,9 +249,11 @@ function update_infos(handles)
 % Fill out text fields 
 set(handles.text_pt_name,'String',handles.Pt_name); 
 
-set(handles.text_nb_trials,'String',num2str(size(F,3))); 
+% Display the number of trials ( = degree of freedom) 
+set(handles.text_nb_trials,'String',num2str(handles.df)); 
 pop_montage = get(handles.popupmenu_montage,'String') ; 
 
+% Display the number of contacts 
 set(handles.text_nb_contacts,'String', sprintf('%s (%s)',num2str(size(F,1)),cell2mat(pop_montage(get(handles.popupmenu_montage,'Value')))));
 
 % Get labels of electrodes (NOT contacts)
