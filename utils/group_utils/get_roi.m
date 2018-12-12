@@ -1,35 +1,27 @@
 function [roi] = get_roi(m_table_effect,t, s, smask, all_labels,freqs,opt) 
 %
-% ========================================================================
-% This file is part of MIA.
-% 
-% MIA is free software: you can redistribute it and/or modify
-% it under the terms of the GNU General Public License as published by
-% the Free Software Foundation, either version 3 of the License, or
-% (at your option) any later version.
-% 
-% MIA is distributed in the hope that it will be useful,
-% but WITHOUT ANY WARRANTY; without even the implied warranty of
-% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-% GNU General Public License for more details.
-%  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% ***********************************************************************
 %
-% ========================================================================
-% This software was developed by
+%  Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+%
+%  This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 %
+% ***********************************************************************
+%
 % 2015/5/15 : ASD creation
+% ? : ASD modif flip according to description : 
+% We computed the correlation matrix across all signals within one region (i.e. across contacts and patients).
+% This matrix was thresholded separately for positive and negative values, based on a threshold chosen by the user (default thr = -0.7). 
+% We counted the number of high negative correlation (-thr) and pick the channel with the highest number of anti-correlated channels.
+% All channels highly correlated with this channel were flipped. 
+% 2018/12/7 : correct flip : do not flip if nothing needs to be flipped! 
 
 id_loc2 =5; 
 id_lat=4;
 starting_freq=6  ;
 id_subj = 1 ;
 roi = [] ;
-ptCor = [] ;
-roi_rejected = [];
-m_bool_res = [] ; 
-
 n  = 2; % Nombre de contact min par roi
 
 % Create unique ROI name
@@ -153,6 +145,10 @@ for jj=1:length(idx)
         % Compute correlations between contacts
         r = corrcoef(all_sig) ; 
         
+        if strcmp(un(idx(jj)),'R.Pre-central Gyrus')
+            fprintf('toto');
+        end
+        
         % If FLIP option is used 
         if isfield(opt, 'flip_thresh')
            
@@ -160,8 +156,12 @@ for jj=1:length(idx)
            A = (r<opt.flip_thresh) ; 
            Ap =  (r>-opt.flip_thresh) ; 
            
+ 
            % Finds ind with anti-correlation 
-           [Y,I] = max(sum(A)) ;              
+           [Y,I] = max(sum(A)) ;
+           
+           % Nothing to flip
+           if Y ==0; I = []; end
            fl = ones(1,length(A)) ; 
            fl(find(Ap(I,:))) = -1 ; 
              
@@ -213,5 +213,3 @@ for jj=1:length(idx)
     end
 
 end
-
-
