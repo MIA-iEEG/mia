@@ -575,3 +575,21 @@ set(handles.text12, 'visible','on');
 set(handles.text11, 'visible','on');
 set(handles.edit_scale, 'visible','on');
 set(handles.text_scalezs, 'visible','on');
+
+
+% --- Executes on button press in pushbutton_display_timeseries.
+function pushbutton_display_timeseries_Callback(hObject, eventdata, handles)
+% hObject    handle to pushbutton_display_timeseries (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+% Get all parameters for visulalization (from edit fields)
+
+[threshp, threshdur,max_tvals,max_zscore] = get_parameters(handles) ; 
+
+time = handles.Time; 
+zs = handles.zsnew(handles.iSel,:,:);
+
+set(0,'DefaultAxesColorOrder',jet(size(zs,1)));
+ 
+% Plot timeseries of the selected channels
+figure ; plot(time,mean(zs(:,:,:),3)','LineWidth',1.05); legend(strrep(handles.Labels(handles.iSel),'_','-')) ; grid on ; ylim([-max_zscore max_zscore]) ; 
