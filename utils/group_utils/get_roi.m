@@ -144,19 +144,14 @@ for jj=1:length(idx)
  
         % Compute correlations between contacts
         r = corrcoef(all_sig) ; 
-        
-        if strcmp(un(idx(jj)),'R.Pre-central Gyrus')
-            fprintf('toto');
-        end
-        
+                
         % If FLIP option is used 
         if isfield(opt, 'flip_thresh')
            
            % Select min in R 
            A = (r<opt.flip_thresh) ; 
            Ap =  (r>-opt.flip_thresh) ; 
-           
- 
+   
            % Finds ind with anti-correlation 
            [Y,I] = max(sum(A)) ;
            
