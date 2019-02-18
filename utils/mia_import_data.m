@@ -73,12 +73,8 @@ if strcmp(FileFormat,inputFormat{1,2})
         % Get the list of existing subjects
         subjects = get(handles.list_patient,'string');
 
-        if ~isempty(subjects)
-            % Ask for the patient name and check if it already exist or not
-            Name=check_name(subjects,get(handles.outdir,'string'),defaultName);
-        else 
-            Name = defaultName; 
-        end
+        % Ask for the patient name and check if it already exist or not
+        Name=check_name(subjects,get(handles.outdir,'string'),defaultName);
         
         % Use of cancel button
         if isempty(Name) ; return; end
