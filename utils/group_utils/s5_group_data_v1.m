@@ -103,6 +103,8 @@ for pp=1:length(subj)
                     if ~isempty(stat_data.stats(ss).fname)&& ~isempty(stat_data.stats(ss).pthresh)&& ~isempty(stat_data.stats(ss).nboot)&& ~isempty(stat_data.stats(ss).threshdur)
                         if stat_data.stats(ss).nboot==OPTIONS.nboot && stat_data.stats(ss).pthresh==OPTIONS.alpha %check for the right combination of nboot and alpha
                             ganalysis{pp,n}.threshdur=stat_data.stats(ss).threshdur;
+                            ganalysis{pp,n}.threshp=OPTION.alpha;
+                            
                         end
                     end
                 end
@@ -148,9 +150,7 @@ for pp=1:length(subj)
         
         % Save mean zscore 
         ganalysis{pp,n}.meanzsc=mean(data.zs,3) ;
-        
-        % ASD TODO : fix old files... (at display or loading study?)
-        
+       
         n=n+1;
     end
  

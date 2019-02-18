@@ -28,22 +28,31 @@ function [rois,mia_table,edges,datafiles, montage, freqb, wdir]=create_table_of_
 gana=load(ganaFile,'ganalysis');
 ganalysis=gana.ganalysis;
 
-% Remove some undesired regions (Lesion, out) 
-isGood =~(strcmp(m_table_as(:,5),'out')|strcmp(m_table_as(:,5),'lesion')|strcmp(m_table_as(:,5),'les'));
+% FIX old files : Get threshp wich was used to compute the threshdur
+if ~isfield(ganalysis{1,1},'threshp')
+    threshp = str2double(input('WARNING : you used an old version of MIA to generate the study, please indicate the alpha critical values that you used : alpha = ', 's'));
+    while isnan(threshp) 
+        threshp = str2double(input('alpha (must be a number): ', 's'));
+    end
+    
+    % The following 4 lines add the field 'threshp' to each element of cell
+    % array ganalysis (prevents from looping)
+    tmp = cell2mat(ganalysis) ;
+    T = num2cell(threshp*ones(1,length(ganalysis)));
+    [tmp(1:length(ganalysis)).threshp] = T{:};    
+    ganalysis = num2cell(tmp);
+    
+    save(ganaFile,'ganalysis');
+end
 
 % Create table of effects 
-[m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_as(isGood,:), ganalysis);
+[m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_as, ganalysis);
 
 %Define OPTIONS for group anlaysis and display
 getOPTIONS.freq = 1; % Morlet or Hilbert what freqid? 
 getOPTIONS.nPt= 1 ;% min numb of pt by roi
 getOPTIONS.signifmode =OPTIONS.signifmode ; % mode to select significant activity (if 0 no constrain)
-getOPTIONS.signmode = 'signed' ;
-
-% getOPTIONS.signmode = 'abs';
-
-% Comment out 2018/4/19
-% gan = [ganalysis{1,:}] ;
+getOPTIONS.signmode = 'signed' ; % signmode can be 'signed' or 'abs';
 
 if OPTIONS.allow_flipsign 
     getOPTIONS.flip_thresh = OPTIONS.flip_thresh ; 
@@ -52,10 +61,7 @@ end
 % Get all rois that has significant activity for this frequency band
 rois = get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{ganalysis{1}.freqb},getOPTIONS);
 
-%remove blanc (comment out 2018/4/19)
-% r = [rois{:}];
-% rois(strcmp({r.name},'blancL')|strcmp({r.name},'blancR'))=[];
-
+% mia_table column index 
 id_name=1;
 id_onset=2;
 id_corrPt=3;
@@ -67,7 +73,8 @@ id_ID=7;
 mia_table = [] ; 
 cPt = [] ; 
 cChan = [] ; 
-% Fill table with rois 
+
+%% Fill in table with rois
 for ii=1:length(rois)
     
     mia_table{ii,id_name}=rois{ii}.name;

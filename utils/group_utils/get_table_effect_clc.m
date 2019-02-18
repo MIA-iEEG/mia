@@ -22,8 +22,7 @@ id_contact = 2;
 id_ncontact = 3;
 id_subj = 1 ; 
 
-threshp = 0.001; 
-
+threshp = [] ; 
 m_table_effect = [] ;
 idx_ganalysisloc = [] ;
 all_labels = [] ;
@@ -95,22 +94,20 @@ for ii=1:size(ganalysis,1)
     
     % For all freq.
     for jj=1:size(ganalysis,2)
-
        
         gana = ganalysis{ii,jj};
         
-%         pvals = [gana.pvals]; 
         tvals = [gana.tvals];
         df = gana.df;
-
-        % ASD For only increase
-%         h = tvals>tinv(1-threshp/2,df) ; 
-        h = abs(tvals)>tinv(1-threshp/2,df) ; 
-
+    
+        % Get mask of significance 
+        h = abs(tvals)>tinv(1-gana.threshp/2,df) ; 
+        
         % Removes segments of significance shorter than a threshold duration
         [hf] = filter_timewin_signif(h,gana.threshdur*Fs);
       
-        % 
+        % Get electrodes that show at least one signififcant time point in
+        % the post stim peiod
         tmp = sum(hf(:,gana.Time>0)')~=0 ;
         gana.effect = tmp(id(ic));
         
@@ -121,14 +118,8 @@ for ii=1:size(ganalysis,1)
         tmp =sum(abs(tvals(:,gana.Time>0).*hf(:,gana.Time>0)),2);      
         gana.sumt = tmp(id(ic))'; 
 
-%         h=figure('Name',gana.subj,'units','normalized','position',[0,0,0.3,1]);
-%         imagesc(gana.tvals.*hf) ; title(num2str(jj)); set(gca,'Ytick',1:size(gana.tvals,1),'YTicklabel',gana.labels); caxis([-10 10]) ; grid on;
-%         pause
-%          close(h) ;
-
         %% idx : monopolaire  to bipol
         %% ic bipol to mono 
-        
         ganalysis{ii,jj} = gana; 
     
         % Adds bipolar labels in table
@@ -138,8 +129,6 @@ for ii=1:size(ganalysis,1)
     
     s= cat(1,s,sig);
     smask= cat(1,smask,sigmask);
-    
-   
     m_table_effect = cat(1,m_table_effect,table_tmp);
 
 end
