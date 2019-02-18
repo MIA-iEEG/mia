@@ -44,13 +44,28 @@ if isempty(RawFiles) ; return ; end
 if strcmp(FileFormat,inputFormat{1,2})
 
     for ff=1:size(RawFiles,1)
-
-        % Get path and default subject (=filename)
-        [PathName,defaultName,EXT] = fileparts(RawFiles{ff}) ;
+        
+        % Directories were selected for multiple patient import
+        if isdir(RawFiles{ff}) 
+            tmp = dir(fullfile(RawFiles{ff},'*.vhdr'));
+            % If several (or no) .vhdr files in directory DO NOTHING
+            if length(tmp)~=1 ; break ; end 
+            PathName = RawFiles{ff} ; 
+            RawFiles{ff} = fullfile(tmp.folder,tmp.name) ;
+            [~,fname] = fileparts(tmp.name) ; 
+            % Default patient name is the name of the directory
+            [~,defaultName] = fileparts(tmp.folder) ;
+        else
+            % Get path and default subject (=filename)
+            [PathName,fname,~] = fileparts(RawFiles{ff}) ;
+            % Default patient name is the name of the file 
+            defaultName = fname ; 
+        end
+        
         handles.history.datapath = PathName;
 
         % Check if .eeg exists
-        if ~exist(fullfile(PathName,strcat(defaultName,'.eeg')),'file')
+        if ~exist(fullfile(PathName,strcat(fname,'.eeg')),'file')
             errordlg('.eeg file is missing.');
             continue;
         end
