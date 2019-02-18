@@ -40,8 +40,9 @@ function [ganalysis] = s5_group_data_v1(sFiles,mia_table,OPTIONS)
 % ========================================================================
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
-
-% analysis directory (must contain .eeg .vhdr and .vmrk)
+%
+% This piece of code was re-written by student (Jane Bourguignon, 2016) 
+% TODO : review and clean
 
 ganalysis=[];
 
@@ -65,9 +66,9 @@ for pp=1:length(subj)
     n=1;
     %Find the right data and stats name
     for ii=count(pp):(count(pp+1)-1)
+        
         [PATHSTR,filename,EXT1] = fileparts(sFiles{ii});
         [PATHSTRtmp,patient,EXT] = fileparts(char(PATHSTR));
-        
         
         %check for LFP signal if zs has not been calculated yet
         if isempty(strfind(filename,'data'))
@@ -91,19 +92,23 @@ for pp=1:length(subj)
         ganalysis{pp,n}.df=size(data.F,3);
         ganalysis{pp,n}.freqb=data.freqb;
         ganalysis{pp,n}.edges=[OPTIONS.low_twin, OPTIONS.up_twin];
-        
-        
-        %create the 'stats' file name that should exist
+        ganalysis{pp,n}.threshp=OPTION.alpha;
+      
+        % Create the 'stats' filename
         statfile = strrep(sFile,'_data','_stats');
-        %computation to find or calculate threshdur
-        if exist(char(statfile))%check if stat file already exist
-            stat_data=load(statfile); %load it
-            if isfield(stat_data,'stats') %check for the existance of the field 'stats' (case of 'stat' file not computed by marspower)
+        
+        % computation to find or calculate threshdur
+        if exist(statfile) %check if stat file already exist
+            
+            %load stats file
+            stat_data=load(statfile); 
+            
+            if isfield(stat_data,'stats') %check for the existance of the field 'stats' (case of 'stat' file not computed)
                 for ss=1:length(stat_data.stats)
                     if ~isempty(stat_data.stats(ss).fname)&& ~isempty(stat_data.stats(ss).pthresh)&& ~isempty(stat_data.stats(ss).nboot)&& ~isempty(stat_data.stats(ss).threshdur)
-                        if stat_data.stats(ss).nboot==OPTIONS.nboot && stat_data.stats(ss).pthresh==OPTIONS.alpha %check for the right combination of nboot and alpha
+                        % If the specific combination of nboot + alpha was already computed 
+                        if stat_data.stats(ss).nboot==OPTIONS.nboot && stat_data.stats(ss).pthresh==OPTIONS.alpha 
                             ganalysis{pp,n}.threshdur=stat_data.stats(ss).threshdur;
-                            ganalysis{pp,n}.threshp=OPTION.alpha;
                             
                         end
                     end
@@ -118,6 +123,7 @@ for pp=1:length(subj)
                     if ~isempty(stat_data.stats(ss).fname)&& ~isempty(stat_data.stats(ss).pthresh)&& ~isempty(stat_data.stats(ss).nboot)&& ~isempty(stat_data.stats(ss).threshdur)
                         if stat_data.stats(ss).nboot==OPTIONS.nboot && stat_data.stats(ss).pthresh==OPTIONS.alpha
                             ganalysis{pp,n}.threshdur=stat_data.stats(ss).threshdur; %keep the new calculated threshdur
+                            
                         end
                     end
                 end
@@ -128,6 +134,7 @@ for pp=1:length(subj)
             stat_data=load(char(statfile));
             ganalysis{pp,n}.threshdur=stat_data.stats.threshdur;
         end
+        
         
         % Compute Ttest
         [tvals,pvals] = mia_compute_ttest(data.zs);
@@ -187,14 +194,3 @@ waitbar(length(subj)/length(subj),hwait,sprintf('%s %d/%d',strrep(char(length(su
 
 %Close waitbar
 close(hwait)
-
-
-
-
-
-
-
-
-
-
-
