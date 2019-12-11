@@ -92,7 +92,7 @@ for pp=1:length(subj)
         ganalysis{pp,n}.df=size(data.F,3);
         ganalysis{pp,n}.freqb=data.freqb;
         ganalysis{pp,n}.edges=[OPTIONS.low_twin, OPTIONS.up_twin];
-        ganalysis{pp,n}.threshp=OPTION.alpha;
+        ganalysis{pp,n}.threshp=OPTIONS.alpha;
       
         % Create the 'stats' filename
         statfile = strrep(sFile,'_data','_stats');
@@ -130,7 +130,7 @@ for pp=1:length(subj)
             end
             
         else  %cas of inexistent statfile
-            statfile=mia_s5_compute_stats(cellstr(sFile),OPTIONS);
+            statfile=mia_s5_compute_stats(sFiles{ii},OPTIONS);
             stat_data=load(char(statfile));
             ganalysis{pp,n}.threshdur=stat_data.stats.threshdur;
         end
