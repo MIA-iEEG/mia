@@ -31,8 +31,11 @@ if nargin<2
         sInputs = cat(2,sInputs,fullfile(OPTIONS.outdir,subjects{ss},{tmp.name})) ;
     end
     
-else % old but we keep for compatibility
+else 
     sInputs = varargin{1} ;
+    % If input is only one file, convert to cell for compatibility with
+    % multiple data file processing 
+    if size(sInputs,1) == 1 ; sInputs = mat2cell(sInputs,[1]) ; end;
     OPTIONS = varargin{2};
 end
 
