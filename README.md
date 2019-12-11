@@ -16,7 +16,6 @@ Estimating Parallel Processing in a Language Task Using Single-Trial Intracerebr
 AS Dubarry,  A Llorens, A Trébuchon-Da Fonsesca, R Carron, C Liégeois-Chauvel, C Bénar, F.-X Alario.
 
 Cortical Dynamics of Semantic Priming and Interference during Word Production : An Intracerebral Study. <strong><em> Journal of Cognitive Neuroscience</em>,</strong> <em>31</em>(7), 978–1001. <a href="https://doi.org/10.1162/jocn">[doi]</a>
-
 Anders, R., Llorens, A., Dubarry, A., Trébuchon, A., Liégeois-chauvel, C., & Alario, F.
 <h2></h2>
 &nbsp;
