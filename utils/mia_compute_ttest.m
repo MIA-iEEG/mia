@@ -49,7 +49,11 @@ end
 
 function [p,t] = ttest(x) % JCM
 
-t = mean(x) ./ sqrt(std(x).^2 / size(x,1));
-n = size(x,1)-1;
-
-p = betainc(n./(n+t.^2),0.5*n,0.5);
+if  ~sum(isnan(x(:)))
+    t = mean(x) ./ sqrt(std(x).^2 / size(x,1));
+    n = size(x,1)-1;
+    p = betainc(n./(n+t.^2),0.5*n,0.5);
+else
+    t = zeros(1,size(x,2));
+    p = ones(1,size(x,2));
+end
