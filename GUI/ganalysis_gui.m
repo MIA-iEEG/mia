@@ -18,7 +18,7 @@ function varargout = ganalysis_gui(varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -99,9 +99,6 @@ OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ;
      handles.freqb,...
      handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
  
-%create a cell table to keep cfroi 
-handles.CFROI= cell(length(handles.NAMES),1);
-
 % Update handles structure
 guidata(hObject, handles);
 
@@ -351,7 +348,7 @@ else
     % Several items selected in the table
     elseif length(idx)>0
   
-%         dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); % distinct colors for pt
+        dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); % distinct colors for pt
         dOPTIONS.win_noedges = handles.edges;
         display_roi(handles.rois(idx),dOPTIONS);
     end
@@ -465,192 +462,96 @@ guidata(hObject, handles);
 
 
 % --- Executes on button press in TRfiles.
-function TRfiles_Callback(hObject, eventdata, handles)
+function TRfiles_Callback(hObject, eventdata, handles) %#ok<*DEFNU>
 
-%name of cfroi file. Could exist or not
-outname_cfroi=char(fullfile(handles.maindir,handles.NAMES(get(handles.list_study,'Value')),strcat(handles.NAMES(get(handles.list_study,'Value')),'_cfroi.mat')));
+hwarn = warndlg('This will erase previous RT (Press cancel on next window to cancel)');
+waitfor(hwarn);
 
-ind=1;
+% Open a directory browser
+[filename, pathname] = uigetfile('*.xlsx', 'Pick a EXCEL file',handles.extOPTIONS.outdir);
 
-%test if cfroi has already been computed
-if exist(outname_cfroi,'file')
-    
-    L=load(outname_cfroi);
-    n=get(handles.list_study,'Value');
-    handles.CFROI{n}=L.cfroi;
-        
-    %list missing pt when cfroi was computed
-    list_missing_pt='';
-    for ii=1:length(L.RTfiles)
-        if ~isempty(strfind(L.RTfiles{ii},'MiSsInG'))
-            missing_pt=strtok(L.RTfiles{ii});
-            list_missing_pt=[list_missing_pt, '   ' ,missing_pt];
-        end
-    end
-    
-    if ~isempty(list_missing_pt)
-        choice=questdlg(sprintf('One file already exist but %s response time files was missing. Do you want to continue ?',list_missing_pt),...
-            'Response Time Files already existing',...
-            'Continue','Pass','Continue');
-        switch choice
-            case 'Continue'
-                ind=1;
-            case 'Pass'
-                ind=0;
-        end
-    else
-        ind=0;
-    end
-    
-end
+% CANCEL
+if filename==0 ; return; end 
 
-if ind==1
+% % FOR DEBUG ONLY
+% filename = '20200124_ BehavData_Dorsal_reformattedMIA.xlsx' ; 
+% pathname =  '/Users/anne-sophiedubarry/Documents/2_DATA/Dorsal/' ; 
     
-    %pick a directory containing TR files
-    directoryname = uigetdir(handles.maindir, 'Pick a Directory containing response time files ');
-    
-    
-    %use of cancel button
-    if directoryname==0
-        return;
-    end
-    
-    %list files in directoryname
-    d=dir(directoryname);
-    files = {d.name}';
-    files(ismember(files,{'.','..'})) = []; % Removes . and ..
-    
-    %list patients
-    froi=handles.rois;
-    f = [froi{:}];
-    subj = vertcat(f.namePt) ;
-    [subj,~,~]=unique(subj);
-    
-    %check we have one files for each patient and list RT files in the
-    %right order
-    for ii=1:length(subj)
-        idx = ~logical(cellfun(@isempty,strfind(files,subj{ii})));
-        
-        % question if no RT files is found for a patient
-        if idx==zeros(length(files),1)
-            choice = questdlg(sprintf('No response time file found for %s. What would you like to do ?',subj{ii}), ...
-                'Missing Response Time File', 'Skip','Cancel','Skip');
-            % Handle response
-            switch choice
-                case 'Skip'
-                    RTfiles{ii,1}=sprintf('%s MiSsInG', subj{ii});
-                case 'Cancel'
-                    return;
-            end
-        else
-            RTfiles{ii,1}=char(fullfile(directoryname,files(idx)));
-        end
-    end
-    
-    
-    rOPTIONS.win_noedges = handles.edges;
-    rOPTIONS.maindir=handles.maindir;
-    
-    %check if montage is monopolar or bipolar
-    NAME=handles.sfiles(get(handles.list_study,'Value'));
-    id_montage=strfind(NAME,'bipolar');
-    if isempty(id_montage{1})
-        rOPTIONS.mtg = 'monopolar';
-    else
-        rOPTIONS.mtg = 'bipolar';
-    end
-   
-    [cfroi] = s6_explore_all_rastersV1(handles.rois,handles.datafiles,RTfiles,rOPTIONS); 
-        
-    %save cfroi in study file
-    save(outname_cfroi,'cfroi','RTfiles');
-    
-    n=get(handles.list_study,'Value');
-    handles.CFROI{n}=cfroi;
-end
+% Read the RT table
+[rt_byPatients] = read_rt_table(fullfile(pathname,filename));
 
-msgbox('Response Time Files extracted correctly');
+% Get montage (from file name) 
+rOPTIONS.freq= handles.freqb ;
+rOPTIONS.mtg = handles.mtg ;
+rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
+rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
+rOPTIONS.win_noedges = handles.edges;
+rOPTIONS.clr = handles.dOPTIONS.clr ;
+
+% Inject the RTs (organized by patients at this point) into ROIs
+[handles.rois] = add_rts(handles.rois,rt_byPatients, rOPTIONS) ; 
+
+% TODO : ASD Here save new ROI strucutre with Rts
+% for next exceution (if not we will have to reload RT
+% at every execution) 
+
+% Update handles structure
+guidata(hObject, handles);
+
+
+% --- Executes on button press in load_rasters.
+function load_rasters_Callback(hObject, eventdata, handles) %#ok<DEFNU>
+% hObject    handle to load_rasters (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Get montage (from file name) 
+rOPTIONS.mtg = handles.mtg ;
+rOPTIONS.freq= handles.freqb ;
+rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
+rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
+rOPTIONS.win_noedges = handles.edges;
+rOPTIONS.clr = handles.dOPTIONS.clr ;
+
+% Get signals (single trials) 
+[handles.rois] = get_rasters(handles.rois,rOPTIONS) ;
+
+% TODO : ASD Here save new ROI strucutre with Rts
+% for next exceution (if not we will have to reload signals
+% at every execution) 
+
+% Update handles structure
 guidata(hObject, handles);
 
 
 % --- Executes on button press in display_rasters.
 function display_rasters_Callback(hObject, eventdata, handles)
 
-  n=get(handles.list_study,'Value');
-
-if  isempty(handles.CFROI{n})
-    errordlg('You must give Response Time files using "Get TR files" button','Error');
-else
-    
-    if get(handles.togglebutton1,'Value')==0
-        errordlg('Use show table button to select a region to explore','Error');
-    else
-     % Gets selected items in java table
-    all_idx = handles.table.jtable.getSelectedRows ; 
-    idx = [] ;
-    % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
-
-    if isempty(idx)
-            errordlg('You must select a region to explore','Error');
-            % Several items selected in the table
-        elseif length(idx)>0
-            
-            
-%             dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); % distinct colors for pt
-            dOPTIONS.win_noedges = handles.edges;
-            dOPTIONS.isRT='Yes';
-            
-            cfroi = handles.CFROI{n};
-            tmp=[cfroi{:}];
-            selected_cfroi=cfroi(idx);
-            
-            for ii=1:length(selected_cfroi)
-                if isempty(selected_cfroi{ii}.namePt);
-                    msgbox(sprintf('No Data to display for %s region (missing RT files)',selected_cfroi{ii}.name));
-                else
-                getOPTIONS.roi=selected_cfroi{ii}.name;               
-                display_roi_and_raster(cfroi(ismember({tmp.name},getOPTIONS.roi)),dOPTIONS)
-                end
-            end
-        end
-    end
-end
-  guidata(hObject, handles);
-  
-% --- Executes on button press in simple_rasters.
-function simple_rasters_Callback(hObject, eventdata, handles)
-
 if get(handles.togglebutton1,'Value')==0
-        errordlg('Use show table button to select a region to explore','Error');
-    else
-      % Gets selected items in java table
+    errordlg('Use show table button to select a region to explore','Error');
+else
+    % Gets selected items in java table
     all_idx = handles.table.jtable.getSelectedRows ; 
     idx = [] ;
     % Get proper indices in case table is sorted
     for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    if isempty(idx)
+        errordlg('You must select a region to explore','Error');
+    % One or Several items selected in the table
+    elseif length(idx)>0
+        % Get montage (from file name) 
+        rOPTIONS.mtg = handles.mtg ;
+        rOPTIONS.freq= handles.freqb ;
+        rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
+        rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
+        rOPTIONS.win_noedges = handles.edges;
+        rOPTIONS.clr = handles.dOPTIONS.clr ;
 
-    if isempty(idx)||length(idx)>1
-            errordlg('You must select ONE region to explore','Error');
-            % Several items selected in the table
-     elseif length(idx)==1
-         
-         % Get montage (from file name) 
-         rOPTIONS.mtg = handles.mtg ;
-         rOPTIONS.freq= handles.freqb ;
-         rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
-         rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
-         rOPTIONS.win_noedges = handles.edges;
-         rOPTIONS.clr = handles.dOPTIONS.clr ;
-         
-         % Get signals (single trials) 
-         [rasters,idpt,m_tab] = get_rasters(handles.rois(idx),rOPTIONS) ;
-         
-         % Display signals per roi/condition
-         display_roi_and_raster(handles.rois(idx),rasters,idpt,m_tab,rOPTIONS) 
+        display_roi_and_raster(handles.rois(idx),rOPTIONS) ;
     end
 end
 
+ 
 % --- Executes during object creation, after setting all properties.
 function uipanel_displayrois_CreateFcn(hObject, eventdata, handles)
 

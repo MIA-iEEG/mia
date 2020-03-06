@@ -11,7 +11,7 @@
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -75,7 +75,9 @@ for ii=1:size(ganalysis,1)
      
     idx_ganalysisloc = cat(1,idx_ganalysisloc,ii);
 
-    [id, labels,idx] = filter_localized_channels(m_table_as, idx_subjloc , id_contact, id_ncontact, gana.labels) ; 
+   % Here use restrictive option : TODO : define inclusive from GUI 
+    inclusive = 0 ;
+    [id, labels,idx] = filter_localized_channels(m_table_as, idx_subjloc , id_contact, id_ncontact, gana.labels,inclusive) ; 
    
     [un, ia, ic] = unique(labels,'stable');
   
@@ -107,7 +109,7 @@ for ii=1:size(ganalysis,1)
         [hf] = filter_timewin_signif(h,gana.threshdur*Fs);
       
         % Get electrodes that show at least one signififcant time point in
-        % the post stim peiod
+        % the post stim period (positively or negatively)
         tmp = sum(hf(:,gana.Time>0)')~=0 ;
         gana.effect = tmp(id(ic));
         

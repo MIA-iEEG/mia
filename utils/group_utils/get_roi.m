@@ -2,7 +2,7 @@ function [roi] = get_roi(m_table_effect,t, s, smask, all_labels,freqs,opt)
 %
 % ***********************************************************************
 %
-%  Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+%  Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 %  This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)

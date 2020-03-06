@@ -11,7 +11,7 @@
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -50,7 +50,7 @@ end
 
 %Define OPTIONS for group anlaysis and display
 getOPTIONS.freq = 1; % Morlet or Hilbert what freqid? 
-getOPTIONS.nPt= 1 ;% min numb of pt by roi
+getOPTIONS.nPt= 1 ;% min numb of pt by roi (set to 1 for GUI : user can filter the ROIs by visualizing the number of pts from the table)
 getOPTIONS.signifmode =OPTIONS.signifmode ; % mode to select significant activity (if 0 no constrain)
 getOPTIONS.signmode = 'signed' ; % signmode can be 'signed' or 'abs';
 

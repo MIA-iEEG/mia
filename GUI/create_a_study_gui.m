@@ -19,7 +19,7 @@ function varargout = create_a_study_gui(varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by

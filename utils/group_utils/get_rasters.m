@@ -11,12 +11,12 @@
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
-function [rasters,idpt,m_tab] = get_rasters(roi,OPTIONS) 
+function [roi] = get_rasters(roi,OPTIONS) 
 
 ct=1;
 %  Loop through regions
@@ -49,8 +49,11 @@ end
 [un, ia, ic] = unique(m_tab(:,1),'stable');
 
 rasters = cell(size(m_tab,1),1);
-rts = cell(size(m_tab,1),1);
+idpt = cell(size(m_tab,1),1);
 
+% TODOS : ASD here add a waitbar 
+
+% For each patient load single trial data 
 for kk=1:length(un)
 
     tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'*.mat')));
@@ -60,21 +63,36 @@ for kk=1:length(un)
     fileg = dir(fullfile(OPTIONS.maindir,un{kk},'*signal_LFP*.mat'));
           
     dat = load(fname);      
+   
+    % Replace all ' by p
+    dat.labels = strrep(dat.labels,'''','p') ; 
     
     % Get channel to display
     idx_elec_tab = ismember(m_tab(:,1),un{kk}) ;
     lab_toproc = m_tab(idx_elec_tab,2);
     idx_elec_dat = ismember(dat.labels,lab_toproc);    
     
-%     [C,IA,IC] = unique(lab_toproc,'stable');
-    
+    % Define time vector once for all 
+    if kk==1; vTime = (dat.Time>roi{1}.t(1))&(dat.Time<=roi{1}.t(end)) ; end
+        
     id = find(idx_elec_dat);
   
     [LIA,LOCB] = ismember(lab_toproc',dat.labels(idx_elec_dat)) ;
     
     % Format output
-    rasters(idx_elec_tab) =  num2cell(dat.zs(id(LOCB),(dat.Time>OPTIONS.win_noedges(1))&(dat.Time<OPTIONS.win_noedges(2)),:),[2,3]);
+%     rasters(idx_elec_tab) =  num2cell(dat.zs(id(LOCB),(dat.Time>OPTIONS.win_noedges(1))&(dat.Time<OPTIONS.win_noedges(2)),:),[2,3]);
+    rasters(idx_elec_tab) =  num2cell(dat.zs(id(LOCB),vTime,:),[2,3]);
     idpt(idx_elec_tab) = repmat({repmat(kk,size(dat.zs,3),1)},sum(idx_elec_tab),1);
+    % TODOS : ASD add indat information (isGood -> contained in data) 
+    
 
 end
+    
+% Reinject the signals into the roi structure 
+for ii=1:length(roi) 
 
+    idx = [m_tab{:,3}] == ii ;   
+    roi{ii}.F =rasters(idx);
+    roi{ii}.idptsignals= idpt(idx);
+
+end

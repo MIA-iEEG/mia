@@ -22,7 +22,7 @@ function [tarray, parray] = mia_compute_ttest(dc)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -49,6 +49,7 @@ end
 
 function [p,t] = ttest(x) % JCM
 
+% Make sure there is no NaN otherwise tvalues = 0 and pvalues =1 
 if  ~sum(isnan(x(:)))
     t = mean(x) ./ sqrt(std(x).^2 / size(x,1));
     n = size(x,1)-1;

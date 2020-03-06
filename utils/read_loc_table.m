@@ -24,7 +24,7 @@ function [struct_table, status, message] = read_loc_table(filename, OPTIONS)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -34,10 +34,13 @@ function [struct_table, status, message] = read_loc_table(filename, OPTIONS)
 
 %Load excel file
 [~, text_data, ~] = xlsread(filename) ;
+
+
 %%
 % If there is not exactly 4 col
 if size(text_data,2)~=4
-    errordlg('Wrong format (table should contain 4 columns)') ;
+    struct_table = [] ; status = -1; message =  'Wrong format (table should contain 4 columns)' ;
+%     errordlg('Wrong format (table should contain 4 columns)') ;
    return;
 end
 
@@ -49,7 +52,11 @@ struct_table = [];
 % Get the header line and remove spaces
 hdr = deblank(text_data(1,:)) ;
 idpt = find(strcmpi(hdr,'Patient'));
+
+% idelec can either be Electrode or Contact
 idelec = find(strcmpi(hdr,'Electrode'));
+if isempty(idelec) ; idelec = find(strcmpi(hdr,'Contact')); end
+
 idlat = find(strcmpi(hdr,'Lateralization'));
 idroi = find(strcmpi(hdr,'Region'));
 

@@ -13,7 +13,7 @@ function [] = display_roi(roi,OPTIONS)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -92,8 +92,8 @@ for ii=1:length(roi)
 
     n = 150 ;
     pos_fig = get(hfig, 'position'); 
-    set(hfig,'Position',[pos_fig(1),pos_fig(2)-n,pos_fig(3)+n,pos_fig(4)]);
     
+    set(hfig,'Position',[pos_fig(1),pos_fig(2)-n,pos_fig(3)+n,pos_fig(4)]);
     set(hplot,'position',[pos_hp(1)+n,pos_hp(2),pos_hp(3),pos_hp(4)]);
     set(himage,'position',[pos_im(1)+n,pos_im(2),pos_im(3),pos_im(4)]);
     set(hleg,'Position',[10,pos_hl(2),pos_hl(3),pos_hl(4)]);
