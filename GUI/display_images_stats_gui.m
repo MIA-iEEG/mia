@@ -56,19 +56,22 @@ function display_images_stats_gui_OpeningFcn(hObject, eventdata, handles, vararg
 handles.output = hObject;
 % 
 % This sets up the initial plot - only do when we are invisible
-handles.fname = varargin{1} ;
+handles.fname = cell2mat(varargin{1}) ;
 handles.infos = varargin{2} ;
-handles.zs = varargin{3} ;
-handles.Labels=varargin{4} ;
-handles.Time = varargin{5} ;
-handles.nboot = varargin{6} ;
-handles.pthresh=varargin{7} ;
-handles.threshdur = varargin{8} ;
 
+% handles.zs = varargin{3} ;
+% handles.Labels=varargin{4} ;
+% handles.Time = varargin{5} ;
+% handles.nboot = varargin{6} ;
+% handles.pthresh=varargin{7} ;
+% handles.threshdur = varargin{8} ;
+% 
 %initilization datas for select channels button 
 handles.badlabels={};
-% handles.goodlabels=handles.Labels;
-handles.zsnew=handles.zs;
+% 
+% % handles.goodlabels=handles.Labels;
+% handles.zsnew=handles.zs;
+% 
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
@@ -91,19 +94,77 @@ function handles = initialize_gui(fig_handle, handles, isreset)
 handles.FONTSZ = 8 ; 
 handles.BACKGROUNDCOL = [ 0.8275, 0.8275, 0.8275] ; 
 
+% New File structure : optimization to load only average 
+if ismember('meanzs',who('-file', handles.fname))&&ismember('tvals',who('-file', handles.fname))&&ismember('pvals',who('-file', handles.fname))&&ismember('df',who('-file', handles.fname))
+    % Loads data to display
+    d = load(handles.fname,'Time','labels','meanzs','tvals','pvals','df') ;
+  
+else
+    % FIX OLD FILES
+    d = load(handles.fname,'Time','labels','zs') ;
+    d.meanzs = mean(d.zs,3); meanzs = d.meanzs ;
+    d.df = size(d.zs,3) ; df = d.df ;
+    % Compute the t-test
+    [d.tvals,d.pvals] = mia_compute_ttest(d.zs);
+    tvals = d.tvals ; pvals = d.pvals;
+    % Fix old files
+    save(handles.fname,'-append','meanzs','tvals','pvals','df');
+end
+
+% Check if stats file exists 
+[PATHSTR,NAME,EXT] = fileparts(handles.fname) ; 
+fname_stat = fullfile(PATHSTR,strcat(strrep(NAME,'_data','_stats'),EXT)) ;
+
+% handles.zs = zs ;
+handles.Labels = d.labels;
+handles.Time = d.Time ;
+handles.tvals = d.tvals; 
+handles.pvals = d.pvals; 
+ 
+% ASD TODO : display name of regions if contacts were labelled (m_table
+% exist)
+if ~exist(fname_stat)
+  hwarn=warndlg('No statsistics were computed for this data. Play at your own risk') ;
+  waitfor(hwarn);
+  
+  handles.nboot = 0 ;
+  handles.pthresh = 0.001 ;
+  handles.threshdur = 0.02 ;
+  
+else
+    stats = load(fname_stat) ;
+
+    % Ensure compatibility with old files
+    if isfield(stats,'stats')
+          handles.nboot = [stats.stats(:).nboot] ;
+          handles.pthresh = [stats.stats(:).pthresh];
+          handles.threshdur = [stats.stats(:).threshdur] ;
+
+   else
+        % ASD TODO : test with old data
+        Fs = 1/(Time(2)-Time(1));
+        handles.nboot =-1 ;
+        handles.pthresh = 0.001;
+        handles.threshdur = stats.threshdur/Fs ;
+    end
+
+end
+
+% zsnew used to handle channel selection
+handles.meanzsnew=d.meanzs;
+
 % Check if montage exist
-[PATHSTR,NAME,EXT] = fileparts(cell2mat(handles.fname)) ; 
-fname = fullfile(PATHSTR,strcat(NAME,'_montage.mat')) ; 
-if exist(fname,'file')
-    load(fname) ; 
+fname_montage = fullfile(PATHSTR,strcat(NAME,'_montage.mat')) ; 
+if exist(fname_montage,'file')
+    load(fname_montage) ; 
     handles.iSel = isGood ;
 else  
-    handles.iSel = ones(1,size(handles.zsnew,1))==1 ; 
+    handles.iSel = ones(1,size(handles.meanzsnew,1))==1 ; 
 end
 
 % Set default scale to maximum value
 % Set the zscore editable text filed to [default max value]
-max_zs = max(max(abs(mean(handles.zsnew,3)))) ;
+max_zs = max(max(abs(handles.meanzsnew))) ;
 set(handles.edit_scale,'String',sprintf('%0.2f',max_zs));
 
 % Set the zscore static text to "Scale (default max value)"
@@ -125,11 +186,8 @@ set(handles.edit_duration,'String',num2str(handles.threshdur(1))) ;
 % Set first line of text (top)
 set(handles.text_file_infos,'String',sprintf('Patient : %s\t Method : %s\t Montage : %s\t  Freqs : %s\t',handles.infos{1},handles.infos{2},handles.infos{3},handles.infos{4}));
 
-% Compute the t-test
-[handles.tvals,handles.pvals] = mia_compute_ttest(handles.zsnew);
-
 % Set the tvals editable text filed to [default max value]
-max_tvals = max(max(abs(mean(handles.tvals,3)))) ;
+max_tvals = max(max(abs(mean(d.tvals,3)))) ;
 set(handles.edit_scale_tvals,'String',sprintf('%0.2f',max_tvals));
 
 % Set the tvals static text to "Scale (default max value)"
@@ -161,16 +219,16 @@ function varargout = update_orig(handles)
 [threshp, threshdur,max_tvals,max_zscore] = get_parameters(handles) ; 
 
 time = handles.Time; 
-zs = handles.zsnew(handles.iSel,:,:);
+meanzs = handles.meanzsnew(handles.iSel,:);
 
 % Display IMAGE avergae
 
-hImage = imagesc(time,1:size(zs,1),mean(zs,3),'parent',handles.axes_orig);
+hImage = imagesc(time,1:size(meanzs,1),meanzs,'parent',handles.axes_orig);
 caxis(handles.axes_orig,[-max_zscore max_zscore]) ; 
 colorbar('peer',handles.axes_orig,'location', 'NorthOutside');
 grid(handles.axes_orig);
 set(handles.axes_orig,...
-'YTick',1:size(zs,1),...
+'YTick',1:size(meanzs,1),...
 'YTickLabel', strrep(handles.Labels(handles.iSel),'_','\_'),...
 'Fontsize',handles.FONTSZ);
 
@@ -447,7 +505,7 @@ update_stats_filtertime(handles);
 
 % Save Channel montage 
 isGood = handles.isGood ;
-[PATHSTR,NAME,EXT] = fileparts(cell2mat(handles.fname)) ; 
+[PATHSTR,NAME,EXT] = fileparts(handles.fname) ; 
 fname = fullfile(PATHSTR,strcat(NAME,'_montage.mat')) ; 
 save(fname,'isGood'); 
 
@@ -587,9 +645,9 @@ function pushbutton_display_timeseries_Callback(hObject, eventdata, handles)
 [threshp, threshdur,max_tvals,max_zscore] = get_parameters(handles) ; 
 
 time = handles.Time; 
-zs = handles.zsnew(handles.iSel,:,:);
+meanzs = handles.meanzsnew(handles.iSel,:,:);
 
-set(0,'DefaultAxesColorOrder',jet(size(zs,1)));
+set(0,'DefaultAxesColorOrder',jet(size(meanzs,1)));
  
 % Plot timeseries of the selected channels
-figure ; plot(time,mean(zs(:,:,:),3)','LineWidth',1.05); legend(strrep(handles.Labels(handles.iSel),'_','-')) ; grid on ; ylim([-max_zscore max_zscore]) ; 
+figure ; plot(time,meanzs','LineWidth',1.05); legend(strrep(handles.Labels(handles.iSel),'_','-')) ; grid on ; ylim([-max_zscore max_zscore]) ; 

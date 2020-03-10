@@ -24,7 +24,7 @@ function varargout = sanity_check_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 1;
+gui_Singleton = 0;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
                    'gui_OpeningFcn', @sanity_check_gui_OpeningFcn, ...
@@ -48,7 +48,7 @@ function sanity_check_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for sanity_check_gui
 handles.output = hObject;
 
-handles.fname = varargin{2} ; 
+handles.fname = cell2mat(varargin{1}) ; 
 
 handles = initialize_gui(hObject, handles, false);
 

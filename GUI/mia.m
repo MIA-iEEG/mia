@@ -407,7 +407,10 @@ else
     for iPt=1:length(pt)
         tmp = dir(fullfile(handles.extOPTIONS.outdir,list_pt{pt(iPt)},'*signal_LFP.mat')) ;
         fname = fullfile(handles.extOPTIONS.outdir,list_pt{pt(iPt)},tmp.name) ; 
-        sanity_check_gui(handles.list_patient,fname);
+        
+        % Call main visualization GUI 
+        % Conversion {} required (prevents warning : "The input to STR2FUNC...")
+        sanity_check_gui({fname});
         
     end
     
@@ -439,49 +442,55 @@ else
         % Make the waitbar stay on top
         set(hwait_pt,'WindowStyle','modal')
 
-        % Load data file
-        fname = cell2mat(handles.table.sFiles(idx(ii))) ;
-% 
-%         % There is NO data file for LFP
-%         if isempty(strfind(fname,'_data'))
-%             zOPTIONS.overwrite='no';
-%             % Compute zscore and save file
-%             fname=mia_s3_zscore(cellstr(fname),zOPTIONS);
-%             fname=char(fname);        
-%         end
-        % Update progress bar 
-        waitbar(ii/length(idx),hwait_pt,sprintf('Loading...')) ;
-   
-        % Load data file
-        load(fname);
+        % Get selected patient file name 
+        fname = handles.table.sFiles(idx(ii)) ;
         
-        % Look for stats file
-        [PATHSTR,NAME,EXT] = fileparts(fname);
-        NAME = strrep(NAME,'_data','_stats');
-        fname_stat = fullfile(PATHSTR,strcat(NAME,EXT)) ;
-
-        % ASD TODO : display name of regions if contacts were labelled (m_table
-        % exist)
-        if ~exist(fname_stat)
-            hwarn=warndlg('No statsistics were computed for this data. Play at your own risk') ;
-            waitfor(hwarn);
-            p=0.001 ;
-            d = 0.02 ;
-            display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,0,p,d);
-
-        else
-            stats = load(fname_stat) ;
-
-            % Ensure compatibility with old files
-            if isfield(stats,'stats')
-                display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,[stats.stats(:).nboot],[stats.stats(:).pthresh],[stats.stats(:).threshdur]);
-            else
-                % ASD   :TODO : test with old data
-                Fs = 1/(Time(2)-Time(1));
-                display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,-1,0.001,stats.threshdur/Fs);
-            end
-
-        end
+        % Call main visualization GUI 
+        % Conversion {} required (prevents warning : "The input to STR2FUNC...")
+        display_images_stats_gui(fname,handles.table.mia_table(idx(ii),:));
+% 
+%         
+% % 
+% %         % There is NO data file for LFP
+% %         if isempty(strfind(fname,'_data'))
+% %             zOPTIONS.overwrite='no';
+% %             % Compute zscore and save file
+% %             fname=mia_s3_zscore(cellstr(fname),zOPTIONS);
+% %             fname=char(fname);        
+% %         end
+%         % Update progress bar 
+%         waitbar(ii/length(idx),hwait_pt,sprintf('Loading...')) ;
+%    
+%         % Load data file
+%         load(fname);
+%         
+%         % Look for stats file
+%         [PATHSTR,NAME,EXT] = fileparts(fname);
+%         NAME = strrep(NAME,'_data','_stats');
+%         fname_stat = fullfile(PATHSTR,strcat(NAME,EXT)) ;
+% 
+%         % ASD TODO : display name of regions if contacts were labelled (m_table
+%         % exist)
+%         if ~exist(fname_stat)
+%             hwarn=warndlg('No statsistics were computed for this data. Play at your own risk') ;
+%             waitfor(hwarn);
+%             p=0.001 ;
+%             d = 0.02 ;
+%             display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,0,p,d);
+% 
+%         else
+%             stats = load(fname_stat) ;
+% 
+%             % Ensure compatibility with old files
+%             if isfield(stats,'stats')
+%                 display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,[stats.stats(:).nboot],[stats.stats(:).pthresh],[stats.stats(:).threshdur]);
+%             else
+%                 % ASD TODO : test with old data
+%                 Fs = 1/(Time(2)-Time(1));
+%                 display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,-1,0.001,stats.threshdur/Fs);
+%             end
+% 
+%         end
            % Load is done : close progress bar
         delete(hwait_pt) ;
 
