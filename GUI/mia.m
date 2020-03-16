@@ -130,16 +130,22 @@ end
 function handles = initialize_gui(fig_handle, handles, isreset)
 
 % initialize the whole interface 
+% handles = update_patientlist(handles) ;
+% handles = create_data_table(handles) ; 
+% handles = update_studies_list(handles) ;
+% handles = update_atlas_list(handles) ;
+
 handles = update_patientlist(handles) ;
-handles = create_data_table(handles) ; 
 handles = update_studies_list(handles) ;
 handles = update_atlas_list(handles) ;
+handles = create_data_table(handles) ; 
+handles = update_loctablepath_text(handles);
 
 % Create the table (list) of data on the central panel
 function handles = create_data_table(handles)
 
 % Get table that contains all files (names) found in the working directory
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir) ;
+[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
 
@@ -340,6 +346,24 @@ handles.history.dirname = handles.extOPTIONS.outdir  ;
 history = handles.history ; 
 save(fullfile(dirname,'.mia_history.mat'),'history');
 
+% % --- Set a new loc table filename
+% function handles = set_loctablefilename(handles,directoryname)
+% 
+% % Update MAINDIR text panel
+% set(handles.outdir,'String',directoryname);
+% handles.extOPTIONS.outdir = directoryname ;
+% 
+% handles = initialize_gui(handles.figure1,handles,false);
+% 
+% % Get User home directory
+% dirname = getuserdir ;
+% 
+% handles.history.dirname = handles.extOPTIONS.outdir  ; 
+% 
+% history = handles.history ; 
+% save(fullfile(dirname,'.mia_history.mat'),'history');
+
+
 % Update the data list 
 function handles = update_data_table(handles)
 
@@ -347,7 +371,7 @@ function handles = update_data_table(handles)
 all_idx = handles.table.jtable.getSelectedRows ; 
 
 % Get table that contains all files (names) found in the working directory
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir) ;
+[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
 
@@ -422,7 +446,8 @@ end
 % --- Executes on button press in display_stats.
 function display_stats_Callback(hObject, eventdata, handles)
 
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir) ;
+% ASD : is this line usefull?
+[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 % Gets selected items in java table
 all_idx = handles.table.jtable.getSelectedRows ; 
@@ -558,6 +583,9 @@ atlas = strrep(atlas,'.mat','') ;
 
 set(handles.list_atlas,'Value',1);
 set(handles.list_atlas,'String',atlas);
+
+handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',atlas{1})));
+
 % set(handles.list_study,'Max',length(studies)); % Make it so you can select more than 1.
 
 % --- Executes on button press in pushbutton_statistics.
@@ -603,96 +631,98 @@ handles = update_patientlist(handles) ; %% ASD : WONT WORK??
 handles= update_data_table(handles);
 
       
-% --- Executes on button press in pushbutton_statistics.
-function pushbutton_loadloctable_Callback(hObject, eventdata, handles)
-
-ButtonName = questdlg('What would you like to do?','Atlas', ...
-            'Load table','Remove Patient localisation','Cancel''Load table');
-        
-        % No button was pressed (window closed)
-        if isempty(ButtonName); return ; end
-        switch ButtonName,
-            case 'Load table'
-                [handles]= loadloctable(handles) ; 
-            case 'Remove Patient localisation'
-               [handles]=removePatientLoc(handles) ;
-
-        end
-      
+% % --- Executes on button press in pushbutton_statistics.
+% function pushbutton_loadloctable_Callback(hObject, eventdata, handles)
+% 
+% ButtonName = questdlg('What would you like to do?','Atlas', ...
+%             'Load table','Remove Patient localisation','Cancel''Load table');
+%         
+%         % No button was pressed (window closed)
+%         if isempty(ButtonName); return ; end
+%         switch ButtonName,
+%             case 'Load table'
+%                 [handles]= loadloctable(handles) ; 
+%             case 'Remove Patient localisation'
+%                [handles]=removePatientLoc(handles) ;
+% 
+%         end
+%       
 %--- Removes localisation table for a specific patient
-function [handles] = removePatientLoc(handles)
+function [handles] = resetPatientLoc(handles)
 
-% Get patient selected 
-idx_selected =get(handles.list_patient, 'Value') ;
-list_pt = get(handles.list_patient,'String') ;
+    % Get list of ALL patients
+    list_patients = get(handles.list_patient,'String');
 
-selected_patients = list_pt(idx_selected);
-
-if isempty(selected_patients) 
-    errordlg('You must select a patient','Error');
- 
-else
-
-    spt = sprintf('%s\n',selected_patients{:}); 
-    str = sprintf('%s%s\n','Are you sure you want to remove localizations file(s) for ',spt);
-
-    ButtonName = questdlg(str, ...
-            'Remove localizations','Yes', 'No','No');
-    switch ButtonName,
-        case 'Yes',
-           for pp=1:length(selected_patients)
-             delete(char(fullfile(get(handles.outdir,'String'),selected_patients(pp),'m_table.mat')));
-           end            
-        case 'No'
-            return;
-
-    end
-
+    % Delete all m_table.mat from patients directories
+    for pp=1:length(list_patients)
+        delete(fullfile(get(handles.outdir,'String'),list_patients{pp},'m_table.mat'));
+    end            
+   
     % Update data table
     handles= update_data_table(handles);
 
     % Update Patient table
     handles = update_patientlist(handles) ;
 
-end
 
-%--- Load a ocalisation table  
-function [handles] = loadloctable(handles)
+% % --- Executes on button press in pushbutton_statistics.
+function pushbutton_loadloctable_Callback(hObject, eventdata, handles)
+
 % Open a directory browser
 [filename, pathname] = uigetfile('*.xlsx', 'Pick a EXCEL file',handles.extOPTIONS.outdir);
 
 if filename~=0
-    
-    grpOPTIONS.maindir = handles.extOPTIONS.outdir;
-        
+  
     % Read loc (excel) file 
+    grpOPTIONS.maindir = handles.extOPTIONS.outdir;
     [struct_table, status, message] = read_loc_table(fullfile(pathname,filename),grpOPTIONS) ;
     
     % Return error if doublons exist
     if status==0
         message = sprintf('%s  :\n%s\n\n%s','Doublons in loc table : ',message,'Table was NOT loaded : Please review the table and try again');
         errordlg(message) ;
+        return
     % Return error if no header in file
     elseif status == -1 
-        errordlg(message);        
+        errordlg(message);   
+        return
     else
     
         % Map the contacts from loc table with the ones in the data 
-        [m_table_as, message] = get_dataloc_table(struct_table,grpOPTIONS);
-        
-        %  ASD : TODO verif si ' in elec name?
-%         [m_table_as, message] = get_dataloc_table_clc(struct_table,grpOPTIONS);
-        
-        % Update jtable
-        handles= update_data_table(handles);
-        
+        [s.m_table_all, message] = get_dataloc_table(struct_table,grpOPTIONS);
     end
     
+     % Prompt user for a study name
+    prompt = {'Enter an Atlas name:'};
+    dlg_title = 'ATLAS NAME';
+    num_lines = 1;
+    def = {strrep(filename,'.xlsx',''),'hsv'};
+    loctable_name = newid(prompt,dlg_title,num_lines,def);
+
+    % Use of cancel button
+    if isempty(loctable_name)
+        return;
+    end
+   
+    resetPatientLoc(handles) ; 
+    
+    % GA_Results directory 
+    group_dir=fullfile(pathname,'GA_Results') ; 
+    
+    % Atlas filename 
+    fname = cell2mat(fullfile(group_dir,strcat('m_table_',loctable_name,'.mat')));
+    s.table_fname = fullfile(pathname,filename) ;
+    
+    % Save m_table fopr this atlas
+    save(fname,'-struct','s');
+
+    handles = update_atlas_list(handles) ;
+  
 end
 
 
-% --- Executes on button press in Group_analysis.
-function Group_analysis_Callback(hObject, eventdata, handles)
+% --- Executes on button press in pushbutton_newStudy.
+function pushbutton_newStudy_Callback(hObject, eventdata, handles)
 
 if ~isfield(handles.extOPTIONS,'outdir')
     warndlg('You must pick up a working directory first') ;
@@ -900,7 +930,7 @@ end
 % --- Executes on button press in pushbutton_minusRmData.
 function pushbutton_minusRmData_Callback(hObject, eventdata, handles)
 
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir) ;
+[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 all_idx = handles.table.jtable.getSelectedRows ;
 
@@ -1044,91 +1074,83 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 
-% --- Executes on button press in pushbutton_linkAtlas.
-function pushbutton_linkAtlas_Callback(hObject, eventdata, handles)
-
-[PATH,~,~]=fileparts(handles.extOPTIONS.outdir);
-group_dir=char(fullfile(PATH,'GA_Results'));
-
-if ~exist(group_dir,'dir')
-    warndlg('You must create a study first') ;
-    return ;
-else
-    d = dir(group_dir);
-    study = {d.name}';
-    study(ismember(study,{'.','..','.DS_Store'})) = []; %remove . et ..
-    if isempty(study)
-        warndlg('You must create a study first') ;
-        return ;
-    end
-end
-
-% Prompt user for a study name
-prompt = {'Enter an Atlas name:'};
-dlg_title = 'ATLAS NAME';
-num_lines = 1;
-def = {'Atlas1','hsv'};
-atlas_name = newid(prompt,dlg_title,num_lines,def);
-
-% Use of cancel button
-if isempty(atlas_name)
-    return;
-end
-
-m_table_all = [] ;
-
-%% ASD : TODO uncomment this section and adapt when atlas name already exists
-% % Atlas name exists
-% if ~isempty(NAMES)
-%     %if the name already exist :
-%     if sum(ismember(NAMES,atlas_name))==1
-%         
-%         %creation of a list containing all the names that have been used in the
-%         %past
-%         list='';
-%         for ii=1:length(NAMES)
-%             list=[list, '  ',char(NAMES(ii))];
-%         end
-%         
-%         % ask for overwriting or choose an other one
-%         choice = questdlg(sprintf('Those names are alerady existing :%s',list) , ...
-%             'STUDY NAME','Overwrite','Choose an other Name','Overwrite');
-%         switch choice
-%             case 'Overwrite'
-%                 %find back the full existing file name and delete it                
-%                  rmdir(char(fullfile(outdir,studyn)),'s');                   
-%                 
-%             case 'Choose an other Name'
-%                 %function to check if the given name already exist
-%                 studyn=check_name(NAMES,outdir);
-%         end
-%     
-%     end    
-% end
-
-patients = get(handles.list_patient,'STRING'); 
-% Loop through directory to get all m_tables
-for pp=1:length(patients)
-    
-    m_table = fullfile(get(handles.outdir,'String'), patients{pp},'m_table.mat');
-    if exist(m_table,'file')
-        load(m_table);
-        m_table_all = cat(1,m_table_all,m_table);
-    end
-  
-end
-
-% Atlas filename 
-fname = cell2mat(fullfile(group_dir,strcat('m_table_',atlas_name,'.mat')));
-
-% Save m_table fopr this atlas
-save(fname,'m_table_all');
-
-handles = update_atlas_list(handles) ;
-
 % --- Executes on selection change in list_atlas.
 function list_atlas_Callback(hObject, eventdata, handles)
 
+persistent chk
+
+if isfield(handles,'table') 
+    
+    if ~isempty(handles.table.mia_table)
+
+        % Get table selected 
+        idx_selected = get(hObject,'Value'); 
+        list_table = get(hObject,'String');
+
+        selected_table = list_table(idx_selected);
+
+        % Reads all folders that are in MAINDIR
+        group_foldnam = fullfile(fileparts(get(handles.outdir,'String')),'GA_Results') ; 
+
+        d = dir(group_foldnam);
+        isub = [d(:).isdir]; % returns logical vector if is folder
+        loctables= {d(~isub).name}';
+        loctables(ismember(loctables,{'.','..','.DS_Store'})) = []; % Removes systems files
+        loctables = strrep(loctables,'m_table_','') ; 
+        loctables = strrep(loctables,'.mat','') ; 
+
+        handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',loctables{idx_selected})));
+
+        handles= update_data_table(handles);
+                        
+         if isempty(chk)
+            chk = 1;
+            pause(0.2); %Add a delay to distinguish single click from a double click
+            if chk == 1
+                  chk = []; % Simple click
+
+            end
+        else
+            chk = [];
+             % Prompt user for a study name
+            prompt = {'Enter an ROIs table name:'};
+            dlg_title = 'ROI TABLE NAME';
+            num_lines = 1;
+            def = {strrep(selected_table{1},'.xlsx',''),'hsv'};
+            loctable_name = newid(prompt,dlg_title,num_lines,def);
+
+            % Atlas filename 
+            fname_old = cell2mat(fullfile(group_foldnam,strcat('m_table_',selected_table,'.mat')));
+            fname_new = cell2mat(fullfile(group_foldnam,strcat('m_table_',loctable_name,'.mat')));
+
+            % Use of cancel button OR use same name as previous one
+            if isempty(loctable_name)||strcmp(fname_old,fname_new)==1
+                return;
+            end
+
+            % Save m_table fopr this atlas
+            movefile(fname_old,fname_new);
+
+            handles = update_atlas_list(handles) ;
+
+         end
+         % Update text field with localization table path
+         handles = update_loctablepath_text(handles);
+
+    end
+    
+end
+   
+    
+function handles = update_loctablepath_text(handles) 
+% Displays path of localization table 
+% Not saved in previous MIA version, if unknown write "unknown"
+if isfield(handles.current_loctable,'table_fname')
+    set(handles.text_labellingFile,'String',handles.current_loctable.table_fname);
+else
+    set(handles.text_labellingFile,'String','Unknown');
+end
+        
 % --- Executes during object creation, after setting all properties.
 function list_atlas_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
@@ -1239,3 +1261,10 @@ switch button,
         return;
 
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function pushbutton_loadloctable_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to pushbutton_loadloctable (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called

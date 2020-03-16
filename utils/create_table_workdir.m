@@ -21,6 +21,7 @@
 function [mia_table, sFiles] = create_table_workdir(varargin)
 
 MAINDIR = varargin{1};
+current_loctable = varargin{2};
 
 % Reads all folders that are in MAINDIR 
 d = dir(MAINDIR); 
@@ -43,14 +44,14 @@ ct = 1;
 % Loop through subject from working directrory 
 for pp=1:length(pt)
 
-    % Reads all folders that are in MAINDIR 
+%     % Reads all folders that are in MAINDIR 
 	fname = dir(fullfile(MAINDIR,pt{pp},strcat(pt{pp},'*.mat'))); 
-    m_table_fname = fullfile(MAINDIR,pt{pp},'m_table.mat') ; 
+%     m_table_fname = fullfile(MAINDIR,pt{pp},'m_table.mat') ; 
     
     % If there is a localisation table for this patient
-    if exist(m_table_fname) 
-        m_table = load(m_table_fname) ; 
-        n_contacts = num2str(length(m_table.m_table)) ; 
+    if ~isempty(current_loctable) 
+%         m_table = load(m_table_fname) ; 
+        n_contacts = num2str(sum(strcmp(pt{pp},current_loctable.m_table_all(:,ID_PATIENT)))) ; 
         
     else 
         n_contacts = num2str(0); 
