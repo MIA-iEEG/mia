@@ -59,6 +59,7 @@ handles.extOPTIONS.suffix = '';
 handles.extOPTIONS.overwrite = 'no';
 handles.extOPTIONS.SensorType = 'SEEG'; % {'MEG GRAD','SEEG','MEG MAG'};
 handles.extOPTIONS.mtg= 'Bipolar';
+handles.current_loctable = [];
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
@@ -241,7 +242,7 @@ function list_patient_Callback(hObject, eventdata, handles)
 
 if isfield(handles,'table') 
     
-    if ~isempty(handles.table.mia_table)
+    if ~isempty(handles.table.mia_table) 
 
     persistent chk
 
@@ -251,6 +252,9 @@ if isfield(handles,'table')
 
     selected_patients = list_patients(idx_selected);
 
+    % No patient in the database
+    if isempty(selected_patients) ; return ; end 
+    
     % Highligths the data corresponding to patient 
     handles.table.jtable.clearSelection ; 
 
@@ -581,11 +585,12 @@ atlas(ismember(atlas,{'.','..','.DS_Store'})) = []; % Removes systems files
 atlas = strrep(atlas,'m_table_','') ; 
 atlas = strrep(atlas,'.mat','') ; 
 
-set(handles.list_atlas,'Value',1);
-set(handles.list_atlas,'String',atlas);
-
-handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',atlas{1})));
-
+% If any localization table 
+if ~isempty(atlas)
+    set(handles.list_atlas,'Value',1);
+    set(handles.list_atlas,'String',atlas);
+    handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',atlas{1})));
+end
 % set(handles.list_study,'Max',length(studies)); % Make it so you can select more than 1.
 
 % --- Executes on button press in pushbutton_statistics.
@@ -689,9 +694,13 @@ if filename~=0
     else
     
         % Map the contacts from loc table with the ones in the data 
-        [s.m_table_all, message] = get_dataloc_table(struct_table,grpOPTIONS);
+        [s.m_table_all, status, message] = get_dataloc_table(struct_table,grpOPTIONS);
     end
     
+    if status==0
+        warndlg(message) ;
+        return
+    end    
      % Prompt user for a study name
     prompt = {'Enter an Atlas name:'};
     dlg_title = 'ATLAS NAME';
@@ -719,7 +728,21 @@ if filename~=0
     handles = update_atlas_list(handles) ;
   
 end
-
+% 
+% function handles = loadloctable(handles) 
+% % Reads all folders that are in MAINDIR
+% group_foldnam = fullfile(fileparts(get(handles.outdir,'String')),'GA_Results') ; 
+% 
+% d = dir(group_foldnam);
+% isub = [d(:).isdir]; % returns logical vector if is folder
+% loctables= {d(~isub).name}';
+% loctables(ismember(loctables,{'.','..','.DS_Store'})) = []; % Removes systems files
+% loctables = strrep(loctables,'m_table_','') ; 
+% loctables = strrep(loctables,'.mat','') ; 
+% 
+% handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',loctables{idx_selected})));
+% 
+%         
 
 % --- Executes on button press in pushbutton_newStudy.
 function pushbutton_newStudy_Callback(hObject, eventdata, handles)
@@ -1081,7 +1104,7 @@ persistent chk
 
 if isfield(handles,'table') 
     
-    if ~isempty(handles.table.mia_table)
+    if ~isempty(handles.table.mia_table) && ~isempty(handles.current_loctable)
 
         % Get table selected 
         idx_selected = get(hObject,'Value'); 

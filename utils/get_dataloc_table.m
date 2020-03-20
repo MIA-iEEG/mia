@@ -1,4 +1,4 @@
-function [m_table_as, message] = get_dataloc_table(struct_table, OPTIONS)
+function [m_table_as, status, message] = get_dataloc_table(struct_table, OPTIONS)
 % -------------------------------------------------------------------------
 % DESCRIPTION
 %   Reads localization table
@@ -42,7 +42,7 @@ set(hwait_pt,'Position',pos);
 
 % Make the waitbar stay on top
 set(hwait_pt,'WindowStyle','modal')
-
+status = 1; 
 n=1;
 for iPt=1:length(struct_table)
 
@@ -58,8 +58,10 @@ for iPt=1:length(struct_table)
     
     if exist(datafile,'file')~=2
         message{n}=sprintf('%s not found : skip.\n',pt);
+        status = 0 ;
         n=n+1;
         continue;
+        
     else
         % Load labels from data file
         load(datafile,'labels');
