@@ -51,12 +51,18 @@ end
 rasters = cell(size(m_tab,1),1);
 idpt = cell(size(m_tab,1),1);
 
-% TODOS : ASD here add a waitbar 
+% Create progress bar for patients processing
+hwait_pt = waitbar(0,'','Units','Normalized','Name','Loading data...');
+% Make the waitbar stay on top
+set(hwait_pt,'WindowStyle','modal')
 
 % For each patient load single trial data 
 for kk=1:length(un)
 
-    tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'*.mat')));
+    % Update progress bar 
+    waitbar(kk/length(un),hwait_pt,sprintf('%s %s','Loading rasters',un{kk})) ;
+
+    tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
 
     fname = fullfile(OPTIONS.maindir,un{kk},tmp.name);
 
@@ -87,7 +93,7 @@ for kk=1:length(un)
     
 
 end
-    
+  
 % Reinject the signals into the roi structure 
 for ii=1:length(roi) 
 
@@ -96,3 +102,6 @@ for ii=1:length(roi)
     roi{ii}.idptsignals= idpt(idx);
 
 end
+
+% Load is done : close progress bar
+delete(hwait_pt) ;
