@@ -64,7 +64,15 @@ for iPt=1:length(struct_table)
         
     else
         % Load labels from data file
-        load(datafile,'labels');
+%         load(datafile,'labels');
+        variableInfo = who('-file', datafile);
+        if ismember('isGood',variableInfo)
+            load(datafile,'labels','isGood');
+            labels = labels(isGood); % Removes contacts that were marked as bad in sanity check
+        else
+            load(datafile,'labels');
+            isGood = ones(1,length(labels));
+        end
     end
     %% ASD to fix so that it works for both configuration
     % Preparte a list of electrode labels from the data appending L or R
@@ -86,10 +94,19 @@ for iPt=1:length(struct_table)
     
     % Remove channels that are in the table but not in the data
     bads = ~ismember(lower(list_table),lower(list_data));
+%     bads = ~ismember(lower(list_table),lower(list_data(isGood)));
     
     message{n}=sprintf(sprintf('%s : %d contacts found in the data (out of %d listed in the localization table)\n',pt,sum(~bads),length(list_table)));
     n=n+1;
-    
+   
+    % Display labels of contacts which were found in the table but NOT in
+    % the data
+    if sum(bads)~=0
+        idBads = find(bads) ;
+        for bb=1:length(idBads)
+            fprintf(sprintf('\n%s_%s found in table but not in data\n',pt,list_table{idBads(bb)}))
+        end
+    end  
     % if all are bads continue
     if sum(bads)==length(list_table)
         continue;
@@ -143,10 +160,10 @@ for iPt=1:size(m_table_as,1)
     end
 end
 
-    % Save main table
-    [PATH,~,~]=fileparts(OPTIONS.maindir);
-    save(fullfile(PATH,'m_table_as'),'m_table_as');
-
+%     % Save main table
+%     [PATH,~,~]=fileparts(OPTIONS.maindir);
+%     save(fullfile(PATH,'m_table_as'),'m_table_as');
+% 
     % Remove wait bar
     delete(hwait_pt) ;
 
