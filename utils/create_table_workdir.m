@@ -49,7 +49,7 @@ for pp=1:length(pt)
 %     m_table_fname = fullfile(MAINDIR,pt{pp},'m_table.mat') ; 
     
     % If there is a localisation table for this patient
-    if ~isempty(current_loctable) 
+    if ~isempty(current_loctable) && ~isempty(current_loctable.m_table_all)
 %         m_table = load(m_table_fname) ; 
         n_contacts = num2str(sum(strcmp(pt{pp},current_loctable.m_table_all(:,ID_PATIENT)))) ; 
         
