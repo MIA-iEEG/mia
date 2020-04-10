@@ -319,10 +319,12 @@ function uipanel_workingdir_CreateFcn(hObject, eventdata, handles)
 function browse_database_Callback(hObject, eventdata, handles)
 
 % Open a directory browser
-directoryname = uigetdir(fullfile(fileparts(which(mfilename))), 'Pick a Directory');
+% directoryname = uigetdir(fullfile(fileparts(which(mfilename))), 'Pick a Directory');
+dirname=get(handles.outdir,'String');
+
+directoryname = uigetdir(dirname, 'Pick a Directory');
 
 %use of cancel button => back to the next state
-dirname=get(handles.outdir,'String');
 if directoryname==0
     set(handles.outdir,'String',dirname);
     return;
