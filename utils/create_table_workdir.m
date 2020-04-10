@@ -99,7 +99,7 @@ for pp=1:length(pt)
                     mia_table{ct,ID_MONTAGE} = mtg;
                     mia_table{ct,ID} = num2str(ct); 
 
-                    if  strcmpi(method,'LFP') ; 
+                    if  strcmpi(method,'LFP')  
                         freq = '-'; 
                     else
                         strfreq = strsplit(remain,'_');
