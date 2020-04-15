@@ -53,8 +53,8 @@ set(hwait_pt,'Position',pos);
 % Loop through all subjects
 for ii=1:length(sInputs)
     
-    fname = sInputs{ii};
-    [~,filename,~] = fileparts(char(fname));
+    fname = char(sInputs{ii});
+    [~,filename,~] = fileparts(fname);
         
     % There is NO data file for LFP
     if isempty(strfind(filename,'data'))
@@ -66,7 +66,7 @@ for ii=1:length(sInputs)
     end
     
     % Prepare output name
-    [PATHSTR,filename,EXT1] = fileparts(char(fname));
+    [PATHSTR,filename,EXT1] = fileparts(fname);
     [~,patient,EXT] = fileparts(char(PATHSTR));
     
     % Create output file name

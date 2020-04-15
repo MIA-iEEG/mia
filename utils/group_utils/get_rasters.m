@@ -62,7 +62,8 @@ for kk=1:length(un)
     % Update progress bar 
     waitbar(kk/length(un),hwait_pt,sprintf('%s %s','Loading rasters',un{kk})) ;
 
-    tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
+%     tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
+    tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*','.mat')));
 
     fname = fullfile(OPTIONS.maindir,un{kk},tmp.name);
 

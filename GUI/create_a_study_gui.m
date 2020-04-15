@@ -52,13 +52,14 @@ function create_a_study_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 handles.idx_selected = varargin{1};
 handles.outdir = varargin{2};
+handles.current_loctable = varargin{3};
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
 
 %  ASD : create a copy of the table  (could be optimized??)
 % Read the working directory in order to build the table
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.outdir) ;
+[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
 
@@ -351,8 +352,17 @@ ganalysis = s5_group_data_v1( handles.table.sFiles(idx),handles.table.mia_table(
 
 %save ganalysis
 [subj,~,~]=unique(mia_table(:,1));
+
 fname =char(fullfile(outdir,NAME,strcat(NAME,'_',num2str(length(subj)),'_',method,'_',montage,'_',freq)));
 save(fname,'ganalysis');
+
+
+% %save ganalysis
+% [subj,~,~]=unique(mia_table(:,1));
+% % Gets the frequency band for this processing 
+% freqb = ganalysis{1}.freqb ;
+% fname =char(fullfile(outdir,NAME,strcat(NAME,'_',num2str(length(subj)),'pts_',method,'_',montage,'_',strcat(num2str(freqb(1)),'_',num2str(freqb(end))))));
+% save(fname,'ganalysis');
 
 
 

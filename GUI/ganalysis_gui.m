@@ -24,7 +24,7 @@ function varargout = ganalysis_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 0;
+gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
     'gui_OpeningFcn', @ganalysis_gui_OpeningFcn, ...
@@ -55,9 +55,17 @@ selected_atlas = varargin{3};
 handles.extOPTIONS =varargin{4};
 handles.INDEX = 6 ; 
 
-% Move window to the center of the screen 
-movegui(gcf,'center');
+% Jtable position offset in Y (down)
+handles.shift = 42 ;
+% table_size = [15,10,735,290];
+handles.table_size = [15,10,735,600];
 
+% Move window to the center of the screen 
+% movegui(gcf,'center');
+% set(handles.figure1,'Units', 'normalized') ; 
+% fig_dim = get(handles.figure1,'Position') ; 
+% set(handles.figure1,'Position', [0.8 0.3 fig_dim(3) fig_dim(4)]);
+ 
 handles.dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); % distinct colors for pt
        
 % Set title with the name of the input atlas 
@@ -157,7 +165,7 @@ if get(handles.togglebutton1,'Value')==1
     handles.table.jScrollPane = jScrollPane ;
     
     handles.jtable = jtable ;
-    [handles.hjtable,handles.hjcontainer]=javacomponent(jScrollPane,[15,10,735,290],gcf);
+    [handles.hjtable,handles.hjcontainer]=javacomponent(jScrollPane,handles.table_size,gcf);
 
 else
     
@@ -173,6 +181,8 @@ else
      
     isub = [d(:).isdir]; % returns logical vector if is folder
     sFile = {d(~isub).name}';
+    sFile(ismember(sFile,{'.DS_Store'})) = []; % Removes .DS_Store if any 
+    
     sFile = cell2mat(fullfile(handles.maindir,cell2mat(handles.NAMES(get(handles.list_study,'Value'))),sFile)) ; 
     OPTIONS.signifmode = get(handles.checkbox_significant_only,'value') ; 
     OPTIONS.allow_flipsign = get(handles.allow_flipsign,'value') ; 
@@ -199,8 +209,6 @@ end
 % --- Executes on button press in togglebutton1.
 function togglebutton1_Callback(hObject, eventdata, handles)
 
-% Jtable position offset in Y (down)
-shift = 22 ;
 
 if (get(hObject,'Value') == get(hObject,'Max'))
     
@@ -221,32 +229,32 @@ if (get(hObject,'Value') == get(hObject,'Max'))
  
     % Enlarge main figure in height and shift down
     fig_position = get(handles.figure1,'Position') ;
-    fig_position(4) = fig_position(4) + shift ;
-    fig_position(2) = fig_position(2) - shift ;
+    fig_position(4) = fig_position(4) + handles.shift ;
+    fig_position(2) = fig_position(2) - handles.shift ;
     set(handles.figure1,'Position',fig_position) ;
     
     uipanel_displayrois_pos = get(handles.uipanel_displayrois,'Position');
-    uipanel_displayrois_pos(2) = uipanel_displayrois_pos(2) + shift;
+    uipanel_displayrois_pos(2) = uipanel_displayrois_pos(2) + handles.shift;
     set(handles.uipanel_displayrois,'Position',uipanel_displayrois_pos);
     
     uipanel_study_pos = get(handles.uipanel_studies,'Position');
-    uipanel_study_pos (2) = uipanel_study_pos (2) + shift;
+    uipanel_study_pos (2) = uipanel_study_pos (2) + handles.shift;
     set(handles.uipanel_studies,'Position',uipanel_study_pos );
         
     uipanel_text_pos = get(handles.text_title,'Position');
-    uipanel_text_pos  (2) = uipanel_text_pos  (2) + shift;
+    uipanel_text_pos  (2) = uipanel_text_pos  (2) + handles.shift;
     set(handles.text_title,'Position',uipanel_text_pos  );
     
     uipanel_flip_pos = get(handles.uipanel_flip,'Position');
-    uipanel_flip_pos(2) = uipanel_flip_pos(2) + shift;
+    uipanel_flip_pos(2) = uipanel_flip_pos(2) + handles.shift;
     set(handles.uipanel_flip,'Position',uipanel_flip_pos );
  
     uipanel_rasterplot_pos = get(handles.uipanel_rasterplot,'Position');
-    uipanel_rasterplot_pos(2) = uipanel_rasterplot_pos(2) + shift;
+    uipanel_rasterplot_pos(2) = uipanel_rasterplot_pos(2) + handles.shift;
     set(handles.uipanel_rasterplot,'Position',uipanel_rasterplot_pos );
     
     togglebutton_pos = get(handles.togglebutton1,'Position');
-    togglebutton_pos(2) = togglebutton_pos(2) + shift;
+    togglebutton_pos(2) = togglebutton_pos(2) + handles.shift;
     set(handles.togglebutton1,'Position',togglebutton_pos);
     
     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
@@ -287,7 +295,7 @@ if (get(hObject,'Value') == get(hObject,'Max'))
     end
 
 
-    [handles.hjtable,handles.hjcontainer]=javacomponent(jScrollPane,[15,10,735,290],gcf);
+    [handles.hjtable,handles.hjcontainer]=javacomponent(jScrollPane,handles.table_size,gcf);
     
     guidata(hObject, handles);
     
@@ -299,32 +307,32 @@ else
     
     % Reduce main figure in height and shift up figure + all components
     fig_position = get(handles.figure1,'Position') ;
-    fig_position(4) = fig_position(4) - shift ;
-    fig_position(2) = fig_position(2) + shift ;
+    fig_position(4) = fig_position(4) - handles.shift ;
+    fig_position(2) = fig_position(2) + handles.shift ;
     set(handles.figure1,'Position',fig_position) ;
     
     uipanel_displayrois_pos = get(handles.uipanel_displayrois,'Position');
-    uipanel_displayrois_pos(2) = uipanel_displayrois_pos(2) - shift;
+    uipanel_displayrois_pos(2) = uipanel_displayrois_pos(2) - handles.shift;
     set(handles.uipanel_displayrois,'Position',uipanel_displayrois_pos);
     
     uipanel_study_pos = get(handles.uipanel_studies,'Position');
-    uipanel_study_pos (2) = uipanel_study_pos (2) - shift;
+    uipanel_study_pos (2) = uipanel_study_pos (2) - handles.shift;
     set(handles.uipanel_studies,'Position',uipanel_study_pos );
     
     uipanel_text_pos = get(handles.text_title,'Position');
-    uipanel_text_pos  (2) = uipanel_text_pos  (2) -shift;
+    uipanel_text_pos  (2) = uipanel_text_pos  (2) -handles.shift;
     set(handles.text_title,'Position',uipanel_text_pos  );
     
     uipanel_rasterplot_pos = get(handles.uipanel_rasterplot,'Position');
-    uipanel_rasterplot_pos(2) = uipanel_rasterplot_pos(2) - shift;
+    uipanel_rasterplot_pos(2) = uipanel_rasterplot_pos(2) - handles.shift;
     set(handles.uipanel_rasterplot,'Position',uipanel_rasterplot_pos );
     
     uipanel_flip_pos = get(handles.uipanel_flip,'Position');
-    uipanel_flip_pos(2) = uipanel_flip_pos(2) - shift;
+    uipanel_flip_pos(2) = uipanel_flip_pos(2) - handles.shift;
     set(handles.uipanel_flip,'Position',uipanel_flip_pos );
  
     togglebutton_pos = get(handles.togglebutton1,'Position');
-    togglebutton_pos(2) = togglebutton_pos(2) - shift;
+    togglebutton_pos(2) = togglebutton_pos(2) - handles.shift;
     set(handles.togglebutton1,'Position',togglebutton_pos);
     
     
@@ -507,7 +515,7 @@ function load_rasters_Callback(hObject, eventdata, handles) %#ok<DEFNU>
 
 % Get montage (from file name) 
 rOPTIONS.mtg = handles.mtg ;
-rOPTIONS.freq= handles.freqb ;
+%rOPTIONS.freq= handles.freqb ;
 rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
 rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
 rOPTIONS.win_noedges = handles.edges;
