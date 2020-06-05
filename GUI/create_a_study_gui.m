@@ -338,13 +338,14 @@ ganalysisOPTIONS.up_twin=str2num(get(handles.up_twin,'String'));
 ganalysisOPTIONS.low_twin=str2num(get(handles.low_twin,'String'));
 ganalysisOPTIONS.outdir=handles.outdir;
 ganalysisOPTIONS.baseline=[str2num(get(handles.baselineb,'String')), str2num(get(handles.baselinee,'String'))] ;
+ganalysisOPTIONS.subjects = handles.table.mia_table(idx,1) ; 
 
 % Create study dir
 mkdir(char(fullfile(outdir,NAME)));
 
 %generate and save ganalysis = table of structure containing time and
 %statistical data about selected subjects for the current study
-ganalysis = s5_group_data_v1( handles.table.sFiles(idx),handles.table.mia_table(idx,:,:,:,:),ganalysisOPTIONS);
+ganalysis = s5_group_data_v1(handles.table.sFiles(idx),ganalysisOPTIONS);
 
 % ASD 2018/1/26 : comment this line (at that point we don<t need the
 % localisation table)
