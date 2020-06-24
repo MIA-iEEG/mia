@@ -397,7 +397,8 @@ else
             pOPTIONS.title = '';
             [labels_o, colorm] = display_summary_roi(handles.rois(idx),pOPTIONS) ;
         case 'Flat display',
-            pOPTIONS.thresh =1.96; % -1 for no color chronological organization
+            %pOPTIONS.thresh =1.96; % -1 for no color chronological organization
+            pOPTIONS.thresh =3; % -1 for no color chronological organization
             pOPTIONS.threshdisp = 1.96; 
             pOPTIONS.nsub =1; % number of subplot
             pOPTIONS.title = '';
