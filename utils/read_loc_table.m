@@ -33,7 +33,8 @@ function [struct_table, status, message] = read_loc_table(filename, OPTIONS)
 % one of the keywords "Patient", "Electrodes", "Lateralization" and "Region"
 
 %Load excel file
-[~, text_data, ~] = xlsread(filename) ;
+[~, text_data, all_data] = xlsread(filename) ;
+text_data = all_data ;
 
 
 %%
@@ -91,6 +92,10 @@ for iPt=1:length(u_pt)
     lat = text_data(idx,idlat);
     roi = text_data(idx,idroi);
     elec = text_data(idx,idelec);
+        
+    % Converts numeric region name (if any)
+    idx = cell2mat(cellfun(@isnumeric, roi,'UniformOutput', false));
+    roi(idx) = cellstr(num2str(cell2mat(roi(idx)))) ;
     
     % Clean text (no ' or coma or anything else but char and digits)
     lat = strrep(lat,'''',''); lat = strrep(lat,',','');  lat = strrep(lat,'"','');
