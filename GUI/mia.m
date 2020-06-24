@@ -701,7 +701,7 @@ if filename~=0
     
     if status==0
         warndlg(message) ;
-        return
+       %return
     end    
      % Prompt user for a study name
     prompt = {'Enter an Atlas name:'};
@@ -718,7 +718,7 @@ if filename~=0
     resetPatientLoc(handles) ; 
     
     % GA_Results directory 
-    group_dir=fullfile(pathname,'GA_Results') ; 
+    group_dir=fullfile(fileparts(grpOPTIONS.maindir),'GA_Results') ; 
     
     % Atlas filename 
     fname = cell2mat(fullfile(group_dir,strcat('m_table_',loctable_name,'.mat')));
