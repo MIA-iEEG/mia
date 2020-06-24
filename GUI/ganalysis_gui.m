@@ -53,7 +53,7 @@ handles.m_table_as=varargin{1};
 handles.maindir=varargin{2};
 selected_atlas = varargin{3};
 handles.extOPTIONS =varargin{4};
-handles.INDEX = 6 ; 
+handles.INDEX = 5 ; 
 
 % Jtable position offset in Y (down)
 handles.shift = 42 ;
@@ -142,7 +142,8 @@ if get(handles.togglebutton1,'Value')==1
      handles.freqb,...
      handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
  
-    jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
+%     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
+    jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
     tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
         
     % Trick to hide to indexing column
@@ -257,7 +258,8 @@ if (get(hObject,'Value') == get(hObject,'Max'))
     togglebutton_pos(2) = togglebutton_pos(2) + handles.shift;
     set(handles.togglebutton1,'Position',togglebutton_pos);
     
-    jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
+%     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
+    jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
     
     % Trick to hide to indexing column
     jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);

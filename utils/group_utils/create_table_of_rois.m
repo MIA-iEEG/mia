@@ -63,12 +63,12 @@ rois = get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{ganalys
 
 % mia_table column index 
 id_name=1;
-id_onset=2;
-id_corrPt=3;
-id_corrChan=4;
-id_numPT=5;
-id_numCT=6;
-id_ID=7;
+% id_onset=2;
+id_corrPt=2;
+id_corrChan=3;
+id_numPT=4;
+id_numCT=5;
+id_ID=6;
 
 mia_table = [] ; 
 cPt = [] ; 
@@ -78,7 +78,7 @@ cChan = [] ;
 for ii=1:length(rois)
     
     mia_table{ii,id_name}=rois{ii}.name;
-    mia_table{ii,id_onset}=num2str(rois{ii}.onset);
+%     mia_table{ii,id_onset}=num2str(rois{ii}.onset);
     if isnan(rois{ii}.corrPt); cPt = '-'; else ; cPt = num2str(rois{ii}.corrPt);end
     mia_table{ii,id_corrPt}=cPt ; 
     if isnan(rois{ii}.corrChan); cChan = '-'; else ; cChan = num2str(rois{ii}.corrChan);end
