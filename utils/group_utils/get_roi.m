@@ -95,7 +95,19 @@ for jj=1:length(un)
     subj_in = find(ismember(unsubj,subj_active)); 
  
     % Compute means per patients
-    [~,~,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false ));
+    
+%     idx_underscores = cellfun(@(x) strfind(x,'_'),labels_roi, 'UniformOutput',false) ; 
+%     idx_patient = cell2mat(cellfun(@(x) x(end-1), idx_underscores,'UniformOutput',false)) ; 
+    
+    for cc=1:length(labels_roi)
+        ptchar = labels_roi{cc} ; 
+        idx_underscores = strfind(ptchar,'_');
+        ptname{cc} = ptchar(1:idx_underscores(2)-1);
+    end
+        
+%     [~,~,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false ));
+    [~,~,IC] = unique(ptname);
+    
     for ss=1:max(IC) 
         % Mean signals per patients
         if strcmp(opt.signmode,'signed') 
@@ -142,7 +154,7 @@ for jj=1:length(un)
 
     ctRoi=ctRoi+1;
 
-    clear r mean_sig_subj ; 
+    clear r mean_sig_subj ptname ; 
 
 end
 

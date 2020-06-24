@@ -42,7 +42,6 @@ function [ganalysis] = s5_group_data_v1(sFiles,OPTIONS)
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 %
 
-
 ganalysis=[];
 
 % Create a wait bar 
