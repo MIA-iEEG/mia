@@ -64,7 +64,12 @@ for kk=1:length(un)
 
 %     tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
     tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*','.mat')));
-
+    
+    % A montage file was found
+    if size(tmp,1)~=1
+        tmp = tmp(cell2mat(cellfun(@isempty, strfind({tmp.name},'montage'), 'UniformOutput',false)));
+    end
+    
     fname = fullfile(OPTIONS.maindir,un{kk},tmp.name);
 
     fileg = dir(fullfile(OPTIONS.maindir,un{kk},'*signal_LFP*.mat'));
