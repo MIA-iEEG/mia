@@ -102,7 +102,8 @@ for jj=1:length(un)
     for cc=1:length(labels_roi)
         ptchar = labels_roi{cc} ; 
         idx_underscores = strfind(ptchar,'_');
-        ptname{cc} = ptchar(1:idx_underscores(2)-1);
+        %ptname{cc} = ptchar(1:idx_underscores(2)-1);
+        ptname{cc} = ptchar(1:idx_underscores(1)-1);
     end
         
 %     [~,~,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false ));
