@@ -141,10 +141,11 @@ for ii=1:length(roi)
     interticks = size(mat_csig,2)/length(croi.labels) ; 
     yticks(floor((1:length(croi.labels))*interticks)-interticks/2) ; 
     yticklabels(strrep(croi.labels,'_','\_'));
-    ytickangle(45) ;
+%     ytickangle(45) ;
     % Holds on for plotting the lines between contacts and RTs (if any)
     hold on ; 
-
+    ax = gca;
+    set(ax,'Fontsize',FONTSZ);
     % Display black dots
     ct = 0 ;
     for ii=1:size(csig,1)
@@ -164,4 +165,4 @@ for ii=1:length(roi)
 
 end
 
-
+set(gcf,'color','white');
