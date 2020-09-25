@@ -63,7 +63,7 @@ idroi = find(strcmpi(hdr,'Region'));
 
 if isempty(idpt)|| isempty(idelec) || isempty(idlat)|| isempty(idroi)
     status =-1; 
-    message = ' (table should contain 4 columns : "Patient", "Contact (or Electrode)", "Lateralization","Region" ';
+    message = ' Table should contain 4 columns : "Patient", "Contact (or Electrode)", "Lateralization","Region" ';
 else
 
 % Removes blanks : if no patient ID removes the whole line
@@ -119,7 +119,7 @@ for iPt=1:length(u_pt)
     if ~isempty(doublons)
         listd = sprintf('%s, ',doublons{:});
         message = sprintf('%s\n %s : %s',message,pt,listd);
-        status = -1;
+        status = 0;
     end
     
     struct_table{iPt}.pt = pt; 

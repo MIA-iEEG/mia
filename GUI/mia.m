@@ -686,7 +686,7 @@ if filename~=0
     
     % Return error if doublons exist
     if status==0
-        message = sprintf('%s  :\n%s\n\n%s','Doublons in loc table : ',message,'Table was NOT loaded : Please review the table and try again');
+        message = sprintf('%s  :\n%s\n\n%s','Some contacts were found twice in the table : ',message,'Table was NOT loaded : Please remove duplicates and try again');
         errordlg(message) ;
         return
     % Return error if no header in file
