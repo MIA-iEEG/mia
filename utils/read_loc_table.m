@@ -38,12 +38,12 @@ text_data = all_data ;
 
 
 %%
-% If there is not exactly 4 col
-if size(text_data,2)~=4
-    struct_table = [] ; status = -1; message =  'Wrong format (table should contain 4 columns)' ;
-%     errordlg('Wrong format (table should contain 4 columns)') ;
-   return;
-end
+% % If there is not exactly 4 col
+% if size(text_data,2)~=4
+%     struct_table = [] ; status = -1; message =  'Wrong format (table should contain 4 columns)' ;
+% %     errordlg('Wrong format (table should contain 4 columns)') ;
+%    return;
+% end
 
 status = 1 ;
 
@@ -63,7 +63,7 @@ idroi = find(strcmpi(hdr,'Region'));
 
 if isempty(idpt)|| isempty(idelec) || isempty(idlat)|| isempty(idroi)
     status =-1; 
-    message = 'No header was found in file';
+    message = ' (table should contain 4 columns : "Patient", "Contact (or Electrode)", "Lateralization","Region" ';
 else
 
 % Removes blanks : if no patient ID removes the whole line
@@ -71,6 +71,12 @@ text_data(strcmp(text_data(:,1),''),:) = [] ;
 text_data(strcmp(text_data(:,2),''),:) = [] ;
 text_data(strcmp(text_data(:,3),''),:) = [] ;
 text_data(strcmp(text_data(:,4),''),:) = [] ;
+
+% Removes other stuff than charaters ([NaN])
+text_data(~cell2mat(cellfun(@ischar, text_data(:,1),'UniformOutput', false)),:) = [] ;
+text_data(~cell2mat(cellfun(@ischar, text_data(:,2),'UniformOutput', false)),:) = [] ;
+text_data(~cell2mat(cellfun(@ischar, text_data(:,3),'UniformOutput', false)),:) = [] ;
+text_data(~cell2mat(cellfun(@ischar, text_data(:,4),'UniformOutput', false)),:) = [] ;
 
 % Removes the header line
 text_data = text_data(2:end,:);
