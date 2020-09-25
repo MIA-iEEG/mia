@@ -30,8 +30,8 @@ for ii=1:length(roi)
     
         str = cell2mat(croi.labels(pp)) ;
         
-        % Column for pt ID
-        if strcmpi(OPTIONS.mtg,'monopolar') ; tt = 0 ; else tt=1 ; end
+        % Select rigth index of the '_' if monopolar and/or Flipped (_FLP)
+        if strcmpi(OPTIONS.mtg,'monopolar')&&length(k{pp})<=1 ; tt = 0 ; else tt=1 ; end
         
         m_tab{ct,1} = str(1:k{pp}(end-tt)-1);
         
@@ -91,8 +91,9 @@ for kk=1:length(un)
   
     [LIA,LOCB] = ismember(lab_toproc',dat.labels(idx_elec_dat)) ;
     
+    % TODO HERE : debug won't work if there are some flipped channels...
+    % (look at 2nd colum in m_tab : contact labels including _FLP wont get read)
     % Format output
-%     rasters(idx_elec_tab) =  num2cell(dat.zs(id(LOCB),(dat.Time>OPTIONS.win_noedges(1))&(dat.Time<OPTIONS.win_noedges(2)),:),[2,3]);
     rasters(idx_elec_tab) =  num2cell(dat.zs(id(LOCB),vTime,:),[2,3]);
     idpt(idx_elec_tab) = repmat({repmat(kk,size(dat.zs,3),1)},sum(idx_elec_tab),1);
     % TODOS : ASD add indat information (isGood -> contained in data) 
