@@ -37,14 +37,6 @@ function [struct_table, status, message] = read_loc_table(filename, OPTIONS)
 text_data = all_data ;
 
 
-%%
-% % If there is not exactly 4 col
-% if size(text_data,2)~=4
-%     struct_table = [] ; status = -1; message =  'Wrong format (table should contain 4 columns)' ;
-% %     errordlg('Wrong format (table should contain 4 columns)') ;
-%    return;
-% end
-
 status = 1 ;
 
 message = '' ; % init
@@ -61,6 +53,7 @@ if isempty(idelec) ; idelec = find(strcmpi(hdr,'Contact')); end
 idlat = find(strcmpi(hdr,'Lateralization'));
 idroi = find(strcmpi(hdr,'Region'));
 
+% Something is wrong with the format (missing column or missing header)
 if isempty(idpt)|| isempty(idelec) || isempty(idlat)|| isempty(idroi)
     status =-1; 
     message = ' Table should contain 4 columns : "Patient", "Contact (or Electrode)", "Lateralization","Region" ';
