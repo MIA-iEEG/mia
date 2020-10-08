@@ -33,18 +33,16 @@ for ii=1:length(roi)
     if croi.freq(1)==0
         tmp=sprintf('%s\n(LFP signal)',croi.name);
     else
-        tmp=sprintf('%s\nfreq band [%sH;%sHz] (step %s)',croi.name,num2str(croi.freq(1)),num2str(croi.freq(end)),num2str(croi.freq(2)-croi.freq(1)));
+        tmp=sprintf('%s\nfreq band [%sH;%sHz] (step %sHz)',croi.name,num2str(croi.freq(1)),num2str(croi.freq(end)),num2str(croi.freq(2)-croi.freq(1)));
     end
     
     
     if strcmp(croi.name(1),'L')
         % Displays one figure per ROI 
        hfig = figure('Name',croi.name,'Units','Pixels','Position', [1   271   432   450],'NumberTitle','off');
-%        hfig = figure('Name',croi.name,'Units','Normalized','Position',[0 , 0.3, 0.3,0.5],'NumberTitle','off'); 
     else 
         % Displays one figure per ROI 
         hfig = figure('Name',croi.name,'Units','Pixels','Position',[721   271   432   450],'NumberTitle','off'); 
-%         hfig = figure('Name',croi.name,'Units','Normalized','Position',[0.5 , 0.3, 0.3,0.5],'NumberTitle','off'); 
     end
     
     % window background white 
@@ -52,7 +50,6 @@ for ii=1:length(roi)
     
     %% Plot mean signals
     hplot = subplot(2,1,1) ;   
-%     set(gca, 'ColorOrder',OPTIONS.clr(croi.idPt,:))
     
     for jj=1:length(croi.idPt)  
         % Plot patient averaged timeseries
@@ -62,10 +59,9 @@ for ii=1:length(roi)
     % Add patient' id in the legend (if they are present in the plot!)
     hleg = legend(strrep(croi.namePt,'_','-'),'Location','NorthWest');
 
+    % Add title (name of the ROI and frequencies explored (or LFP) 
     title(tmp,'FontSize', FONTSZ); grid on ; colorbar ;
-    xlim(OPTIONS.win_noedges);   
-    % ASD 2017/11/2
-    ylim([-15,15]); 
+    xlim(OPTIONS.win_noedges);  ylim([-15,15]); 
     hcol1 = colorbar ; 
     ylabel('zscore','FontSize',FONTSZ);
     set(gca,'color',BackgroundColor);
