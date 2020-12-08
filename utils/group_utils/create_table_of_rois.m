@@ -28,6 +28,11 @@ function [rois,mia_table,edges,datafiles, montage, freqb, wdir]=create_table_of_
 gana=load(ganaFile,'ganalysis');
 ganalysis=gana.ganalysis;
 
+%% Get montage (from one of the filename : at this stage all have the same montage) 
+[pathname,fname,~] = fileparts(ganalysis{1}.fname);
+tmp = strsplit(fname(length(ganalysis{1}.subj)+2:end),'_') ;
+montage = tmp{1} ;
+
 % FIX old files : Get threshp wich was used to compute the threshdur
 if ~isfield(ganalysis{1,1},'threshp')
     threshp = str2double(input('WARNING : you used an old version of MIA to generate the study, please indicate the alpha critical values that you used : alpha = ', 's'));
@@ -53,6 +58,7 @@ getOPTIONS.freq = 1; % Morlet or Hilbert what freqid?
 getOPTIONS.nPt= 1 ;% min numb of pt by roi (set to 1 for GUI : user can filter the ROIs by visualizing the number of pts from the table)
 getOPTIONS.signifmode =OPTIONS.signifmode ; % mode to select significant activity (if 0 no constrain)
 getOPTIONS.signmode = 'signed' ; % signmode can be 'signed' or 'abs';
+getOPTIONS.montage = montage ; 
 
 if OPTIONS.allow_flipsign 
     getOPTIONS.flip_thresh = OPTIONS.flip_thresh ; 
@@ -103,10 +109,6 @@ for ii=1:size(ganalysis,1)
     end
 end
 
-%% Get montage (from one of the filename : at this stage all have the same montage) 
-[pathname,fname,~] = fileparts(ganalysis{1}.fname);
-tmp = strsplit(fname(length(ganalysis{1}.subj)+2:end),'_') ;
-montage = tmp{1} ;
 
 %% Get freq 
 freqb = ganalysis{1}.freqb;
