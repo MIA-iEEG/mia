@@ -61,7 +61,7 @@ clr = hsv(numel(unsubj));
 % ROI counter
 ctRoi = 1; 
 
-% Filters contacts (or not) based on significance of signal
+% Show all contacts or Show only significant
 if opt.signifmode ~=0
     bool_signif = cell2mat(m_table_effect(:,starting_freq+opt.freq)) ; 
 else
@@ -94,19 +94,33 @@ for jj=1:length(un)
     labels_roi = all_labels(idx_signals);
     subj_in = find(ismember(unsubj,subj_active)); 
  
-    % Compute means per patients
-    
-%     idx_underscores = cellfun(@(x) strfind(x,'_'),labels_roi, 'UniformOutput',false) ; 
-%     idx_patient = cell2mat(cellfun(@(x) x(end-1), idx_underscores,'UniformOutput',false)) ; 
-    
-    for cc=1:length(labels_roi)
+    % Get each contact's patient name 
+     for cc=1:length(labels_roi)
         ptchar = labels_roi{cc} ; 
         idx_underscores = strfind(ptchar,'_');
         %ptname{cc} = ptchar(1:idx_underscores(2)-1);
-        ptname{cc} = ptchar(1:idx_underscores(1)-1);
+        %ptname{cc} = ptchar(1:idx_underscores(1)-1);
+        if strcmp(opt.montage,'bipolar')
+            ptname{cc} = ptchar(1:idx_underscores(end-1)-1);
+        else 
+            ptname{cc} = ptchar(1:idx_underscores(end)-1);
+        end
+     end
+    
+    
+%     idx_underscores = cellfun(@(x) strfind(x,'_'),labels_roi, 'UniformOutput',false) ; 
+%     idx_patient = cell2mat(cellfun(@(x) x(end-1), idx_underscores,'UniformOutput',false)) ; 
+    if(strcmp(un{jj},'R.pFuG'))
+        fprintf('toto') ; 
     end
-        
-%     [~,~,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false ));
+ % If FLIP option is used 
+    if isfield(opt, 'flip_thresh')
+          [all_sig,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
+    else
+           r = corrcoef(all_sig) ; 
+    end
+     
+    % Compute means per patients
     [~,~,IC] = unique(ptname);
     
     for ss=1:max(IC) 
@@ -116,16 +130,9 @@ for jj=1:length(un)
         else 
             mean_sig_subj(:,ss) = mean(abs(all_sig(:,IC==ss)),2) ; 
         end
-     end
-
-    % If FLIP option is used 
-    if isfield(opt, 'flip_thresh')
-          [mean_sig_subj,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
-    else
-           r = corrcoef(all_sig) ; 
- 
     end
 
+           
     % Compute correlations between patients : interpatient correlation
     rPt = corrcoef(mean_sig_subj) ; 
     trPt = tril(rPt,-1) ; 
@@ -160,7 +167,7 @@ for jj=1:length(un)
 end
 
 % This function flip signals if option is checked (for broadband "LFP"signals) 
-function  [mean_sig_subj,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig, labels_roi, flip_thresh)
+function  [all_sig,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig, labels_roi, flip_thresh)
 
     % Computes correlations
     r = corrcoef(all_sig) ; 
@@ -189,11 +196,11 @@ function  [mean_sig_subj,masked_sig,labels_roi,r]  =  flip_signals(all_sig, mask
     r = corrcoef(all_sigFl) ; 
     all_sig = all_sigFl ;
 
-    % Recompute means per patients
-    [C,IA,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false )) ;
-    for ss=1:max(IC) 
-        mean_sig_subj(:,ss) = mean(all_sig(:,IC==ss),2);
-    end
+%     % Recompute means per patients
+%     [C,IA,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false )) ;
+%     for ss=1:max(IC) 
+%         mean_sig_subj(:,ss) = mean(all_sig(:,IC==ss),2);
+%     end
     
     % Add _FLP at the end of the contacts labels that were flipped
     labels_roi(fl==-1) = strcat(labels_roi(fl==-1),'_FLP') ; 
