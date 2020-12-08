@@ -237,7 +237,7 @@ elseif strcmp(modetf,'LFP') %% COMPUTE LFP EXTRACTION
     
    handles.sFiles = mia_s3_zscore(OPTIONS) ; 
  
-else %% COMPUTE TIME-FREAUENCY EXTRACTION
+else %% COMPUTE TIME-FREQUENCY EXTRACTION
     
     %% Frequency extraction 
     % Test if frequency bounds are valid
@@ -256,7 +256,6 @@ else %% COMPUTE TIME-FREAUENCY EXTRACTION
     end
 
     %Options = Select descomposition mode, frequency band and baseline
-%     OPTIONS.modetf=modetf ;
     OPTIONS.modetf=get(handles.popupmenu_methods,'String');
 
     OPTIONS.freqs= [lfreq:step:ufreq];
