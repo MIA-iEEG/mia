@@ -45,6 +45,6 @@ Anders, R., Llorens, A., Dubarry, A., Trébuchon, A., Liégeois-chauvel, C., & A
 <p style="padding-left: 60px;">A.-S Dubarry, A Llorens, A Trébuchon, R Carron, C Liégeois- Chauvel, C Bénar, F.-X Alario</p>
 &nbsp;
 
-<img class="alignnone size-full wp-image-284" src="http://www.neurotrack.fr/wp-content/uploads/2018/05/Copyrigth.png" alt="" width="88" height="31" />   <span style="color: #999999;">  <em>A.-Sophie Dubarry 2012-2020.</em></span>
+<img class="alignnone size-full wp-image-284" src="http://www.neurotrack.fr/wp-content/uploads/2018/05/Copyrigth.png" alt="" width="88" height="31" />   <span style="color: #999999;">  <em>A.-Sophie Dubarry 2012-2021.</em></span>
 
 &nbsp;

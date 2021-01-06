@@ -23,7 +23,7 @@ function [thresh_dur, dur_array, capt] = mia_get_bootthresh(nboot, zs, threshp)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by

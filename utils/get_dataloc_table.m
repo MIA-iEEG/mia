@@ -23,7 +23,7 @@ function [m_table_as, status, message] = get_dataloc_table(struct_table, OPTIONS
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2020 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
