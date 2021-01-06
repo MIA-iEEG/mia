@@ -75,7 +75,7 @@ handles.badlabels={};
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
-
+set(gcf,'color','white');
 % set(handles.figure1,'DefaultFigureColormap',jet)  
     
 handles = initialize_gui(hObject, handles, false);
@@ -92,6 +92,8 @@ function handles = initialize_gui(fig_handle, handles, isreset)
 % initialize the whole interface 
 
 handles.FONTSZ = 8 ; 
+handles.FONTSZ_large = 14 ; 
+
 handles.BACKGROUNDCOL = [ 0.8275, 0.8275, 0.8275] ; 
 
 % New File structure : optimization to load only average 
@@ -168,7 +170,7 @@ max_zs = max(max(abs(handles.meanzsnew))) ;
 set(handles.edit_scale,'String',sprintf('%0.2f',max_zs));
 
 % Set the zscore static text to "Scale (default max value)"
-set(handles.text_scalezs,'String',sprintf('Zscore Scale (%0.2f)',max_zs));
+set(handles.text_scalezs,'String',sprintf('Max z-score scale (%0.2f)',max_zs));
 
 % Fill in the pop up menu with precompute stats
 for ii=1:length(handles.pthresh)
@@ -191,7 +193,7 @@ max_tvals = max(max(abs(mean(d.tvals,3)))) ;
 set(handles.edit_scale_tvals,'String',sprintf('%0.2f',max_tvals));
 
 % Set the tvals static text to "Scale (default max value)"
-set(handles.text_scaletv,'String',sprintf('t-value Scale (%0.2f)',max_tvals));
+set(handles.text_scaletv,'String',sprintf('Max t-value scale (%0.2f)',max_tvals));
 
 % Display first column (left)
 update_orig(handles);
@@ -225,14 +227,14 @@ meanzs = handles.meanzsnew(handles.iSel,:);
 
 hImage = imagesc(time,1:size(meanzs,1),meanzs,'parent',handles.axes_orig);
 caxis(handles.axes_orig,[-max_zscore max_zscore]) ; 
-colorbar('peer',handles.axes_orig,'location', 'NorthOutside');
+colorbar('peer',handles.axes_orig,'location', 'NorthOutside','Fontsize',handles.FONTSZ_large);
 grid(handles.axes_orig);
 set(handles.axes_orig,...
 'YTick',1:size(meanzs,1),...
 'YTickLabel', strrep(handles.Labels(handles.iSel),'_','\_'),...
 'Fontsize',handles.FONTSZ);
 
-xlabel(handles.axes_orig,'Time (ms)');
+xlabel(handles.axes_orig,'Time (sec)','Fontsize',handles.FONTSZ_large);
 
 % Light grey color for middle of the scale 
 cmap = colormap(jet) ; cmap(fix(length(cmap)/2)+1,:) = handles.BACKGROUNDCOL; colormap(handles.axes_orig,cmap) ;
@@ -254,7 +256,7 @@ h = pvals<threshp;
 % Display IMAGE avergae
 
 hImage2 = imagesc(time,1:size(tvals,1),mean(tvals,3).*h, 'Parent',handles.axes_stats );
-colorbar('peer',handles.axes_stats ,'location', 'NorthOutside');
+colorbar('peer',handles.axes_stats ,'location', 'NorthOutside','Fontsize',handles.FONTSZ_large);
  
 % % Light grey color for middle of the scale 
 % cmap = colormap ; cmap(fix(length(cmap)/2)+1,:) = handles.BACKGROUNDCOL; colormap(cmap) ;
@@ -267,7 +269,7 @@ set(handles.axes_stats,...
     'YTick',1:size(tvals,1),...
     'YTickLabel',strrep(handles.Labels(handles.iSel),'_','\_'),...
     'Fontsize',handles.FONTSZ);
-xlabel(handles.axes_stats,'Time (ms)');
+xlabel(handles.axes_stats,'Time (sec)','Fontsize',handles.FONTSZ_large);
 
 
 
@@ -290,7 +292,7 @@ Fs = 1/(time(2)-time(1));
 % Display IMAGE avergae
 %modif by Jane
 hImage2 = imagesc(time,1:size(tvals,1),mean(tvals,3).*hf,'Parent',handles.axes_duration);
-colorbar('peer',handles.axes_duration ,'location', 'NorthOutside');
+colorbar('peer',handles.axes_duration ,'location', 'NorthOutside','Fontsize',handles.FONTSZ_large);
 caxis(handles.axes_duration,[-max_tvals  max_tvals ]) ; 
 
 % Light grey color for middle of the scale 
@@ -302,7 +304,7 @@ set(handles.axes_duration,...
     'YTick',1:size(tvals,1),...
     'YTickLabel',strrep(handles.Labels(handles.iSel),'_','\_'),...
     'Fontsize',handles.FONTSZ);
-xlabel(handles.axes_duration,'Time (ms)');
+xlabel(handles.axes_duration,'Time (sec)','Fontsize',handles.FONTSZ_large);
 
 
 
@@ -523,16 +525,14 @@ set(handles.uitoggletool2,'State','off');
 set(handles.uitoggletool4,'State','off');
 guidata(hObject,handles)
 
-[PATH,~,~]=fileparts(handles.fname{1});
-[PATH,Pt_name,~]=fileparts(PATH);
-[PATH,~,~]=fileparts(PATH);
-snap_dirname=char(fullfile(PATH,'JPEGs'));
+% Get main Database directory 
+[PATH,Pt_name,~]=fileparts(fileparts(handles.fname));
 
+% Create a JPEGs folder in the databse directory 
+snap_dirname=char(fullfile(fileparts(PATH),'JPEGs'));
+if ~exist(snap_dirname,'dir');  mkdir(snap_dirname); end
 
-if ~exist(snap_dirname,'dir')
-    mkdir(snap_dirname);
-end
-
+% Sets a default snapshot filename
 snap_filename=char(fullfile(snap_dirname,strcat(Pt_name,'_Statistics.jpg')));
 
 [filename,jpeg_dirname]=uiputfile({'*.jpg;','Image Files';...
@@ -651,3 +651,4 @@ set(0,'DefaultAxesColorOrder',jet(size(meanzs,1)));
  
 % Plot timeseries of the selected channels
 figure ; plot(time,meanzs','LineWidth',1.05); legend(strrep(handles.Labels(handles.iSel),'_','-')) ; grid on ; ylim([-max_zscore max_zscore]) ; 
+xlabel('Time (sec)'); ylabel('Z-score');
