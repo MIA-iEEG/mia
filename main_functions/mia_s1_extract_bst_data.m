@@ -59,7 +59,7 @@ for ii=1:length(subjects)
     % Create Output name
     outname = fullfile(SDIR,strcat(subjects{ii},'_signal_LFP'));
     % Exist the file or not? Overwrite or not?
-    if ((exist (strcat(outname, '.mat'), 'file')) && (strcmpi(OPTIONS.overwrite , 'Yes'))) ||(~exist (strcat(outname, '.mat'), 'file'))
+    if ((exist(strcat(outname, '.mat'), 'file')) && (strcmpi(OPTIONS.overwrite , 'Yes'))) ||(~exist (strcat(outname, '.mat'), 'file'))
                    
         % Update progress bar (replace _ by \_ for proper display
         waitbar(ii/length(subjects),hwait,sprintf('Loading %s... %d / %d',char(strrep(subjects{ii},'_','\_')), ii ,length(subjects))) ;
@@ -73,22 +73,38 @@ for ii=1:length(subjects)
         
         CH_FILES = dir(fullfile(THISDIR,'*channel*.mat'));
         DATA_FILES = dir(fullfile(THISDIR,'data*trial*.mat'));
+        BST_STUDY = dir(fullfile(THISDIR,'brainstormstudy.mat'));
         
         % Load channel file
         CH = load(fullfile(THISDIR,CH_FILES(1).name));
-    
+                
+        % Test if brainstormstudy file exist (for compatibility with old version) 
+        if ~isempty(BST_STUDY) 
+            % Load brainsotmrstudy.mat
+            STUDY = load(fullfile(THISDIR,BST_STUDY(1).name));
+           % Build a boolean vector which identifies good trials (1)  
+            bool_goodtrials = ~ismember({DATA_FILES.name},STUDY.BadTrials) ; 
+        else 
+          % Otherwise mark all trials as GOOD
+            bool_goodtrials = ones(1,length(DATA_FILES)); 
+        end
+        
+        % Keeps only good trials 
+        DATA_FILES = DATA_FILES(bool_goodtrials);
+        
         % Load data
         DATA = load(fullfile(THISDIR,DATA_FILES(1).name));
+        
         Time = DATA.Time; % CBB: assume same for all trials
 
         % Find the valid Subarray channels : Modif ASD 2017/05/23
         bool_subarray = strcmp(OPTIONS.SensorType,{CH.Channel.Type})& (DATA.ChannelFlag==1)';
-    
+        
         % Get their corresponding labels
         labels = {CH.Channel(bool_subarray).Name};
          
         % Get the corresponding three dimensional data
-        % ASD only keep good channels
+        % ASD only keep good channels AND good trials 
         tmp = DATA.F(bool_subarray,:);
         
         F = zeros(size(tmp,1),size(tmp,2),length(DATA_FILES));
