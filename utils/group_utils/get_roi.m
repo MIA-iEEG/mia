@@ -105,14 +105,11 @@ for jj=1:length(un)
         else 
             ptname{cc} = ptchar(1:idx_underscores(end)-1);
         end
-     end
-    
+     end    
     
 %     idx_underscores = cellfun(@(x) strfind(x,'_'),labels_roi, 'UniformOutput',false) ; 
 %     idx_patient = cell2mat(cellfun(@(x) x(end-1), idx_underscores,'UniformOutput',false)) ; 
-    if(strcmp(un{jj},'R.pFuG'))
-        fprintf('toto') ; 
-    end
+    
  % If FLIP option is used 
     if isfield(opt, 'flip_thresh')
           [all_sig,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
