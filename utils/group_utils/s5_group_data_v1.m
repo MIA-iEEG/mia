@@ -94,7 +94,7 @@ for pp=1:length(sFiles)
         %No stats has already been calculated with those parameters
         %if no combination match or no stat field
         if ~isfield(ganalysis{pp},'threshdur')
-            statfile=mia_s5_compute_stats(cellstr(sFile),OPTIONS); %stats computation
+            statfile=mia_s5_compute_stats(sFiles{pp},OPTIONS); % stats computation and append the results in the saved struct
             stat_data=load(char(statfile));
             for ss=1:length(stat_data.stats)
                 if ~isempty(stat_data.stats(ss).fname)&& ~isempty(stat_data.stats(ss).pthresh)&& ~isempty(stat_data.stats(ss).nboot)&& ~isempty(stat_data.stats(ss).threshdur)
