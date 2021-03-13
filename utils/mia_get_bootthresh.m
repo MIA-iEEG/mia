@@ -44,7 +44,7 @@ for ii=1:nboot
     % update progress bar
     waitbar(ii/nboot,hwait_boot,sprintf('Computing bootstrap %d/%d...',ii, nboot)) ;
    
-    % Generates random index between 1-ntrials 
+    % Generates random index between 1-ntrials (with repetitions for bootstrap))
     bootidx = 1+ floor(ntrials*rand(ntrials,1)) ;
     
     [~,pvals] = mia_compute_ttest(zs(:,:,bootidx));
