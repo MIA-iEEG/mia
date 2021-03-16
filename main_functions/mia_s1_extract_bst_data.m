@@ -77,16 +77,18 @@ for ii=1:length(subjects)
         
         % Load channel file
         CH = load(fullfile(THISDIR,CH_FILES(1).name));
-                
+                 
+        % Initialize the good trial vector 
+        bool_goodtrials = ones(1,length(DATA_FILES)); 
+        
         % Test if brainstormstudy file exist (for compatibility with old version) 
         if ~isempty(BST_STUDY) 
             % Load brainsotmrstudy.mat
             STUDY = load(fullfile(THISDIR,BST_STUDY(1).name));
-           % Build a boolean vector which identifies good trials (1)  
-            bool_goodtrials = ~ismember({DATA_FILES.name},STUDY.BadTrials) ; 
-        else 
-          % Otherwise mark all trials as GOOD
-            bool_goodtrials = ones(1,length(DATA_FILES)); 
+            if ~isempty(STUDY.BadTrials)
+                % Build a boolean vector which identifies good trials (1)  
+                bool_goodtrials = ~ismember({DATA_FILES.name},STUDY.BadTrials) ; 
+            end
         end
         
         % Keeps only good trials 
