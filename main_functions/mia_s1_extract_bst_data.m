@@ -92,7 +92,7 @@ for ii=1:length(subjects)
         end
         
         % Keeps only good trials 
-        DATA_FILES = DATA_FILES(bool_goodtrials);
+        DATA_FILES = DATA_FILES(find(bool_goodtrials));
         
         % Load data
         DATA = load(fullfile(THISDIR,DATA_FILES(1).name));
