@@ -35,7 +35,7 @@ else
     sInputs = varargin{1} ;
     % If input is only one file, convert to cell for compatibility with
     % multiple data file processing 
-    if ~iscell(sInputs) ; sInputs = mat2cell(sInputs,[1]) ; end;
+    if length(sInputs) ==1 ; sInputs = mat2cell(sInputs,[1]) ; end;
     OPTIONS = varargin{2};
 end
 
