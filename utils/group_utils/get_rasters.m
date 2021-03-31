@@ -31,7 +31,11 @@ for ii=1:length(roi)
         str = cell2mat(croi.labels(pp)) ;
         
         % Select rigth index of the '_' if monopolar and/or Flipped (_FLP)
-        if strcmpi(OPTIONS.mtg,'monopolar')&&length(k{pp})<=1 ; tt = 0 ; else tt=1 ; end
+        if strcmpi(OPTIONS.mtg,'monopolar')&&~strcmp(str(end-3:end),'_FLP')
+            tt = 0 ;
+        elseif strcmpi(OPTIONS.mtg,'monopolar')&&strcmp(str(end-3:end),'_FLP') || strcmpi(OPTIONS.mtg,'bipolar')
+            tt = 1 ; 
+        end
         
         m_tab{ct,1} = str(1:k{pp}(end-tt)-1);
         
@@ -62,8 +66,12 @@ for kk=1:length(un)
     % Update progress bar 
     waitbar(kk/length(un),hwait_pt,sprintf('%s %s','Loading rasters',un{kk})) ;
 
-%     tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
-    tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*','.mat')));
+    % Make an exception for LFP (OPTIONS.freq does not match the filename).
+    if strcmp(OPTIONS.freq(1),'0')
+        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*LFP_data*','.mat')));    
+    else
+        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
+    end
     
     % A montage file was found
     if size(tmp,1)~=1
