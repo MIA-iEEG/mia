@@ -68,12 +68,12 @@ for iPt=1:length(u_pt)
     pt = u_pt{iPt};
     rt = all_data(idx,idrt);
     ord = all_data(idx,idor);
-    dat= all_data(idx,idat);
+    dat= logical(cell2mat(all_data(idx,idat)));
 
-    struct_table{iPt}.pt = pt; 
-    struct_table{iPt}.rt = rt ; 
-    struct_table{iPt}.order = ord; 
-    struct_table{iPt}.indat= dat; 
+    struct_table{iPt}.pt = pt ; 
+    struct_table{iPt}.rt = rt(dat) ; 
+    struct_table{iPt}.order = ord(dat); 
+    struct_table{iPt}.indat= dat(dat); 
     
 end
 

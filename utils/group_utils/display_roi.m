@@ -62,7 +62,7 @@ for ii=1:length(roi)
     % Add title (name of the ROI and frequencies explored (or LFP) 
     title(tmp,'FontSize', FONTSZ); grid on ; colorbar ;
     xlim(OPTIONS.win_noedges);  ylim([-15,15]); 
-    hcol1 = colorbar ; 
+    hcol1 = colorbar ; set(hcol1,'visible','off')
     ylabel('zscore','FontSize',FONTSZ);
     set(gca,'color',BackgroundColor);
     
@@ -72,7 +72,7 @@ for ii=1:length(roi)
     % Light grey color for middle of the scale 
     cmap = colormap ; cmap(33,:) = BackgroundColor ; colormap(cmap) ;
     
-    set(gca,'YTick',1:size(croi.Fmask,2),'YTickLabel', strrep(croi.labels,'_','\_'));  grid on ;
+    set(gca,'YTick',1:size(croi.Fmask,2),'YTickLabel', strrep(croi.labels,'_','\_'),'Fontsize',8);  grid on ;
     title(sprintf('[R_p = %0.3f]  [R_c = %0.3f]',croi.corrPt,croi.corrChan), 'FontSize', FONTSZ);
     xlabel('Time(s)','FontSize',FONTSZ);
 
