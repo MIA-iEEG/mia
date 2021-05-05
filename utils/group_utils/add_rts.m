@@ -25,16 +25,26 @@ pt = {tmp.pt}' ;
 %  Loop through regions
 for ii=1:length(roi) 
 
+    pt_name = [] ; 
+    
     % Get current ROI
     croi = roi{ii};
     
+    % Quick drity fix to ghandle underscore in the patient name. 
     % Get patients in the ROI 
-    pt_name = cellfun(@(x) x(1:strfind(x,'_')-1), croi.labels, 'UniformOutput',false) ;
+    for pp=1:length(croi.labels)
+        chan = cell2mat(croi.labels(pp)) ; 
+        k=strfind(chan,'_');
+        pt_name{pp} =  chan(1:k(2)-1) ;
+    end
+    
+    % Alternatively (no underscore in patient ID) use :
+%     pt_name = cellfun(@(x) x(1:strfind(x,'_')-1), croi.labels, 'UniformOutput',false) ;
    
     % Just add rts if there were existing ones (WARNING existing ones will
     % be overwritten) 
     if ~isfield(croi,'rts') ; croi.rts = cell(size(pt_name,1),1); end 
-
+    
     % Gets all unique occurence of patients in this roi 
     [lia1,locb1] = ismember(pt_name,pt) ; 
     
