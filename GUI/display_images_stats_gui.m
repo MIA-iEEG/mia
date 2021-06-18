@@ -25,7 +25,7 @@ function varargout = display_images_stats_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 0;
+gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
                    'gui_OpeningFcn', @display_images_stats_gui_OpeningFcn, ...
@@ -79,6 +79,8 @@ set(gcf,'color','white');
 % set(handles.figure1,'DefaultFigureColormap',jet)  
     
 handles = initialize_gui(hObject, handles, false);
+
+set (gcf, 'WindowButtonMotionFcn', {@mouseMove, handles});
 
 % Update handles structure
 guidata(hObject, handles);
@@ -677,3 +679,53 @@ set(0,'DefaultAxesColorOrder',jet(size(meanzs,1)));
 % Plot timeseries of the selected channels
 figure ; plot(time,meanzs','LineWidth',1.05); legend(strrep(handles.Labels(handles.iSel),'_','-')) ; grid on ; ylim([-max_zscore max_zscore]) ; 
 xlabel('Time (sec)'); ylabel('Z-score');
+
+
+function mouseMove (object, eventdata, handles)
+
+% Get cursor position in the window
+C = get (gcf, 'CurrentPoint');
+
+set(handles.axes_orig,'units', 'characters');
+set(handles.axes_stats,'units', 'characters');
+set(handles.axes_duration,'units', 'characters');
+
+% Get position of the axes 
+xOrig = get(handles.axes_orig,'Position');
+xStats = get(handles.axes_stats,'Position');
+xDur = get(handles.axes_duration,'Position');
+
+% Get info on one of the panels (axes_orig)
+xOrigLim = get(handles.axes_orig,'xlim');
+
+% Duration in time
+dur = sum(abs(xOrigLim)) ;
+
+% Starting position of each panel
+starts = [xOrig(1),xStats(1),xDur(1)];
+
+% Cursor if out of the window
+if find(starts-C(1)>0,1)-1 ==0 ; return; end
+
+% Position of the cursor inside the panel
+pos = C(1,1) - starts(find(starts-C(1)>0,1)-1);
+
+if isempty(find(starts-C(1)>0,1)) 
+    pos = C(1,1) - starts(3) ; 
+end
+
+% Lastency (in msec)
+lat = pos*dur/xDur(3) + xOrigLim(1); 
+
+% If mouse is not moving over one panel
+if lat<xOrigLim(1)|lat>xOrigLim(2)
+    set(handles.cursor_infos,'String',sprintf('Latency = ------'));
+else
+    % Display latency 
+    set(handles.cursor_infos,'String',sprintf('Latency = %0.3f sec', lat));
+
+end
+
+set(handles.axes_orig,'units', 'Normalized');
+set(handles.axes_stats,'units', 'Normalized');
+set(handles.axes_duration,'units', 'Normalized');
