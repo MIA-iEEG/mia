@@ -21,7 +21,8 @@ for ii=1:length(roi)
 
     croi = roi{ii};
     Time = croi.t ; 
-        %% Get current roi signals 
+        
+    %% Get current roi signals 
     csig = croi.F;
     mat_csig = squeeze(cat(3,csig{:})) ; 
 
@@ -52,7 +53,6 @@ for ii=1:length(roi)
     else
         I = 1:size(mat_csig,2) ; 
     end
-    
 
    % Displays a figure for rasters only 
     if strcmp(croi.name(end),'L')
