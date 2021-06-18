@@ -60,7 +60,7 @@ for ii=1:length(roi)
     hleg = legend(strrep(croi.namePt,'_','-'),'Location','NorthWest');
 
     % Add title (name of the ROI and frequencies explored (or LFP) 
-    title(tmp,'FontSize', FONTSZ); grid on ; colorbar ;
+    title(tmp,'FontSize', FONTSZ); grid on ; 
     xlim(OPTIONS.win_noedges);  ylim([-15,15]); 
     hcol1 = colorbar ; set(hcol1,'visible','off')
     ylabel('zscore','FontSize',FONTSZ);
