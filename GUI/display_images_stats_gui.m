@@ -54,44 +54,31 @@ function display_images_stats_gui_OpeningFcn(hObject, eventdata, handles, vararg
 
 % Choose default command line output for display_images_stats_gui
 handles.output = hObject;
-% 
+ 
 % This sets up the initial plot - only do when we are invisible
 handles.fname = cell2mat(varargin{1}) ;
 handles.infos = varargin{2} ;
 
-% handles.zs = varargin{3} ;
-% handles.Labels=varargin{4} ;
-% handles.Time = varargin{5} ;
-% handles.nboot = varargin{6} ;
-% handles.pthresh=varargin{7} ;
-% handles.threshdur = varargin{8} ;
-% 
 %initilization datas for select channels button 
 handles.badlabels={};
-% 
-% % handles.goodlabels=handles.Labels;
-% handles.zsnew=handles.zs;
-% 
 
 % Move window to the center of the screen 
-movegui(gcf,'center');
-set(gcf,'color','white');
-% set(handles.figure1,'DefaultFigureColormap',jet)  
-    
-handles = initialize_gui(hObject, handles, false);
+movegui(hObject,'center');
+set(hObject,'color','white');
 
-set (gcf, 'WindowButtonMotionFcn', {@mouseMove, handles});
+% Initialize GUI 
+handles = initialize_gui(handles);
+
+% Track mouse cursor in order to display latencies in real time
+set (hObject, 'WindowButtonMotionFcn', {@mouseMove, handles});
 
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes display_images_stats_gui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
-
 
 % --------------------------------------------------------------------
-function handles = initialize_gui(fig_handle, handles, isreset)
-% initialize the whole interface 
+function handles = initialize_gui(handles)
+% initialize the whole GUI 
 
 handles.FONTSZ = 8 ; 
 handles.FONTSZ_large = 14 ; 
