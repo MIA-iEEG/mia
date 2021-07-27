@@ -641,7 +641,8 @@ set(handles.axes_duration,'Position',handles.backupAxesPos) ;
  colorbar('peer',handles.axes_stats,'location', 'NorthOutside');
 %  colorbar('peer',handles.axes_duration ,'location', 'NorthOutside');
 
- set(handles.figure1,'units','normalized');
+%  set(handles.figure1,'units','normalized');
+set(handles.figure1,'units','characters');
 
 % Set Select button back to visibble 
  set(handles.Select_chan, 'visible','on');
@@ -651,7 +652,7 @@ set(handles.text12, 'visible','on');
 set(handles.text11, 'visible','on');
 set(handles.edit_scale, 'visible','on');
 set(handles.text_scalezs, 'visible','on');
-set(handles.cursor_infos, 'visible','off');
+set(handles.cursor_infos, 'visible','on');
 
 
 % --- Executes on button press in pushbutton_display_timeseries.
