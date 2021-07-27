@@ -25,7 +25,7 @@ function varargout = display_images_stats_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 1;
+gui_Singleton = 0;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
                    'gui_OpeningFcn', @display_images_stats_gui_OpeningFcn, ...
@@ -572,6 +572,9 @@ function uitoggletool_displight_OnCallback(hObject, eventdata, handles)
 
 % Reduce main figure in height and shift down
 set(handles.figure1,'units','pixels');
+% set(handles.axes_orig,'units', 'pixels');
+% set(handles.axes_stats,'units', 'pixels');
+% set(handles.axes_duration,'units', 'pixels');
 
 fig_position = get(handles.figure1,'Position') ;
 shift = fig_position(3) /3;
@@ -602,6 +605,7 @@ set(handles.text12, 'visible','off');
 set(handles.text11, 'visible','off');
 set(handles.edit_scale, 'visible','off');
 set(handles.text_scalezs, 'visible','off');
+set(handles.cursor_infos, 'visible','off');
 
 
 % Put back the figure position mode to normalized 
@@ -647,6 +651,7 @@ set(handles.text12, 'visible','on');
 set(handles.text11, 'visible','on');
 set(handles.edit_scale, 'visible','on');
 set(handles.text_scalezs, 'visible','on');
+set(handles.cursor_infos, 'visible','off');
 
 
 % --- Executes on button press in pushbutton_display_timeseries.
@@ -673,6 +678,7 @@ function mouseMove (object, eventdata, handles)
 % Get cursor position in the window
 C = get (gcf, 'CurrentPoint');
 
+% Set axes positions to pixels in order to get mouse cursor coordinates
 set(handles.axes_orig,'units', 'characters');
 set(handles.axes_stats,'units', 'characters');
 set(handles.axes_duration,'units', 'characters');
@@ -681,6 +687,11 @@ set(handles.axes_duration,'units', 'characters');
 xOrig = get(handles.axes_orig,'Position');
 xStats = get(handles.axes_stats,'Position');
 xDur = get(handles.axes_duration,'Position');
+
+% Set axes positions back to normalized (auto adjust size with size window)
+set(handles.axes_orig,'units', 'normalized');
+set(handles.axes_stats,'units', 'normalized');
+set(handles.axes_duration,'units', 'normalized');
 
 % Get info on one of the panels (axes_orig)
 xOrigLim = get(handles.axes_orig,'xlim');
@@ -713,6 +724,3 @@ else
 
 end
 
-set(handles.axes_orig,'units', 'Normalized');
-set(handles.axes_stats,'units', 'Normalized');
-set(handles.axes_duration,'units', 'Normalized');
