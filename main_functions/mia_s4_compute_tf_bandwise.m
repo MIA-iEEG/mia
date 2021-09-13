@@ -78,7 +78,11 @@ for ii=1:length(sInputs)
     waitbar(ii/length(sInputs),hwait_pt,sprintf('Computing %s...',strrep(ptname,'_','\_'))) ;
     
     % Prepare output file name
-    output = fullfile(PATHSTR,strrep(NAME,'_signal_LFP', strcat('_',mtg,'_',modetf,'_data_',num2str(freqstep),'_',num2str(freqb(1)),'_',num2str(freqb(end))))) ;
+    if OPTIONS.removeEvoked
+        output = fullfile(PATHSTR,strrep(NAME,'_signal_LFP', strcat('_',mtg,'_',modetf,'_data_',num2str(freqstep),'_',num2str(freqb(1)),'_',num2str(freqb(end)),'_','removeEvoked'))) ;
+    else
+        output = fullfile(PATHSTR,strrep(NAME,'_signal_LFP', strcat('_',mtg,'_',modetf,'_data_',num2str(freqstep),'_',num2str(freqb(1)),'_',num2str(freqb(end))))) ;
+    end
     
     % Check if the file have already created and if overwrite or not
     if ((exist (strcat(output, '.mat'), 'file')) && (strcmpi(OPTIONS.overwrite , 'Yes'))) ||(~exist (strcat(output, '.mat'), 'file'))
@@ -102,6 +106,11 @@ for ii=1:length(sInputs)
         
         % Sampling rate
         Fs=1/(Time(2)-Time(1));
+        
+        % Remove evoked response from each trial if selected
+        if OPTIONS.removeEvoked
+            F = F - mean(F,3);
+        end
         
         % Process TF decomposition
         [F,zs] = process_tf(Time,F,freqb,Fs,zbaseline,modetf) ;
