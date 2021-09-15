@@ -341,24 +341,6 @@ end
 
 % Update handles structure
 guidata(hObject, handles);
-
-function output = write_BIDS_compatible_channel_file(labels, isGood, fname)
-
-% Prepare list of labels and corresponding status (BIDS compatibility)) 
-name = labels ; 
-status_description = repmat({'n/a'},length(name),1);
-status_description(~isGood) = {'MIA rejection'} ; 
-
-% Create a two colum table (name, status)
-T = table(name',status_description);
-
-% Prepare output filename
-[dir_name, pt_fname] = fileparts(fname);
-output = fullfile(dir_name,strrep(pt_fname,'_signal_LFP', 'channels.tsv')) ; 
-
-% Write table <SUBJ>_channels.tsv
-writetable(T,output, 'FileType','text','Delimiter','\t');
-
             
             
 % --- Executes on button press SaveChannelsSelection JPEG
