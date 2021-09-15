@@ -313,17 +313,23 @@ savedlg = questdlg('Are you sure you want to remove bad channels ?', ...
 switch savedlg
     case 'Yes'
         if handles.isNew 
-            % Appends isGood to the original file 
-            isGood = handles.iSelMono ;
-            save(handles.fname,'isGood','-append');
+            
+            write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
+           
+            % Old implementation 
+%             save(handles.fname,'isGood','-append');
+
             handles.isNew =0;
         else
             choice = questdlg('This action will erase already existing file. Would you like to continue ? ', ...
                 'CAUTION','Continue','Cancel','Continue');
             switch choice
                 case 'Continue' 
-                    isGood = handles.iSelMono ;
-                    save(handles.fname,'isGood','-append');
+            
+            write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
+                 
+                % Old implementation 
+%               save(handles.fname,'isGood','-append');
                 case 'Cancel'
                     
             end
@@ -334,6 +340,25 @@ end
 % Update handles structure
 guidata(hObject, handles);
 
+function output = write_BIDS_compatible_channel_file(labels, isGood, fname)
+
+% Prepare list of labels and corresponding status (BIDS compatibility)) 
+name = labels ; 
+status_description = repmat({'n/a'},length(name),1);
+status_description(~isGood) = 'MIA rejection' ; 
+
+% Create a two colum table (name, status)
+T = table(name',status_description);
+
+% Prepare output filename
+[dir_name, pt_fname] = fileparts(fname);
+output = fullfile(dir_name,strrep(pt_fname,'_signal_LFP', 'channels.tsv')) ; 
+
+% Write table <SUBJ>_channels.tsv
+writetable(T,output, 'FileType','text','Delimiter','\t');
+
+            
+            
 % --- Executes on button press SaveChannelsSelection JPEG
 function jpeg_export_ClickedCallback(hObject, eventdata, handles)
 set(handles.uitoggletool1,'State','off');
