@@ -63,10 +63,9 @@ for iPt=1:length(struct_table)
         continue;
         
     else
-    chan_file = strrep(sInputs{ii},'signal_LFP.mat','channels.tsv') ; 
-       
+        chan_file = strrep(datafile,'signal_LFP.mat','channels.tsv') ; 
+      
         % Load labels from data file
-%         load(datafile,'labels');
         variableInfo = who('-file', datafile);
         if ismember('isGood',variableInfo)
             load(datafile,'labels','isGood');
