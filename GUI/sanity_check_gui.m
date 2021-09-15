@@ -315,7 +315,7 @@ if strcmp(savedlg,'Yes')
             
             % Create a table of electrode with flag for good/bad (n/a =
             % good, MIA rejection = BAD) in a tsv file (BIDS) 
-            write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
+            write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname, 'MIA sanity rejection') ; 
            
             % Old implementation 
             isGood = handles.iSelMono ; 
@@ -329,7 +329,7 @@ if strcmp(savedlg,'Yes')
             
                 % Create a table of electrode with flag for good/bad (n/a =
                 % good, MIA rejection = BAD) in a tsv file (BIDS) 
-                write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
+                write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname, 'MIA sanity rejection') ; 
 
                 % Old implementation 
                 isGood = handles.iSelMono ;
