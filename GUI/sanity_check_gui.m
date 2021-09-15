@@ -310,31 +310,33 @@ savedlg = questdlg('Are you sure you want to remove bad channels ?', ...
     'Save','Yes','No','Yes');
 
 % Handle response
-switch savedlg
-    case 'Yes'
+if strcmp(savedlg,'Yes')
         if handles.isNew 
             
+            % Create a table of electrode with flag for good/bad (n/a =
+            % good, MIA rejection = BAD) in a tsv file (BIDS) 
             write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
            
             % Old implementation 
-%             save(handles.fname,'isGood','-append');
-
+            isGood = handles.iSelMono ; 
+            save(handles.fname,'isGood','-append');
             handles.isNew =0;
+            
         else
             choice = questdlg('This action will erase already existing file. Would you like to continue ? ', ...
                 'CAUTION','Continue','Cancel','Continue');
-            switch choice
-                case 'Continue' 
+            if strcmp(choice,'Continue')
             
-            write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
-                 
+                % Create a table of electrode with flag for good/bad (n/a =
+                % good, MIA rejection = BAD) in a tsv file (BIDS) 
+                write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname) ; 
+
                 % Old implementation 
-%               save(handles.fname,'isGood','-append');
-                case 'Cancel'
-                    
+                isGood = handles.iSelMono ;
+                save(handles.fname,'isGood','-append');
+            
             end
         end
-    case 'No'        
 end
 
 % Update handles structure
@@ -345,7 +347,7 @@ function output = write_BIDS_compatible_channel_file(labels, isGood, fname)
 % Prepare list of labels and corresponding status (BIDS compatibility)) 
 name = labels ; 
 status_description = repmat({'n/a'},length(name),1);
-status_description(~isGood) = 'MIA rejection' ; 
+status_description(~isGood) = {'MIA rejection'} ; 
 
 % Create a two colum table (name, status)
 T = table(name',status_description);
