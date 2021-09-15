@@ -85,15 +85,18 @@ for ii=1:length(sInputs)
         
         % Load data
         data = load(sInputs{ii}) ; 
-        chan_file = strrep(sInputs{ii},'signal_LFP.mat','channels.tsv') ; 
-        
+        Time = data.Time ; 
+        F = data.F ; 
+
+       chan_file = strrep(sInputs{ii},'signal_LFP.mat','channels.tsv') ; 
+       
         % Keep this block for compatibility with old databses
         if isfield(data,'isGood')
             F = data.F(find(data.isGood),:,:) ;
             labels=data.labels(find(data.isGood)) ;
             
             % Move the channel information to BIDS format
-            if ~exist(chan_file,'file') ; write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii}) ; end
+            if ~exist(chan_file,'file') ; write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii},'MIA sanity rejection') ; end
             
         end
         % New BIDS implementation : read the table and mark as good all
@@ -108,8 +111,6 @@ for ii=1:length(sInputs)
         if strcmpi(OPTIONS.mtg,'BIPOLAR')
             [F, labels] = mia_make_bipolarmtg(F,labels);
         end
-        
-        Time = data.Time ; 
         
         % Sampling rate
         Fs=1/(Time(2)-Time(1));

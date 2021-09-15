@@ -76,7 +76,7 @@ for ii=1:length(sInputs)
             labels=data.labels(find(data.isGood)) ;
             
             % Move the channel information to BIDS format
-            if ~exist(chan_file,'file') ; write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii}) ; end
+            if ~exist(chan_file,'file') ; write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii},'MIA sanity rejection') ; end
             
         end
         % New BIDS implementation : read the table and mark as good all

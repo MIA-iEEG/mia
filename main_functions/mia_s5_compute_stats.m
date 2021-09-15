@@ -26,7 +26,7 @@ if nargin<2
     isub = [d(:).isdir]; % returns logical vector if is folder
     subjects = {d(isub).name}';
     subjects(ismember(subjects,{'.','..'})) = []; % Removes . and ..
-    for ss=1:length(subjects) ;
+    for ss=1:length(subjects)
         tmp = dir(fullfile(OPTIONS.outdir,subjects{ss},'*_data_*.mat')) ;
         sInputs = cat(2,sInputs,fullfile(OPTIONS.outdir,subjects{ss},{tmp.name})) ;
     end
@@ -35,7 +35,7 @@ else
     sInputs = varargin{1} ;
     % If input is only one file, convert to cell for compatibility with
     % multiple data file processing 
-    if length(sInputs) ==1 ; sInputs = mat2cell(sInputs,[1]) ; end;
+%     if length(sInputs) ==1 ; sInputs = mat2cell(sInputs,[1]) ; end;
     OPTIONS = varargin{2};
 end
 
@@ -53,7 +53,13 @@ set(hwait_pt,'Position',pos);
 % Loop through all subjects
 for ii=1:length(sInputs)
     
-    fname = char(sInputs{ii});
+    % fix for several files handling
+    if iscell(sInputs)
+        fname = char(sInputs{ii});    
+    else 
+        fname = sInputs ;
+    end 
+    
     [~,filename,~] = fileparts(fname);
         
     % There is NO data file for LFP
@@ -83,6 +89,7 @@ for ii=1:length(sInputs)
         stat=load(outname);
         
         if isfield(stat,'stats')
+            tmp = [] ; 
             % Check if that combination pthresh/nboot exist
             tmp(1,:) = [stat.stats(:).pthresh] ;
             tmp(2,:) = [stat.stats(:).nboot] ;
