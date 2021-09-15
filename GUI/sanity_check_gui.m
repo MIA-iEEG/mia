@@ -310,30 +310,39 @@ savedlg = questdlg('Are you sure you want to remove bad channels ?', ...
     'Save','Yes','No','Yes');
 
 % Handle response
-switch savedlg
-    case 'Yes'
+if strcmp(savedlg,'Yes')
         if handles.isNew 
-            % Appends isGood to the original file 
-            isGood = handles.iSelMono ;
+            
+            % Create a table of electrode with flag for good/bad (n/a =
+            % good, MIA rejection = BAD) in a tsv file (BIDS) 
+            write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname, 'MIA sanity rejection') ; 
+           
+            % Old implementation 
+            isGood = handles.iSelMono ; 
             save(handles.fname,'isGood','-append');
             handles.isNew =0;
+            
         else
             choice = questdlg('This action will erase already existing file. Would you like to continue ? ', ...
                 'CAUTION','Continue','Cancel','Continue');
-            switch choice
-                case 'Continue' 
-                    isGood = handles.iSelMono ;
-                    save(handles.fname,'isGood','-append');
-                case 'Cancel'
-                    
+            if strcmp(choice,'Continue')
+            
+                % Create a table of electrode with flag for good/bad (n/a =
+                % good, MIA rejection = BAD) in a tsv file (BIDS) 
+                write_BIDS_compatible_channel_file(handles.Labelsmono, handles.iSelMono, handles.fname, 'MIA sanity rejection') ; 
+
+                % Old implementation 
+                isGood = handles.iSelMono ;
+                save(handles.fname,'isGood','-append');
+            
             end
         end
-    case 'No'        
 end
 
 % Update handles structure
 guidata(hObject, handles);
-
+            
+            
 % --- Executes on button press SaveChannelsSelection JPEG
 function jpeg_export_ClickedCallback(hObject, eventdata, handles)
 set(handles.uitoggletool1,'State','off');

@@ -148,7 +148,14 @@ handles.meanzsnew=d.meanzs;
 fname_montage = fullfile(PATHSTR,strcat(NAME,'_montage.mat')) ; 
 if exist(fname_montage,'file')
     load(fname_montage) ; 
-    handles.iSel = isGood ;
+    
+    % Fix old files 
+    if exist('isGood', 'var') 
+        isDisplayed = isGood ; 
+        save(fname_montage,'isDisplayed') ; 
+    end
+        
+    handles.iSel = isDisplayed ;
 else  
     handles.iSel = ones(1,size(handles.meanzsnew,1))==1 ; 
 end
@@ -507,8 +514,8 @@ function Select_chan_Callback(hObject, eventdata, handles)
 labels=handles.Labels;
 
 % get 0 1 vector for labels that were marked as good
-handles.isGood=ismember(labels,goodlabels) ; 
-handles.iSel =  handles.isGood==1 ;
+handles.isDisplayed=ismember(labels,goodlabels) ; 
+handles.iSel =  handles.isDisplayed==1 ;
 
 % Display first column (left)
 update_orig(handles);
@@ -520,10 +527,10 @@ update_stats(handles);
 update_stats_filtertime(handles);
 
 % Save Channel montage 
-isGood = handles.isGood ;
+isDisplayed = handles.isDisplayed ;
 [PATHSTR,NAME,EXT] = fileparts(handles.fname) ; 
 fname = fullfile(PATHSTR,strcat(NAME,'_montage.mat')) ; 
-save(fname,'isGood'); 
+save(fname,'isDisplayed'); 
 
 % Save the new low_freq value
 guidata(hObject,handles)
@@ -641,7 +648,8 @@ set(handles.axes_duration,'Position',handles.backupAxesPos) ;
  colorbar('peer',handles.axes_stats,'location', 'NorthOutside');
 %  colorbar('peer',handles.axes_duration ,'location', 'NorthOutside');
 
- set(handles.figure1,'units','normalized');
+%  set(handles.figure1,'units','normalized');
+set(handles.figure1,'units','characters');
 
 % Set Select button back to visibble 
  set(handles.Select_chan, 'visible','on');
@@ -651,7 +659,7 @@ set(handles.text12, 'visible','on');
 set(handles.text11, 'visible','on');
 set(handles.edit_scale, 'visible','on');
 set(handles.text_scalezs, 'visible','on');
-set(handles.cursor_infos, 'visible','off');
+set(handles.cursor_infos, 'visible','on');
 
 
 % --- Executes on button press in pushbutton_display_timeseries.

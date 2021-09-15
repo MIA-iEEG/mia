@@ -63,12 +63,17 @@ for iPt=1:length(struct_table)
         continue;
         
     else
+        chan_file = strrep(datafile,'signal_LFP.mat','channels.tsv') ; 
+      
         % Load labels from data file
-%         load(datafile,'labels');
         variableInfo = who('-file', datafile);
         if ismember('isGood',variableInfo)
             load(datafile,'labels','isGood');
             labels = labels(isGood); % Removes contacts that were marked as bad in sanity check
+        elseif exist(chan_file,'file')
+            T = readtable(chan_file,'FileType','text','Delimiter','\t','TreatAsEmpty',{'N/A','n/a'}) ;             
+            isGood = strcmp(T.status_description,'n/a') ; 
+            labels=data.labels(isGood) ;
         else
             load(datafile,'labels');
             isGood = ones(1,length(labels));

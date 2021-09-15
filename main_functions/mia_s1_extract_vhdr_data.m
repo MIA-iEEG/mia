@@ -104,24 +104,39 @@ for ii=1:length(sInputs)
         fprintf('Number of channels = %d\n',size(F,1))
         labels = {EEG.chanlocs.labels};
         
-        % Removes user specified channels (in bad_chan.xls file)
+        % Removes user specified channels (in bad_chan.xls) 
         if exist(fullfile(OPTIONS.maindir,subject_NAME,'bad_chan.xlsx'),'file')
             % Read bad channels if any
             [~, pdb,~]=xlsread(fullfile(OPTIONS.maindir,subject_NAME,'bad_chan.xlsx'));
             for jj=1:length(pdb)
-                % Vire les canaux NULL
-                isNULL = ~cellfun(@isempty,strfind(labels,pdb{jj}));
-                labels(isNULL) = [] ;
-                F(isNULL,:,:) = [];
+               % Remove channels
+                toRemove = ~cellfun(@isempty,strfind(labels,pdb{jj}));
+                labels(toRemove) = [] ;
+                F(toRemove,:,:) = [];
             end
-        else
-            % Vire les canaux NULL
-            isNULL = ~cellfun(@isempty,strfind(labels,'NULL'));
-            labels(isNULL) = [] ;
-            F(isNULL,:,:) = [];
+            
         end
         
-        % Vire les canaux pour lesquels au moins un essai null
+        % Removes user specified channels (in bad_chan.csv file - BIDS compatibility)
+        if exist(fullfile(OPTIONS.maindir,subject_NAME,'bad_chan.csv'),'file')
+            % Read bad channels if any
+            T = readtable(fullfile(OPTIONS.maindir,subject_NAME,'bad_chan.csv'),'ReadVariableNames',0);
+            pdb = T.Var1 ; 
+            for jj=1:length(pdb)
+                % Vire les canaux NULL
+                toRemove = ~cellfun(@isempty,strfind(labels,pdb{jj}));
+                labels(toRemove) = [] ;
+                F(toRemove,:,:) = [];
+            end
+            
+        end
+        
+        % Systematically removes NULL channels
+        isNULL = ~cellfun(@isempty,strfind(labels,'NULL'));
+        labels(isNULL) = [] ;
+        F(isNULL,:,:) = [];
+
+        % Removes channel for which at least one trial is null  (flat)
         idx_null = find(~min(squeeze(max(abs(F),[],2)),[],2)) ;
         labels(idx_null) = [] ;
         F(idx_null,:,:) = [];

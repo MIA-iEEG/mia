@@ -84,15 +84,27 @@ for ii=1:length(sInputs)
     if ((exist (strcat(output, '.mat'), 'file')) && (strcmpi(OPTIONS.overwrite , 'Yes'))) ||(~exist (strcat(output, '.mat'), 'file'))
         
         % Load data
-        load(sInputs{ii},'Time','F', 'labels');      
-        
-        % Remove Bad channels if needed
-        LFP = load(sInputs{ii}) ; 
-        
-        if isfield(LFP,'isGood')
+        data = load(sInputs{ii}) ; 
+        Time = data.Time ; 
+        F = data.F ; 
+
+       chan_file = strrep(sInputs{ii},'signal_LFP.mat','channels.tsv') ; 
+       
+        % Keep this block for compatibility with old databses
+        if isfield(data,'isGood')
+            F = data.F(find(data.isGood),:,:) ;
+            labels=data.labels(find(data.isGood)) ;
             
-            F = F(find(LFP.isGood),:,:) ;
-            labels=labels(find(LFP.isGood)) ;
+            % Move the channel information to BIDS format
+            if ~exist(chan_file,'file') ; write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii},'MIA sanity rejection') ; end
+            
+        end
+        % New BIDS implementation : read the table and mark as good all
+        % 'n/a' electrodes
+        if ~isfield(data,'isGood') && exist(chan_file,'file')
+            T = readtable(chan_file,'FileType','text','Delimiter','\t','TreatAsEmpty',{'N/A','n/a'}) ;             
+            F = data.F(strcmp(T.status_description,'n/a'),:,:) ;
+            labels=data.labels(strcmp(T.status_description,'n/a')) ;
         end
         
         % Compute bipolar montage if needed
@@ -104,7 +116,7 @@ for ii=1:length(sInputs)
         Fs=1/(Time(2)-Time(1));
         
         % Process TF decomposition
-        [F,zs] = process_tf(Time,F,freqb,Fs,zbaseline,modetf) ;
+        [F,zs] = process_tf(data.Time,F,freqb,Fs,zbaseline,modetf) ;
         
         % Keep OPTIONS in history
         history = OPTIONS;
