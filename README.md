@@ -10,6 +10,13 @@ MIA™ toolbox is completely FREE for all Non-Commercial Academic Applications u
 
 <strong>DISCLAIMER:</strong>  MIA™ was implemented and released for research purposes only. MIA™ toolbox, or data obtained from MIA toolbox, should not be used for clinical purposes.
 
+<h2></h2>
+&nbsp;
+<h2>Get started</h2>
+
+We are happy to provide ONLINE TUTORIALS and support throught the public Github repository and a full compagnion dataset available on Zenodo. We also provide some past courses material.
+
+ 
 <h2>Publications</h2>
 Estimating Parallel Processing in a Language Task Using Single-Trial Intracerebral Electroencephalography. <strong><em>Psychological Science</em>,</strong> <em>28</em>(4), 414–426. <a href="http://doi.org/10.1177/0956797616681296">[doi]</a>
 
