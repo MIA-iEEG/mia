@@ -9,7 +9,6 @@ MIA was developed by <a href="http://www.neurotrack.fr/contact/">A.-Sophie Dubar
 MIA™ toolbox is completely FREE for all Non-Commercial Academic Applications under Creative Commons Public License (CCPL BY-NC-ND).
 
 <strong>DISCLAIMER:</strong>  MIA™ was implemented and released for research purposes only. MIA™ toolbox, or data obtained from MIA toolbox, should not be used for clinical purposes.
-<h2></h2>
 &nbsp;
 <h2>Get started</h2>
 We are happy to provide  <a href="http://www.neurotrack.fr/mia/tutorials/">ONLINE TUTORIALS</a> and support throught the public <a href="https://github.com/MIA-iEEG/mia">Github repository</a> and a full compagnion <a href="https://zenodo.org/record/4767855#.YUdDpKA6_UI">dataset available on Zenodo</a>. We also provide some past <a href="http://www.neurotrack.fr/mia/training-sessions/">courses material</a>.
@@ -22,7 +21,6 @@ AS Dubarry,  A Llorens, A Trébuchon-Da Fonsesca, R Carron, C Liégeois-Chauvel
 
 Cortical Dynamics of Semantic Priming and Interference during Word Production : An Intracerebral Study. <strong><em> Journal of Cognitive Neuroscience</em>,</strong> <em>31</em>(7), 978–1001. <a href="https://doi.org/10.1162/jocn">[doi]</a>
 Anders, R., Llorens, A., Dubarry, A., Trébuchon, A., Liégeois-chauvel, C., & Alario, F.
-<h2></h2>
 &nbsp;
 <h2>Presentations</h2>
 <ul>
