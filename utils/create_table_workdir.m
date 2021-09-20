@@ -33,11 +33,12 @@ ID_PATIENT = 1 ;
 ID_METHOD = 2 ; 
 ID_MONTAGE = 3 ; 
 ID_FREQS = 4 ; 
-ID_CONTACTSLOC = 6 ; 
-ID_NUMSTATS= 5 ;
-ID = 7 ;
+ID_REMEVK = 5;
+ID_CONTACTSLOC = 7 ; 
+ID_NUMSTATS= 6 ;
+ID = 8 ;
 
-mia_table = {'','','','','','',''} ;
+mia_table = {'','','','','','','',''} ;
 sFiles = [] ;
 ct = 1;
 
@@ -100,12 +101,21 @@ for pp=1:length(pt)
                     mia_table{ct,ID} = num2str(ct); 
 
                     if  strcmpi(method,'LFP')  
-                        freq = '-'; 
+                        freq = '-';
+                        remEvk = '-';
                     else
                         strfreq = strsplit(remain,'_');
-                        freq = sprintf('%s-%s Hz (step %s)',strfreq{3},strfreq{4},strfreq{2}); 
+                        freq = sprintf('%s-%s Hz (step %s)',strfreq{3},strfreq{4},strfreq{2});
+                        % check if tf decomp processed with removal of evk
+                        % response or not
+                        if length(strfreq)==5 && isequal(strfreq{5},'removeEvoked') 
+                            remEvk = num2str(1);
+                        else
+                            remEvk = num2str(0);
+                        end
                     end
-                    mia_table{ct,ID_FREQS} = freq; 
+                    mia_table{ct,ID_FREQS} = freq;
+                    mia_table{ct,ID_REMEVK} = remEvk;
 
                     % Fill out the list of file 
                     sFiles{ct} = fullfile(MAINDIR,pt{pp},fname(ff).name);

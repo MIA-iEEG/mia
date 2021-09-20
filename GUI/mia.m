@@ -148,7 +148,7 @@ function handles = create_data_table(handles)
 % Get table that contains all files (names) found in the working directory
 [handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove ERP','Nb stats','Localized Contacts','ID'});
 
 % Trick to hide to indexing column
 jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
@@ -379,7 +379,7 @@ all_idx = handles.table.jtable.getSelectedRows ;
 % Get table that contains all files (names) found in the working directory
 [handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove ERP','Nb stats','Localized Contacts','ID'});
 
 % These lines avoid Java Null Exception 
 jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
