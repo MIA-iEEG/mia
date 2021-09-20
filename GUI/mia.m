@@ -52,7 +52,7 @@ handles.output = hObject;
 % Get User home directory
 dirname = getuserdir ;
 
-handles.INDEX = 6 ; 
+handles.INDEX = 7 ; 
 
 handles.extOPTIONS.eeglab = fullfile(dirname,'eeglab11_0_0_0b') ;
 handles.extOPTIONS.suffix = '';
