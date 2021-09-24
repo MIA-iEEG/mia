@@ -23,7 +23,7 @@
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 %
-% Code inspired by nst_get_version (NIRSTORM brainsotmr plugin) 
+% Code inspired by nst_get_version (NIRSTORM brainstorm plugin) 
 
 function version = mia_get_version()
 
