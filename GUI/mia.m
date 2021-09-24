@@ -64,21 +64,25 @@ handles.current_loctable = [];
 % Move window to the center of the screen 
 movegui(gcf,'center');
 
-
-% Loads history (working directory if exist) 
-if exist(fullfile(dirname,'.mia_history.mat'),'file')
+% Loads database (either from filepath in varagin, history file or promtp
+% user
+if  nargin~=0
+    % BST plugin was used to call MIA with a database dir 
+    directoryname = varargin{1} ; 
+    
+elseif exist(fullfile(dirname,'.mia_history.mat'),'file')
 
     % if history exist set the working directory 
     hist = load(fullfile(dirname,'.mia_history.mat')); 
     directoryname = hist.history.dirname ; 
     handles.history = hist.history ;
     set(handles.outdir,'String',hist.history.dirname);
-
-else 
+    
+else
+        
      % Open a directory browser
     hwarn= warndlg('This is the first time you run MIA. Please pick an empty directory for MIA to store its database','Database');
     waitfor(hwarn);
-          
     directoryname = uigetdir('Pick a DataBase Directory');
     
 end
