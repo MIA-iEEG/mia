@@ -37,7 +37,7 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.InputTypes  = {'data'};
     sProcess.OutputTypes = {'data'};
     sProcess.nInputs     = 1;
-    sProcess.nMinFiles   = 2;
+    sProcess.nMinFiles   = 1;
     
     % File selection options
     SelectOptions = {...
