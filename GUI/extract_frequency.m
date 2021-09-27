@@ -213,7 +213,7 @@ if strcmpi(modetf,'Morse') %% COMPUTE LFP EXTRACTION
     lfreq = str2num(get(handles.low_freq,'String')); 
     ufreq = str2num(get(handles.up_freq,'String')); 
     step =  str2num(get(handles.step,'String')); 
-
+    
     if ufreq<=lfreq 
        warndlg('High Frequency bound must be > Low frequency bound') ;
        return ;
@@ -244,6 +244,7 @@ else %% COMPUTE TIME-FREQUENCY EXTRACTION
     lfreq = str2num(get(handles.low_freq,'String')); 
     ufreq = str2num(get(handles.up_freq,'String')); 
     step =  str2num(get(handles.step,'String')); 
+    removeEvoked = get(handles.checkbox_remove_evoked,'Value');
 
     if ufreq<=lfreq 
        warndlg('High Frequency bound must be > Low frequency bound') ;
@@ -260,6 +261,8 @@ else %% COMPUTE TIME-FREQUENCY EXTRACTION
 
     OPTIONS.freqs= [lfreq:step:ufreq];
     OPTIONS.subjects = list_patients(selected_patient) ; 
+    
+    OPTIONS.removeEvoked = removeEvoked;
 
     % Compute frequecy analysis
     handles.sFiles = mia_s4_compute_tf_bandwise(OPTIONS);
@@ -305,11 +308,13 @@ if strcmp(method,'LFP')
     set(handles.up_freq,  'enable', 'off');
     set(handles.step,     'enable', 'off');     
     set(handles.edit_ncycles,     'enable', 'off');     
+    set(handles.checkbox_remove_evoked, 'enable','off');
 else
     set(handles.low_freq, 'enable', 'on');
     set(handles.up_freq,  'enable', 'on');
     set(handles.step,     'enable', 'on');     
-    set(handles.edit_ncycles,     'enable', 'on');     
+    set(handles.edit_ncycles,     'enable', 'on');
+    set(handles.checkbox_remove_evoked, 'enable','on');
 end
 %  contents{get(hObject,'Value')} returns selected item from popupmenu_methods
 
@@ -552,3 +557,12 @@ function radio_bipolar_CreateFcn(hObject, eventdata, handles)
 function radio_bipolar_Callback(hObject, eventdata, handles)
 
 function radio_monopolar_Callback(hObject, eventdata, handles)
+
+
+% --- Executes on button press in checkbox_remove_evoked.
+function checkbox_remove_evoked_Callback(hObject, eventdata, handles)
+% hObject    handle to checkbox_remove_evoked (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of checkbox_remove_evoked
