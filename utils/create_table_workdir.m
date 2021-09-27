@@ -106,13 +106,7 @@ for pp=1:length(pt)
                     else
                         strfreq = strsplit(remain,'_');
                         freq = sprintf('%s-%s Hz (step %s)',strfreq{3},strfreq{4},strfreq{2});
-                        % check if tf decomp processed with removal of evk
-                        % response or not
-                        if length(strfreq)==5 && isequal(strfreq{5},'removeEvoked') 
-                            remEvk = num2str(1);
-                        else
-                            remEvk = num2str(0);
-                        end
+                        remEvk = num2str(double(length(strfreq)==5 && isequal(strfreq{5},'removeEvoked'))); % check if tf decomp processed with removal of evk response or not
                     end
                     mia_table{ct,ID_FREQS} = freq;
                     mia_table{ct,ID_REMEVK} = remEvk;
