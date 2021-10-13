@@ -370,7 +370,7 @@ if snap_filename(1) == 0 ;  return; end
 snap_filename=char(fullfile(snap_filename,filename));     
        
 % SaveChannelsSelection jpeg
-export_fig(snap_filename,'-jpeg',handles.figure1)
+mia_export_fig(snap_filename,'-jpeg',handles.figure1)
 
 guidata(hObject, handles);
 
