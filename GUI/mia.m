@@ -66,7 +66,7 @@ movegui(gcf,'center');
 
 % Loads database (either from filepath in varagin, history file or promtp
 % user
-if  nargin~=0
+if  ~isempty(varargin)
     % BST plugin was used to call MIA with a database dir 
     directoryname = varargin{1} ; 
     
