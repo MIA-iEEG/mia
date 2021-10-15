@@ -91,8 +91,9 @@ for ii=1:length(sInputs)
         data = load(sInputs{ii}) ; 
         Time = data.Time ; 
         F = data.F ; 
-
-       chan_file = strrep(sInputs{ii},'signal_LFP.mat','channels.tsv') ; 
+        labels = data.labels ; 
+        
+        chan_file = strrep(sInputs{ii},'signal_LFP.mat','channels.tsv') ; 
        
         % Keep this block for compatibility with old databses
         if isfield(data,'isGood')
