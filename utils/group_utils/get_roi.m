@@ -169,6 +169,10 @@ function  [all_sig,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig
     % Computes correlations
     r = corrcoef(all_sig) ; 
 
+%     % Alternative flip with SVD 
+%     [u,s,v] = svd(all_sig,0); 
+%     fl = sign(v(:,1))' ; 
+
     % Select min in R 
     A = (r<flip_thresh) ; 
     Ap =  (r>-flip_thresh) ; 
@@ -193,6 +197,8 @@ function  [all_sig,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig
     r = corrcoef(all_sigFl) ; 
     all_sig = all_sigFl ;
 
+    
+    
 %     % Recompute means per patients
 %     [C,IA,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false )) ;
 %     for ss=1:max(IC) 
