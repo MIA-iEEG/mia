@@ -159,11 +159,11 @@ for trialidx=1:size(dc,3)
     % update progress bar
     waitbar(trialidx/size(dc,3),hwait_trials,sprintf('Computing trial %d/%d...',trialidx, size(dc,3))) ;
     
-    if ~strcmpi(modetf,'hilbert')
-        [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
-    else
+%     if ~strcmpi(modetf,'hilbert')
+%         [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
+%     else
         [s(:,:,trialidx),zs(:,:,trialidx)] = compute_hilbert(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
-    end
+%     end
 end
 % Close progress bar
 delete(hwait_trials) ;
