@@ -54,7 +54,7 @@ end
 if ~isempty(strfind(OPTIONS.modetf,'Morlet')) ; modetf = 'morlet'; end
 zbaseline = OPTIONS.zbaseline;
 freqb=OPTIONS.freqs  ;
-freqstep = freqb(2)-freqb(1);
+freqstep = fix(freqb(2)-freqb(1));
 mtg = lower(OPTIONS.mtg);
 
 % Init output
