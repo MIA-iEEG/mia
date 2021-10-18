@@ -106,10 +106,7 @@ for jj=1:length(un)
             ptname{cc} = ptchar(1:idx_underscores(end)-1);
         end
      end    
-    
-%     idx_underscores = cellfun(@(x) strfind(x,'_'),labels_roi, 'UniformOutput',false) ; 
-%     idx_patient = cell2mat(cellfun(@(x) x(end-1), idx_underscores,'UniformOutput',false)) ; 
-    
+   
  % If FLIP option is used 
     if isfield(opt, 'flip_thresh')
           [all_sig,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
@@ -196,14 +193,6 @@ function  [all_sig,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig
     % Recompute correlations between FLIPPED contacts
     r = corrcoef(all_sigFl) ; 
     all_sig = all_sigFl ;
-
-    
-    
-%     % Recompute means per patients
-%     [C,IA,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false )) ;
-%     for ss=1:max(IC) 
-%         mean_sig_subj(:,ss) = mean(all_sig(:,IC==ss),2);
-%     end
     
     % Add _FLP at the end of the contacts labels that were flipped
     labels_roi(fl==-1) = strcat(labels_roi(fl==-1),'_FLP') ; 
