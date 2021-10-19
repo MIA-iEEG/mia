@@ -1,4 +1,4 @@
-function [roi] = get_roi(m_table_effect,t, s, smask, all_labels,freqs,opt) 
+function [roi] = get_roi_permute(m_table_effect,t, s, smask, all_labels,freqs,opt) 
 %
 % ***********************************************************************
 %
@@ -147,7 +147,7 @@ for jj=1:length(un)
     subj_in = find(ismember(unsubj,subj_active)); 
  
     % Compute means per patients
-    [~,~,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false ));
+    [~,~,IC] = unique(cellfun( @(x) x(1:5), labels_roi, 'UniformOutput',false )); % BUG To fix : 1:5 is length of pt_name
     for ss=1:max(IC) 
         % Mean signals per patients
         if strcmp(opt.signmode,'signed') 
@@ -234,7 +234,7 @@ function  [mean_sig_subj,masked_sig,labels_roi,r]  =  flip_signals(all_sig, mask
     all_sig = all_sigFl ;
 
     % Recompute means per patients
-    [C,IA,IC] = unique(cellfun( @(x) x(1:3), labels_roi, 'UniformOutput',false )) ;
+    [C,IA,IC] = unique(cellfun( @(x) x(1:5), labels_roi, 'UniformOutput',false )) ;% BUG To fix : 1:5 is length of pt_name
     for ss=1:max(IC) 
         mean_sig_subj(:,ss) = mean(all_sig(:,IC==ss),2);
     end

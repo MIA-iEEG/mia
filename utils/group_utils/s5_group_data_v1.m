@@ -72,7 +72,7 @@ for pp=1:length(sFiles)
     ganalysis{pp,ii}.threshp=OPTIONS.alpha;
       
     % Create the 'stats' filename
-    statfile = strrep(sFiles{ii},'_data','_stats');
+    statfile = strrep(sFiles{pp},'_data_','_stats_');
 
     % computation to find or calculate threshdur
     if exist(statfile) %check if stat file already exist
@@ -91,8 +91,8 @@ for pp=1:length(sFiles)
                 end
             end
         end
-        %No stats has already been calculated with those parameters
-        %if no combination match or no stat field
+        % No stats has already been calculated with those parameters
+        % if no combination match or no stat field
         if ~isfield(ganalysis{pp},'threshdur')
             statfile=mia_s5_compute_stats(sFiles{pp},OPTIONS); % stats computation and append the results in the saved struct
             stat_data=load(char(statfile));
@@ -107,7 +107,7 @@ for pp=1:length(sFiles)
         end
 
     else  %cas of inexistent statfile
-        statfile=mia_s5_compute_stats(sFiles{ii},OPTIONS);
+        statfile=mia_s5_compute_stats(sFiles{pp},OPTIONS);
         stat_data=load(char(statfile));
         ganalysis{pp,ii}.threshdur=stat_data.stats.threshdur;
     end
