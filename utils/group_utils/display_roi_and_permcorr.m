@@ -80,15 +80,15 @@ for ii=1:length(roi)
     %% Plot distrib correlation
     hhist = subplot(3,1,3) ; hist(croi.corr_permut,100); xlabel('Surrogate distribution of max correlation (permutations)');
     
-%     title(sprintf('Q+5%s : %1.3f ,Q-5%s : %1.3f ','%',quantile(croi.corr_permut(croi.corr_permut>0),0.95),'%',quantile(croi.corr_permut(croi.corr_permut<0),0.95)));
+%     title(sprintf('Q+5%s : %1.3f ,Q-5%s : %1.3f ','%',mia_quantile(croi.corr_permut(croi.corr_permut>0),0.95),'%',mia_quantile(croi.corr_permut(croi.corr_permut<0),0.95)));
 %   
     %For NOW only look at positive values
-    title(sprintf('Q+5%s : %1.3f ','%',quantile(croi.corr_permut(croi.corr_permut>0),0.95)));
+    title(sprintf('Q+5%s : %1.3f ','%',mia_quantile(croi.corr_permut(croi.corr_permut>0),0.95)));
     
-    if croi.corrChan>=quantile(croi.corr_permut(croi.corr_permut>0),0.95) 
-        fprintf(sprintf('%0.0f - %s : %1.3f > %1.3f *** \n',length(croi.idPt),croi.name,croi.corrChan,quantile(croi.corr_permut(croi.corr_permut>0),0.95)));
+    if croi.corrChan>=mia_quantile(croi.corr_permut(croi.corr_permut>0),0.95) 
+        fprintf(sprintf('%0.0f - %s : %1.3f > %1.3f *** \n',length(croi.idPt),croi.name,croi.corrChan,mia_quantile(croi.corr_permut(croi.corr_permut>0),0.95)));
     else
-        fprintf(sprintf('%0.0f - %s : %1.3f < %1.3f\n',length(croi.idPt),croi.name,croi.corrChan,quantile(croi.corr_permut(croi.corr_permut>0),0.95)));
+        fprintf(sprintf('%0.0f - %s : %1.3f < %1.3f\n',length(croi.idPt),croi.name,croi.corrChan,mia_quantile(croi.corr_permut(croi.corr_permut>0),0.95)));
     end
     % Moves legend to the left (everything else to the rigth) 
     set(hleg,'units','pixels');

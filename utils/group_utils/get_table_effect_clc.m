@@ -103,7 +103,7 @@ for ii=1:size(ganalysis,1)
         df = gana.df;
     
         % Get mask of significance 
-        h = abs(tvals)>tinv(1-gana.threshp/2,df) ; 
+        h = abs(tvals)>mia_tinv(1-gana.threshp/2,df) ; 
         
         % Removes segments of significance shorter than a threshold duration
         [hf] = filter_timewin_signif(h,gana.threshdur*Fs);

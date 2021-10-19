@@ -50,7 +50,7 @@ function mia_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 % Get User home directory
-dirname = getuserdir ;
+dirname = mia_getuserdir ;
 
 handles.INDEX = 7 ; 
 
