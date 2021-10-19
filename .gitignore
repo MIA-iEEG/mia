@@ -1,2 +1,8 @@
 .DS_Store
 *.asv
+externals/.DS_Store
+utils/.DS_Store
+utils/group_utils/.DS_Store
+main_functions/.DS_Store
+GUI/.DS_Store
+

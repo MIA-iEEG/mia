@@ -54,7 +54,7 @@ end
 if ~isempty(strfind(OPTIONS.modetf,'Morlet')) ; modetf = 'morlet'; end
 zbaseline = OPTIONS.zbaseline;
 freqb=OPTIONS.freqs  ;
-freqstep = freqb(2)-freqb(1);
+freqstep = fix(freqb(2)-freqb(1));
 mtg = lower(OPTIONS.mtg);
 
 % Init output
@@ -159,11 +159,11 @@ for trialidx=1:size(dc,3)
     % update progress bar
     waitbar(trialidx/size(dc,3),hwait_trials,sprintf('Computing trial %d/%d...',trialidx, size(dc,3))) ;
     
-    if ~strcmpi(modetf,'hilbert')
-        [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
-    else
+%     if ~strcmpi(modetf,'hilbert')
+%         [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
+%     else
         [s(:,:,trialidx),zs(:,:,trialidx)] = compute_hilbert(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
-    end
+%     end
 end
 % Close progress bar
 delete(hwait_trials) ;
