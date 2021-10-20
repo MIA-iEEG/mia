@@ -80,8 +80,7 @@ mia(mia_db);
 %-----------------------------------------------------------------------------
 groupOPTIONS.nboot=3;
 groupOPTIONS.alpha=0.001;
-groupOPTIONS.up_twin=1.5;
-groupOPTIONS.low_twin=-0.5;
+groupOPTIONS.twin=[-0.5,1.5];
 groupOPTIONS.outdir=mia_db;
 groupOPTIONS.baseline=[ -0.8, -0.05] ;
 groupOPTIONS.subjects = patients_dir ; 

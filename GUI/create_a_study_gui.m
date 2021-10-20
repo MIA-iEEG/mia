@@ -334,8 +334,7 @@ end
 
 ganalysisOPTIONS.nboot=str2num(get(handles.nboot,'String'));
 ganalysisOPTIONS.alpha=str2num(get(handles.alpha,'String'));
-ganalysisOPTIONS.up_twin=str2num(get(handles.up_twin,'String'));
-ganalysisOPTIONS.low_twin=str2num(get(handles.low_twin,'String'));
+ganalysisOPTIONS.twin=[str2num(get(handles.low_twin,'String')), str2num(get(handles.up_twin,'String'))];
 ganalysisOPTIONS.outdir=handles.outdir;
 ganalysisOPTIONS.baseline=[str2num(get(handles.baselineb,'String')), str2num(get(handles.baselinee,'String'))] ;
 ganalysisOPTIONS.subjects = handles.table.mia_table(idx,1) ; 
