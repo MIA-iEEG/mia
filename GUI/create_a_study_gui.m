@@ -53,6 +53,7 @@ handles.output = hObject;
 handles.idx_selected = varargin{1};
 handles.outdir = varargin{2};
 handles.current_loctable = varargin{3};
+handles.INDEX = 7 ;
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
@@ -61,12 +62,12 @@ movegui(gcf,'center');
 % Read the working directory in order to build the table
 [handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove Avg','Nb stats','Localized Contacts','ID'});
 
 % Trick to hide to indexing column
-jtable.getColumnModel().getColumn(6).setMinWidth(0);
-jtable.getColumnModel().getColumn(6).setMaxWidth(0);
-jtable.getColumnModel().getColumn(6).setWidth(0);
+jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
+jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
+jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
 
 tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
 tableHeader.setAutoFilterEnabled(true)
@@ -278,7 +279,7 @@ function calculate_Callback(hObject, eventdata, handles)
 all_idx = handles.table.jtable.getSelectedRows ; 
 
 % Get proper indices in case table is sorted
-for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),6)) ; end
+for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
 
 mia_table=handles.table.mia_table(idx,:,:,:,:);
 
