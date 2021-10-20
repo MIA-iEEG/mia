@@ -68,7 +68,7 @@ for pp=1:length(sFiles)
     ganalysis{pp,ii}.subj=sSubj;
     ganalysis{pp,ii}.df=size(data.F,3);
     ganalysis{pp,ii}.freqb=data.freqb;
-    ganalysis{pp,ii}.edges=[OPTIONS.low_twin, OPTIONS.up_twin];
+    ganalysis{pp,ii}.edges=OPTIONS.twin ;
     ganalysis{pp,ii}.threshp=OPTIONS.alpha;
       
     % Create the 'stats' filename
@@ -118,7 +118,7 @@ for pp=1:length(sFiles)
     % Remove value of Time, tvals and pvals that are not in the time
     %window
     for ss=1:length(data.Time)
-        if data.Time(ss)<=OPTIONS.low_twin || data.Time(ss)>=OPTIONS.up_twin
+        if data.Time(ss)<=OPTIONS.twin(1) || data.Time(ss)>=OPTIONS.twin(2)
             data.Time(ss)=0;
         end
     end
