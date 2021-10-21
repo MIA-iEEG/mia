@@ -53,7 +53,6 @@ handles.m_table_as=varargin{1};
 handles.maindir=varargin{2};
 selected_atlas = varargin{3};
 handles.extOPTIONS =varargin{4};
-handles.INDEX = 5 ; 
 
 % Jtable position offset in Y (down)
 handles.shift = 42 ;
@@ -147,9 +146,9 @@ if get(handles.togglebutton1,'Value')==1
     tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
         
     % Trick to hide to indexing column
-    jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
-    jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
-    jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
+    jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
+    jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMaxWidth(0);
+    jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setWidth(0);
 
     tableHeader.setAutoFilterEnabled(true)
     tableHeader.setShowFilterName(true)
@@ -262,9 +261,9 @@ if (get(hObject,'Value') == get(hObject,'Max'))
     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
     
     % Trick to hide to indexing column
-    jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
-    jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
-    jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
+    jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
+    jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMaxWidth(0);
+    jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setWidth(0);
 
 
     tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
@@ -352,7 +351,7 @@ else
     all_idx = handles.table.jtable.getSelectedRows ; 
     idx = [] ;
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
     if isempty(idx)
         errordlg('You must select a region to explore','Error');
     % Several items selected in the table
@@ -384,7 +383,7 @@ else
     all_idx = handles.table.jtable.getSelectedRows ; 
     idx = [] ;
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
       if isempty(idx)
         errordlg('You must select a region to explore','Error');
@@ -437,7 +436,7 @@ else
     all_idx = handles.table.jtable.getSelectedRows ; 
     idx = [] ;
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
     if isempty(idx)
         errordlg('You must select a region to explore','Error');
@@ -545,7 +544,7 @@ else
     all_idx = handles.table.jtable.getSelectedRows ; 
     idx = [] ;
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
     if isempty(idx)
         errordlg('You must select a region to explore','Error');
     % One or Several items selected in the table
@@ -605,7 +604,7 @@ else
     all_idx = handles.table.jtable.getSelectedRows ; 
     idx = [] ;
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
     if isempty(idx)
         errordlg('You must select a region to export','Error');
     % Several items selected in the tablex
