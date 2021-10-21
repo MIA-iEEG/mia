@@ -116,7 +116,7 @@ function varargout = mia_OutputFcn(hObject, eventdata, handles)
 %% SAVE HISTORY
 
 % Get User home directory
-dirname = getuserdir ;
+dirname = mia_getuserdir ;
 
 % If user started to use MIA
 if isfield(handles,'history')
