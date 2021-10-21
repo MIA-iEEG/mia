@@ -349,7 +349,7 @@ handles.extOPTIONS.outdir = directoryname ;
 handles = initialize_gui(handles.figure1,handles,false);
 
 % Get User home directory
-dirname = getuserdir ;
+dirname = mia_getuserdir ;
 
 handles.history.dirname = handles.extOPTIONS.outdir  ; 
 
