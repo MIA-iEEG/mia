@@ -52,9 +52,7 @@ handles.output = hObject;
 % Get User home directory
 dirname = mia_getuserdir ;
 
-handles.INDEX = 7 ; 
-
-handles.extOPTIONS.eeglab = fullfile(dirname,'eeglab11_0_0_0b') ;
+% Set initial default OPTIONS
 handles.extOPTIONS.suffix = '';
 handles.extOPTIONS.overwrite = 'no';
 handles.extOPTIONS.SensorType = 'SEEG'; % {'MEG GRAD','SEEG','MEG MAG'};
@@ -102,14 +100,6 @@ else
     close(handles.figure1);
 end
 
-
-% Add recursively the directories of the main function in the path
-% addpath(genpath(fileparts(which(mfilename))));
-
-% UIWAIT makes mia wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
-
-
 % --- Outputs from this function are returned to the command line.
 function varargout = mia_OutputFcn(hObject, eventdata, handles)
 
@@ -135,11 +125,6 @@ end
 function handles = initialize_gui(fig_handle, handles, isreset)
 
 % initialize the whole interface 
-% handles = update_patientlist(handles) ;
-% handles = create_data_table(handles) ; 
-% handles = update_studies_list(handles) ;
-% handles = update_atlas_list(handles) ;
-
 handles = update_patientlist(handles) ;
 handles = update_studies_list(handles) ;
 handles = update_atlas_list(handles) ;
@@ -154,10 +139,10 @@ function handles = create_data_table(handles)
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove Avg','Nb stats','Localized Contacts','ID'});
 
-% Trick to hide to indexing column
-jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
-jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
-jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
+% Trick to hide to indexing column (in last column : jtable.getColumnCount - 1)
+jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
+jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMaxWidth(0);
+jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setWidth(0);
 
 % Create the java table
 tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
@@ -199,7 +184,7 @@ function fname_stat = get_stats_fname(handles)
 all_idx = handles.table.jtable.getSelectedRows ; 
 idx = [] ;
 % Get proper indices in case table is sorted
-for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
 stats = [] ;
 
@@ -386,16 +371,16 @@ all_idx = handles.table.jtable.getSelectedRows ;
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove Avg','Nb stats','Localized Contacts','ID'});
 
 % These lines avoid Java Null Exception 
-jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
-jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
-jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
+jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
+jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMaxWidth(0);
+jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setWidth(0);
 
 handles.table.jtable.setModel(jtable.getModel()) ;
 
 % Trick to hide to indexing column
-handles.table.jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
-handles.table.jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
-handles.table.jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
+handles.table.jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
+handles.table.jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMaxWidth(0);
+handles.table.jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setWidth(0);
 
 % Retrieve selected items (Highligths)
 if ~isempty(all_idx) 
@@ -463,7 +448,7 @@ function display_stats_Callback(hObject, eventdata, handles)
 all_idx = handles.table.jtable.getSelectedRows ; 
 idx = [] ;
 % Get proper indices in case table is sorted
-for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
 % No file was selected 
 if isempty(idx)
@@ -483,50 +468,8 @@ else
         % Call main visualization GUI 
         % Conversion {} required (prevents warning : "The input to STR2FUNC...")
         display_images_stats_gui(fname,handles.table.mia_table(idx(ii),:));
-% 
-%         
-% % 
-% %         % There is NO data file for LFP
-% %         if isempty(strfind(fname,'_data'))
-% %             zOPTIONS.overwrite='no';
-% %             % Compute zscore and save file
-% %             fname=mia_s3_zscore(cellstr(fname),zOPTIONS);
-% %             fname=char(fname);        
-% %         end
-%         % Update progress bar 
-%         waitbar(ii/length(idx),hwait_pt,sprintf('Loading...')) ;
-%    
-%         % Load data file
-%         load(fname);
-%         
-%         % Look for stats file
-%         [PATHSTR,NAME,EXT] = fileparts(fname);
-%         NAME = strrep(NAME,'_data','_stats');
-%         fname_stat = fullfile(PATHSTR,strcat(NAME,EXT)) ;
-% 
-%         % ASD TODO : display name of regions if contacts were labelled (m_table
-%         % exist)
-%         if ~exist(fname_stat)
-%             hwarn=warndlg('No statsistics were computed for this data. Play at your own risk') ;
-%             waitfor(hwarn);
-%             p=0.001 ;
-%             d = 0.02 ;
-%             display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,0,p,d);
-% 
-%         else
-%             stats = load(fname_stat) ;
-% 
-%             % Ensure compatibility with old files
-%             if isfield(stats,'stats')
-%                 display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,[stats.stats(:).nboot],[stats.stats(:).pthresh],[stats.stats(:).threshdur]);
-%             else
-%                 % ASD TODO : test with old data
-%                 Fs = 1/(Time(2)-Time(1));
-%                 display_images_stats_gui({fname},handles.table.mia_table(idx(ii),:),zs,labels,Time,-1,0.001,stats.threshdur/Fs);
-%             end
-% 
-%         end
-           % Load is done : close progress bar
+
+        % Load is done : close progress bar
         delete(hwait_pt) ;
 
     end
@@ -624,7 +567,7 @@ if isfield(handles,'jtable')
     all_idx = handles.table.jtable.getSelectedRows ; 
 
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 else
     idx = 1;
 end
@@ -641,23 +584,6 @@ handles_stats = statistics_gui(idx,handles.extOPTIONS.outdir,  handles.current_l
 handles = update_patientlist(handles) ; %% ASD : WONT WORK??
 handles= update_data_table(handles);
 
-      
-% % --- Executes on button press in pushbutton_statistics.
-% function pushbutton_loadloctable_Callback(hObject, eventdata, handles)
-% 
-% ButtonName = questdlg('What would you like to do?','Atlas', ...
-%             'Load table','Remove Patient localisation','Cancel''Load table');
-%         
-%         % No button was pressed (window closed)
-%         if isempty(ButtonName); return ; end
-%         switch ButtonName,
-%             case 'Load table'
-%                 [handles]= loadloctable(handles) ; 
-%             case 'Remove Patient localisation'
-%                [handles]=removePatientLoc(handles) ;
-% 
-%         end
-%       
 %--- Removes localisation table for a specific patient
 function [handles] = resetPatientLoc(handles)
 
@@ -734,21 +660,6 @@ if filename~=0
     handles = update_atlas_list(handles) ;
   
 end
-% 
-% function handles = loadloctable(handles) 
-% % Reads all folders that are in MAINDIR
-% group_foldnam = fullfile(fileparts(get(handles.outdir,'String')),'GA_Results') ; 
-% 
-% d = dir(group_foldnam);
-% isub = [d(:).isdir]; % returns logical vector if is folder
-% loctables= {d(~isub).name}';
-% loctables(ismember(loctables,{'.','..','.DS_Store'})) = []; % Removes systems files
-% loctables = strrep(loctables,'m_table_','') ; 
-% loctables = strrep(loctables,'.mat','') ; 
-% 
-% handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',loctables{idx_selected})));
-% 
-%         
 
 % --- Executes on button press in pushbutton_newStudy.
 function pushbutton_newStudy_Callback(hObject, eventdata, handles)
@@ -767,7 +678,7 @@ if isfield(handles,'jtable')
     all_idx = handles.table.jtable.getSelectedRows ; 
 
     % Get proper indices in case table is sorted
-    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+    for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
 else
     idx = 1;
@@ -786,7 +697,6 @@ handles= update_data_table(handles);
 handles = update_studies_list(handles) ;
 
 guidata(hObject, handles);
-
 
 % --- Executes on button press in GO.
 function GO_Callback(hObject, eventdata, handles)
@@ -948,7 +858,7 @@ if ~isempty(newEntries)
 
         % Get diplayed table 
         for iRow=0:handles.table.jtable.getRowCount-1
-            iFileInTab = str2num(handles.table.jtable.getValueAt(iRow,handles.INDEX)) ; 
+            iFileInTab = str2num(handles.table.jtable.getValueAt(iRow,handles.table.jtable.getColumnCount - 1)) ; 
             if strcmp(newEntries(iFile),handles.table.sFiles(iFileInTab))
                 handles.table.jtable.addRowSelectionInterval(iRow,iRow)
             end
@@ -965,7 +875,7 @@ all_idx = handles.table.jtable.getSelectedRows ;
 
 idx = [] ;
 % Get proper indices in case table is sorted
-for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
+for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
 % No file was selected 
 if isempty(idx)
