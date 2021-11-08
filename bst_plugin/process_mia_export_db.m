@@ -31,8 +31,8 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.Comment     = 'Export data to MIA database';
     sProcess.FileTag     = '';
     sProcess.Category    = 'Custom';
-    sProcess.SubGroup    = 'SEEG';
-    sProcess.Index       = 1000;
+    sProcess.SubGroup    = 'File';
+    sProcess.Index       = 982;
     % Definition of the input accepted by this process
     sProcess.InputTypes  = {'data'};
     sProcess.OutputTypes = {'data'};
