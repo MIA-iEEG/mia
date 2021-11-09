@@ -226,61 +226,67 @@ if (get(hObject,'Value') == get(hObject,'Max'))
      handles.mtg,...
      handles.freqb,...
      handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
- 
+    
     % Enlarge main figure in height and shift down
     fig_position = get(handles.figure1,'Position') ;
     fig_position(4) = fig_position(4) + handles.shift ;
     fig_position(2) = fig_position(2) - handles.shift ;
     set(handles.figure1,'Position',fig_position) ;
-    
+
     uipanel_displayrois_pos = get(handles.uipanel_displayrois,'Position');
     uipanel_displayrois_pos(2) = uipanel_displayrois_pos(2) + handles.shift;
     set(handles.uipanel_displayrois,'Position',uipanel_displayrois_pos);
-    
+
     uipanel_study_pos = get(handles.uipanel_studies,'Position');
     uipanel_study_pos (2) = uipanel_study_pos (2) + handles.shift;
     set(handles.uipanel_studies,'Position',uipanel_study_pos );
-        
+
     uipanel_text_pos = get(handles.text_title,'Position');
     uipanel_text_pos  (2) = uipanel_text_pos  (2) + handles.shift;
     set(handles.text_title,'Position',uipanel_text_pos  );
-    
+
     uipanel_flip_pos = get(handles.uipanel_flip,'Position');
     uipanel_flip_pos(2) = uipanel_flip_pos(2) + handles.shift;
     set(handles.uipanel_flip,'Position',uipanel_flip_pos );
- 
+
     uipanel_rasterplot_pos = get(handles.uipanel_rasterplot,'Position');
     uipanel_rasterplot_pos(2) = uipanel_rasterplot_pos(2) + handles.shift;
     set(handles.uipanel_rasterplot,'Position',uipanel_rasterplot_pos );
-    
+
     togglebutton_pos = get(handles.togglebutton1,'Position');
     togglebutton_pos(2) = togglebutton_pos(2) + handles.shift;
     set(handles.togglebutton1,'Position',togglebutton_pos);
-    
+
 %     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
-    
+
     % Trick to hide to indexing column
     jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
     jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMaxWidth(0);
     jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setWidth(0);
 
-
-    tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
-    tableHeader.setAutoFilterEnabled(true)
-    tableHeader.setShowFilterName(true)
-    tableHeader.setShowFilterIcon(true)
-    jtable.setTableHeader(tableHeader)
-    installer = com.jidesoft.grid.TableHeaderPopupMenuInstaller(jtable);
-    pmCustomizer1=com.jidesoft.grid.AutoResizePopupMenuCustomizer;
-    installer.addTableHeaderPopupMenuCustomizer(pmCustomizer1);
-    pmCustomizer2=com.jidesoft.grid.TableColumnChooserPopupMenuCustomizer;
-    installer.addTableHeaderPopupMenuCustomizer(pmCustomizer2);
-    jScrollPane = javax.swing.JScrollPane(jtable);
+    if ~isempty(handles.rois)
+  
+        tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
+        tableHeader.setAutoFilterEnabled(true)
+        tableHeader.setShowFilterName(true)
+        tableHeader.setShowFilterIcon(true)
+        jtable.setTableHeader(tableHeader)
+        installer = com.jidesoft.grid.TableHeaderPopupMenuInstaller(jtable);
+        pmCustomizer1=com.jidesoft.grid.AutoResizePopupMenuCustomizer;
+        installer.addTableHeaderPopupMenuCustomizer(pmCustomizer1);
+        pmCustomizer2=com.jidesoft.grid.TableColumnChooserPopupMenuCustomizer;
+        installer.addTableHeaderPopupMenuCustomizer(pmCustomizer2);
+ 
+        
+    else 
+         fprintf('No ROI to show\n');
+    end
     
+    jScrollPane = javax.swing.JScrollPane(jtable);
     handles.table.jtable = jtable ;
     handles.table.jScrollPane = jScrollPane ;
-    
+        
     handles.jtable = jtable ;
     % Set the jtable uneditable 
     sclass=java.lang.String('').getClass;
@@ -295,10 +301,10 @@ if (get(hObject,'Value') == get(hObject,'Max'))
         jtable.getColumnModel.getColumn(iCol).setCellEditor(editor);
     end
 
-
     [handles.hjtable,handles.hjcontainer]=javacomponent(jScrollPane,handles.table_size,gcf);
-    
+
     guidata(hObject, handles);
+
     
 else
     

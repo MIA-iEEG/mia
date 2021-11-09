@@ -44,22 +44,25 @@ function [ganalysis] = s5_group_data_v1(sFiles,OPTIONS)
 
 ganalysis=[];
 
-% Create a wait bar 
-hwait=waitbar(0,sprintf('Processing %d/%d',1,length(sFiles)),'Name','Group analysis');
-
-% Make the waitbar stay on top
-set(hwait,'WindowStyle','modal')
+% % Create a wait bar 
+% hwait=waitbar(0,sprintf('Processing %d/%d',1,length(sFiles)),'Name','Group analysis');
+% 
+% % Make the waitbar stay on top
+% set(hwait,'WindowStyle','modal')
 
 % This indice is here because previous versions of MIA was handling several
 % col
 ii=1;
+
+% Check that all files have same sampling rate
+
 
 % for pp=1:length(subj)
 for pp=1:length(sFiles)
     
     [~,sSubj,~] = fileparts(fileparts(sFiles{pp})) ; 
 
-    waitbar(pp/length(sFiles),hwait,sprintf('%s %d/%d',strrep(sSubj,'_',' '),pp,length(sFiles)))
+%     waitbar(pp/length(sFiles),hwait,sprintf('%s %d/%d',strrep(sSubj,'_',' '),pp,length(sFiles)))
     
     % Load data
     data = load(sFiles{pp});
@@ -115,10 +118,10 @@ for pp=1:length(sFiles)
     % Compute Ttest
     [tvals,pvals] = mia_compute_ttest(data.zs);
 
-    % Create a time vector corresponding to the window selected by user
+    % Create a time vector 
     vTime = data.Time>OPTIONS.twin(1) &data.Time<OPTIONS.twin(2) ;
     
-    % Segment pvals, tvals and Time
+    % Keep pvals, tvals and Time datas without edges effect
     ganalysis{pp,ii}.Time=data.Time(vTime);
     ganalysis{pp,ii}.tvals=tvals(:,vTime);
     ganalysis{pp,ii}.pvals=pvals(:,vTime);
@@ -132,5 +135,19 @@ for pp=1:length(sFiles)
 
 end
 
+% %make sure that all Time vectors have the same length
+% %Get the lower length of alla ganalysis.Time vectors
+% tmp = [ganalysis{:}] ; 
+% minL = min(cell2mat(cellfun(@(x)(length(x)), {tmp.Time}, 'UniformOutput', false))) ; 
+% 
+% % Remove extra Time point if needed
+% for pp=1:length(ganalysis)
+% %     for ii=1:length(sFiles) 
+%         ganalysis{pp,1}.Time=ganalysis{pp,ii}.Time(1:minL);
+%         ganalysis{pp,1}.tvals=ganalysis{pp,ii}.tvals(:,1:minL);
+%         ganalysis{pp,1}.pvals=ganalysis{pp,ii}.pvals(:,1:minL);
+% %     end
+% end
+
 %Close waitbar
-close(hwait)
+% close(hwait)

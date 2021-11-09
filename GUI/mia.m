@@ -137,7 +137,7 @@ function handles = create_data_table(handles)
 % Get table that contains all files (names) found in the working directory
 [handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove Avg','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
 % Trick to hide to indexing column (in last column : jtable.getColumnCount - 1)
 jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
