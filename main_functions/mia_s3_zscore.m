@@ -92,6 +92,12 @@ for ii=1:length(sInputs)
             [F, labels] = mia_make_bipolarmtg(F,labels);
         end
         
+        % Compute monopolar montage if needed
+        if strcmpi(OPTIONS.mtg,'MONOPOLAR')
+            F = data.F ; 
+            labels = data.labels ; 
+        end
+        
         Time = data.Time ;
     
         % Calcule zScore
