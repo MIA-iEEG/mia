@@ -650,6 +650,9 @@ if filename~=0
     % GA_Results directory 
     group_dir=fullfile(fileparts(grpOPTIONS.maindir),'GA_Results') ; 
     
+    % Create GA_Results if does not exist
+    if ~exist(group_dir,'dir') ; mkdir(group_dir); end
+    
     % Atlas filename 
     fname = cell2mat(fullfile(group_dir,strcat('m_table_',loctable_name,'.mat')));
     s.table_fname = fullfile(pathname,filename) ;
