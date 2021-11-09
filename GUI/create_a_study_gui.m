@@ -53,7 +53,7 @@ handles.output = hObject;
 handles.idx_selected = varargin{1};
 handles.outdir = varargin{2};
 handles.current_loctable = varargin{3};
-handles.INDEX = 7 ;
+handles.INDEX = 8 ;
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
@@ -62,7 +62,7 @@ movegui(gcf,'center');
 % Read the working directory in order to build the table
 [handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove Avg','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
 % Trick to hide to indexing column
 jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
@@ -287,10 +287,12 @@ mia_table=handles.table.mia_table(idx,:,:,:,:);
 [method,~,~]=unique(mia_table(:,2));%list of all methods of selected files
 [montage,~,~]=unique(mia_table(:,3));%list of all montage of selected fiels
 [freq,~,~]=unique(mia_table(:,4));%list of all freq band of selected files
+[srate,~,~]=unique(mia_table(:,5));%list of all freq band of selected files
+[rmEvk,~,~]=unique(mia_table(:,6));%list of all freq band of selected files
 
 %check that there is only 1 method, Motage and Freq.band through all
 %selected patients
-if ~(length(method)==1 && length(montage)==1 && length(freq)==1)
+if ~(length(method)==1 && length(montage)==1 && length(freq)==1 && length(srate)==1 && length(rmEvk)==1)
     errordlg('You must select files with same parameters method, montage and freq. band','Files Selection');
     return;
 end

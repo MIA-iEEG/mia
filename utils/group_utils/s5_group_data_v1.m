@@ -44,22 +44,25 @@ function [ganalysis] = s5_group_data_v1(sFiles,OPTIONS)
 
 ganalysis=[];
 
-% Create a wait bar 
-hwait=waitbar(0,sprintf('Processing %d/%d',1,length(sFiles)),'Name','Group analysis');
-
-% Make the waitbar stay on top
-set(hwait,'WindowStyle','modal')
+% % Create a wait bar 
+% hwait=waitbar(0,sprintf('Processing %d/%d',1,length(sFiles)),'Name','Group analysis');
+% 
+% % Make the waitbar stay on top
+% set(hwait,'WindowStyle','modal')
 
 % This indice is here because previous versions of MIA was handling several
 % col
 ii=1;
+
+% Check that all files have same sampling rate
+
 
 % for pp=1:length(subj)
 for pp=1:length(sFiles)
     
     [~,sSubj,~] = fileparts(fileparts(sFiles{pp})) ; 
 
-    waitbar(pp/length(sFiles),hwait,sprintf('%s %d/%d',strrep(sSubj,'_',' '),pp,length(sFiles)))
+%     waitbar(pp/length(sFiles),hwait,sprintf('%s %d/%d',strrep(sSubj,'_',' '),pp,length(sFiles)))
     
     % Load data
     data = load(sFiles{pp});
@@ -147,4 +150,4 @@ end
 % end
 
 %Close waitbar
-close(hwait)
+% close(hwait)

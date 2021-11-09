@@ -33,10 +33,11 @@ ID_PATIENT = 1 ;
 ID_METHOD = 2 ; 
 ID_MONTAGE = 3 ; 
 ID_FREQS = 4 ; 
-ID_REMEVK = 5;
-ID_CONTACTSLOC = 7 ; 
-ID_NUMSTATS= 6 ;
-ID = 8 ;
+ID_SRATE = 5 ; 
+ID_REMEVK = 6;
+ID_NUMSTATS= 7 ;
+ID_CONTACTSLOC = 8 ; 
+ID = 9 ;
 
 mia_table = {'','','','','','','',''} ;
 sFiles = [] ;
@@ -47,8 +48,7 @@ for pp=1:length(pt)
 
 %     % Reads all folders that are in MAINDIR 
 	fname = dir(fullfile(MAINDIR,pt{pp},strcat(pt{pp},'*.mat'))); 
-%     m_table_fname = fullfile(MAINDIR,pt{pp},'m_table.mat') ; 
-    
+  
     % If there is a localisation table for this patient
     if ~isempty(current_loctable) && ~isempty(current_loctable.m_table_all)
 %         m_table = load(m_table_fname) ; 
@@ -82,6 +82,7 @@ for pp=1:length(pt)
                 
                     % Look for a stat file 
                     stat_filename=fullfile(MAINDIR,pt(pp),strrep(fname(ff).name,'_data','_stats'));
+                    dat_filename=fullfile(MAINDIR,pt{pp},fname(ff).name) ;
                     
                     % if stat file exist load and count number of stat
                     % computed
@@ -109,6 +110,8 @@ for pp=1:length(pt)
                         remEvk = num2str(double(length(strfreq)==5 && isequal(strfreq{5},'removeEvoked'))); % check if tf decomp processed with removal of evk response or not
                     end
                     mia_table{ct,ID_FREQS} = freq;
+                    d = load(dat_filename,'Time') ; 
+                    mia_table{ct,ID_SRATE} = sprintf('%d Hz',fix(1/(d.Time(2)-d.Time(1))));
                     mia_table{ct,ID_REMEVK} = remEvk;
 
                     % Fill out the list of file 
