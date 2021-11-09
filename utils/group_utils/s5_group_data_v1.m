@@ -115,17 +115,13 @@ for pp=1:length(sFiles)
     % Compute Ttest
     [tvals,pvals] = mia_compute_ttest(data.zs);
 
-    % Remove value of Time, tvals and pvals that are not in the time
-    %window
-    for ss=1:length(data.Time)
-        if data.Time(ss)<=OPTIONS.twin(1) || data.Time(ss)>=OPTIONS.twin(2)
-            data.Time(ss)=0;
-        end
-    end
-    % Keep pvals, tvals and Time datas without edges effect
-    ganalysis{pp,ii}.Time=data.Time(find(data.Time));
-    ganalysis{pp,ii}.tvals=tvals(:,find(data.Time));
-    ganalysis{pp,ii}.pvals=pvals(:,find(data.Time));
+    % Create a time vector corresponding to the window selected by user
+    vTime = data.Time>OPTIONS.twin(1) &data.Time<OPTIONS.twin(2) ;
+    
+    % Segment pvals, tvals and Time
+    ganalysis{pp,ii}.Time=data.Time(vTime);
+    ganalysis{pp,ii}.tvals=tvals(:,vTime);
+    ganalysis{pp,ii}.pvals=pvals(:,vTime);
 
     % Place the p(for left contacts) at the right place on contact name
     data.labels=strrep(data.labels,'''','p');
@@ -135,21 +131,6 @@ for pp=1:length(sFiles)
     ganalysis{pp,ii}.meanzsc=mean(data.zs,3) ;
 
 end
-
-%make sure that all Time vectors have the same length
-%Get the lower length of alla ganalysis.Time vectors
-tmp = [ganalysis{:}] ; 
-minL = min(cell2mat(cellfun(@(x)(length(x)), {tmp.Time}, 'UniformOutput', false))) ; 
-
-% Remove extra Time point if needed
-for pp=1:length(ganalysis)
-%     for ii=1:length(sFiles) 
-        ganalysis{pp,1}.Time=ganalysis{pp,ii}.Time(1:minL);
-        ganalysis{pp,1}.tvals=ganalysis{pp,ii}.tvals(:,1:minL);
-        ganalysis{pp,1}.pvals=ganalysis{pp,ii}.pvals(:,1:minL);
-%     end
-end
-
 
 %Close waitbar
 close(hwait)
