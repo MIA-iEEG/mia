@@ -135,19 +135,21 @@ for pp=1:length(sFiles)
 
 end
 
-% %make sure that all Time vectors have the same length
-% %Get the lower length of alla ganalysis.Time vectors
-% tmp = [ganalysis{:}] ; 
-% minL = min(cell2mat(cellfun(@(x)(length(x)), {tmp.Time}, 'UniformOutput', false))) ; 
-% 
-% % Remove extra Time point if needed
-% for pp=1:length(ganalysis)
-% %     for ii=1:length(sFiles) 
-%         ganalysis{pp,1}.Time=ganalysis{pp,ii}.Time(1:minL);
-%         ganalysis{pp,1}.tvals=ganalysis{pp,ii}.tvals(:,1:minL);
-%         ganalysis{pp,1}.pvals=ganalysis{pp,ii}.pvals(:,1:minL);
-% %     end
-% end
+% FIX : this allow to have the same number of smaple in each file 
+% (i.e. make sure that all Time vectors have the same length)
+tmp = [ganalysis{:}] ; 
+
+% Get the lower length of alla ganalysis.Time vectors
+minL = min(cell2mat(cellfun(@(x)(length(x)), {tmp.Time}, 'UniformOutput', false))) ; 
+
+% Remove extra Time point if needed
+for pp=1:length(ganalysis)
+%     for ii=1:length(sFiles) 
+        ganalysis{pp,1}.Time=ganalysis{pp,ii}.Time(1:minL);
+        ganalysis{pp,1}.tvals=ganalysis{pp,ii}.tvals(:,1:minL);
+        ganalysis{pp,1}.pvals=ganalysis{pp,ii}.pvals(:,1:minL);
+%     end
+end
 
 %Close waitbar
 % close(hwait)
