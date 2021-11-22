@@ -368,7 +368,7 @@ all_idx = handles.table.jtable.getSelectedRows ;
 % Get table that contains all files (names) found in the working directory
 [handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Remove Avg','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
 % These lines avoid Java Null Exception 
 jtable.getColumnModel().getColumn(jtable.getColumnCount - 1).setMinWidth(0);
