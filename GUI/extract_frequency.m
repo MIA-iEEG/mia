@@ -261,8 +261,8 @@ else %% COMPUTE TIME-FREQUENCY EXTRACTION
 
     OPTIONS.freqs= [lfreq:step:ufreq];
     OPTIONS.subjects = list_patients(selected_patient) ; 
-    
     OPTIONS.removeEvoked = removeEvoked;
+    OPTIONS.ncycles=str2num(get(handles.edit_ncycles,'String'));
 
     % Compute frequecy analysis
     handles.sFiles = mia_s4_compute_tf_bandwise(OPTIONS);

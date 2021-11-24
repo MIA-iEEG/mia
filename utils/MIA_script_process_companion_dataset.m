@@ -64,6 +64,7 @@ OPTIONS.modetf= 'Morlet';
 OPTIONS.mtg = 'BIPOLAR';
 OPTIONS.outdir = mia_db ; 
 OPTIONS.freqs= [80:10:150]; % lower freq, step, higher freq : [lfreq:step:ufreq]
+OPTIONS.ncycles = 7 ; 
 % OPTIONS.freqs= logspace(log10(80), log10(150),8) ; 
 OPTIONS.subjects = patients_dir ; 
 OPTIONS.removeEvoked = 0; % Do not remove evoked response prior to TF decomposition

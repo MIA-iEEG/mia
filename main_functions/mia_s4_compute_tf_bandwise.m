@@ -56,6 +56,7 @@ zbaseline = OPTIONS.zbaseline;
 freqb=OPTIONS.freqs  ;
 freqstep = fix(freqb(2)-freqb(1));
 mtg = lower(OPTIONS.mtg);
+ncycles = OPTIONS.ncycles ;
 
 % Init output
 OutputFile={};
@@ -126,7 +127,7 @@ for ii=1:length(sInputs)
         end
         
         % Process TF decomposition
-        [F,zs] = process_tf(data.Time,F,freqb,Fs,zbaseline,modetf) ;
+        [F,zs] = process_tf(data.Time,F,freqb,Fs,zbaseline,modetf,ncycles) ;
         
         % Keep OPTIONS in history
         history = OPTIONS;
@@ -145,7 +146,7 @@ delete(hwait_pt) ;
 end
 
 
-function [s, zs] = process_tf(t,dc,freqs,Fs,zbaseline,modetf)
+function [s, zs] = process_tf(t,dc,freqs,Fs,zbaseline,modetf,ncycles)
 
 % Time window with no edge
 s = zeros(size(dc));
@@ -158,12 +159,8 @@ hwait_trials = waitbar(0,sprintf('Computing trial %d/%d...',0, size(dc,3))) ;
 for trialidx=1:size(dc,3)
     % update progress bar
     waitbar(trialidx/size(dc,3),hwait_trials,sprintf('Computing trial %d/%d...',trialidx, size(dc,3))) ;
-    
-%     if ~strcmpi(modetf,'hilbert')
-        [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
-%     else
-%         [s(:,:,trialidx),zs(:,:,trialidx)] = compute_hilbert(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
-%     end
+    [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline,ncycles) ;
+
 end
 % Close progress bar
 delete(hwait_trials) ;
@@ -171,13 +168,13 @@ delete(hwait_trials) ;
 end
 
 
-function [s, zs] = compute_wavelet(t,dc,Fs, freqs,zbaseline)
+function [s, zs] = compute_wavelet(t,dc,Fs, freqs,zbaseline,ncycles)
 
 % Loop through contacts 
 for contactidx=1:size(dc,1)
     
     % Compute TF decompo
-    wt = awt_freqlist(dc(contactidx,:)',Fs,freqs,'Gabor',7);
+    wt = awt_freqlist(dc(contactidx,:)',Fs,freqs,'Gabor',ncycles);
     
     %Z-score against baseline
     st = abs(wt)';
@@ -192,26 +189,6 @@ for contactidx=1:size(dc,1)
     if sum(isnan(zs(contactidx,:)))
        fprintf('WARNING : NULL baseline\n');
     end
-end
-end
-
-
-function [s, zs] = compute_hilbert(t,dc,Fs,freqs,zbaseline )
-
-% For all contacts
-for contactidx=1:size(dc,1)
-    % For all freq ranges
-    for ff=1:length(freqs)-1
-        x = squeeze(dc(contactidx,:)) ;
-        [tmp] = bst_bandpass_filtfilt(double(x), Fs, freqs(ff), freqs(ff+1), 0, 'iir') ;
-        wt = hilbert(tmp);
-        % Normalization : Z-score against baseline
-        st(ff,:)= abs(wt);
-        baseline = st(ff,(t>zbaseline(1))&(t<=zbaseline(2)))' ;
-        wtz (ff,:)=  ( abs(wt) - repmat(mean(baseline),length( abs(wt)),1)')./repmat(std(baseline),length( abs(wt)),1)';
-    end
-    s(contactidx,:)=mean(st);
-    zs(contactidx,:)=mean(wtz);
 end
 end
 
