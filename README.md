@@ -18,6 +18,7 @@ We are happy to give you access to <a href="http://www.neurotrack.fr/mia/tutoria
 Estimating Parallel Processing in a Language Task Using Single-Trial Intracerebral Electroencephalography. <strong><em>Psychological Science</em>,</strong> <em>28</em>(4), 414–426. <a href="http://doi.org/10.1177/0956797616681296">[doi]</a>
 AS Dubarry,  A Llorens, A Trébuchon-Da Fonsesca, R Carron, C Liégeois-Chauvel, C Bénar, F.-X Alario.
 
+
 Cortical Dynamics of Semantic Priming and Interference during Word Production : An Intracerebral Study. <strong><em> Journal of Cognitive Neuroscience</em>,</strong> <em>31</em>(7), 978–1001. <a href="https://doi.org/10.1162/jocn">[doi]</a>
 Anders, R., Llorens, A., Dubarry, A., Trébuchon, A., Liégeois-chauvel, C., & Alario, F.
 
