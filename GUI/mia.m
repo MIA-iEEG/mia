@@ -984,8 +984,6 @@ end
 
 % --------------------------------------------------------------------
 function menu_quit_Callback(hObject, eventdata, handles)
-fprintf('\n*--------------- Goodbye! Thank you for using MarsPower -- Anne-Sophie Dubarry - CNRS - 2016-2018 -----------------*\n');
-
 close(handles.figure1);
 
 
