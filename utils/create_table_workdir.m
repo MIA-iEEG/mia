@@ -111,7 +111,7 @@ for pp=1:length(pt)
                     end
                     mia_table{ct,ID_FREQS} = freq;
                     d = load(dat_filename,'Time') ; 
-                    mia_table{ct,ID_SRATE} = sprintf('%d Hz',fix(1/(d.Time(2)-d.Time(1))));
+                    mia_table{ct,ID_SRATE} = sprintf('%d Hz',ceil(1/mean(diff(d.Time))));
                     mia_table{ct,ID_REMEVK} = remEvk;
 
                     % Fill out the list of file 
