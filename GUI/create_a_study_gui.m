@@ -384,7 +384,7 @@ prompt = {'Enter study name:'};
 dlg_title = 'STUDY NAME';
 num_lines = 1;
 def = {'Study','hsv'};
-studyn = newid(prompt,dlg_title,num_lines,def);
+studyn = mia_newid(prompt,dlg_title,num_lines,def);
 
 %Use of cancel button
 if isempty(studyn)

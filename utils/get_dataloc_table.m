@@ -123,7 +123,7 @@ for iPt=1:length(struct_table)
     lat(bads) = [] ;
     
     % reorder labels (in list of electrodes)
-    [~,idx_elec] = sort_nat(lower(elec), 'ascend');
+    [~,idx_elec] = mia_sort_nat(lower(elec), 'ascend');
     elec = elec(idx_elec) ;
     roi = roi(idx_elec) ;
     lat = lat(idx_elec) ;
