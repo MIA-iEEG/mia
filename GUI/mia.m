@@ -843,7 +843,7 @@ if ~isfield(handles.extOPTIONS,'outdir')
 end
 
 % Call frequency analysis GUI
-newEntries= extract_frequency(handles.list_patient, handles.extOPTIONS.outdir);
+newEntries= mia_extract_frequency(handles.list_patient, handles.extOPTIONS.outdir);
 
 % Update the table
 handles = update_data_table(handles);
