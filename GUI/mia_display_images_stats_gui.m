@@ -1,6 +1,6 @@
-function varargout = display_images_stats_gui(varargin)
-% DISPLAY_IMAGES_STATS_GUI MATLAB code for display_images_stats_gui.fig
-%      DISPLAY_IMAGES_STATS_GUI, by itself, creates a new DISPLAY_IMAGES_STATS_GUI or raises the existing
+function varargout = mia_display_images_stats_gui(varargin)
+% MIA_DISPLAY_IMAGES_STATS_GUI MATLAB code for mia_display_images_stats_gui.fig
+%      MIA_DISPLAY_IMAGES_STATS_GUI, by itself, creates a new MIA_DISPLAY_IMAGES_STATS_GUI or raises the existing
 %      singleton*.
 %
 % 
@@ -25,11 +25,11 @@ function varargout = display_images_stats_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 0;
+gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @display_images_stats_gui_OpeningFcn, ...
-                   'gui_OutputFcn',  @display_images_stats_gui_OutputFcn, ...
+                   'gui_OpeningFcn', @mia_display_images_stats_gui_OpeningFcn, ...
+                   'gui_OutputFcn',  @mia_display_images_stats_gui_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -44,15 +44,15 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before display_images_stats_gui is made visible.
-function display_images_stats_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before mia_display_images_stats_gui is made visible.
+function mia_display_images_stats_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to display_images_stats_gui (see VARARGIN)
+% varargin   command line arguments to mia_display_images_stats_gui (see VARARGIN)
 
-% Choose default command line output for display_images_stats_gui
+% Choose default command line output for mia_display_images_stats_gui
 handles.output = hObject;
  
 % This sets up the initial plot - only do when we are invisible
@@ -340,7 +340,7 @@ max_zscore = str2num(get(handles.edit_scale,'String')) ;
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = display_images_stats_gui_OutputFcn(hObject, eventdata, handles) 
+function varargout = mia_display_images_stats_gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -731,4 +731,3 @@ else
     set(handles.cursor_infos,'String',sprintf('Latency = %0.3f sec', lat));
 
 end
-

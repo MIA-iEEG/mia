@@ -467,7 +467,7 @@ else
         
         % Call main visualization GUI 
         % Conversion {} required (prevents warning : "The input to STR2FUNC...")
-        display_images_stats_gui(fname,handles.table.mia_table(idx(ii),:));
+        mia_display_images_stats_gui(fname,handles.table.mia_table(idx(ii),:));
 
         % Load is done : close progress bar
         delete(hwait_pt) ;
