@@ -1,6 +1,6 @@
-function varargout = statistics_gui(varargin)
-% STATISTICS_GUI MATLAB code for statistics_gui.fig
-%      STATISTICS_GUI, by itself, creates a new STATISTICS_GUI or raises the existing
+function varargout = mia_statistics_gui(varargin)
+% MIA_STATISTICS_GUI MATLAB code for mia_statistics_gui.fig
+%      MIA_STATISTICS_GUI, by itself, creates a new MIA_STATISTICS_GUI or raises the existing
 %      singleton*.
 % 
 % This GUI was created with GUIDE
@@ -29,8 +29,8 @@ function varargout = statistics_gui(varargin)
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @statistics_gui_OpeningFcn, ...
-                   'gui_OutputFcn',  @statistics_gui_OutputFcn, ...
+                   'gui_OpeningFcn', @mia_statistics_gui_OpeningFcn, ...
+                   'gui_OutputFcn',  @mia_statistics_gui_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -45,15 +45,15 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before statistics_gui is made visible.
-function statistics_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before mia_statistics_gui is made visible.
+function mia_statistics_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to statistics_gui (see VARARGIN)
+% varargin   command line arguments to mia_statistics_gui (see VARARGIN)
 
-% Choose default command line output for statistics_gui
+% Choose default command line output for mia_statistics_gui
 handles.output = hObject;
 idx_selected = varargin{1};
 handles.outdir = varargin{2};
@@ -109,12 +109,12 @@ handles.table.jScrollPane = jScrollPane ;
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes statistics_gui wait for user response (see UIRESUME)
+% UIWAIT makes mia_statistics_gui wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = statistics_gui_OutputFcn(hObject, eventdata, handles) 
+function varargout = mia_statistics_gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB

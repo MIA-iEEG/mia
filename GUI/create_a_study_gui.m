@@ -48,7 +48,7 @@ end
 % --- Executes just before group_analysis_gui is made visible.
 function create_a_study_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
-% Choose default command line output for statistics_gui
+% Choose default command line output for mia_statistics_gui
 handles.output = hObject;
 handles.idx_selected = varargin{1};
 handles.outdir = varargin{2};

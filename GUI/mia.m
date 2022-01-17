@@ -578,7 +578,7 @@ if isempty(idx)
 end
 
 % Call statistic analysis GUI
-handles_stats = statistics_gui(idx,handles.extOPTIONS.outdir,  handles.current_loctable);
+handles_stats = mia_statistics_gui(idx,handles.extOPTIONS.outdir,  handles.current_loctable);
 
 % Update the list 
 handles = update_patientlist(handles) ; %% ASD : WONT WORK??
