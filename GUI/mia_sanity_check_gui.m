@@ -1,6 +1,6 @@
-function varargout = sanity_check_gui(varargin)
-% sanity_check_gui MATLAB code for sanity_check_gui.fig
-%      SANITY_CHECK_GUI, by itself, creates a new SANITY_CHECK_GUI or raises the existing
+function varargout = mia_sanity_check_gui(varargin)
+% mia_sanity_check_gui MATLAB code for mia_sanity_check_gui.fig
+%      MIA_SANITY_CHECK_GUI, by itself, creates a new MIA_SANITY_CHECK_GUI or raises the existing
 %      singleton*.
 %
 % This GUI was created with GUIDE
@@ -24,11 +24,11 @@ function varargout = sanity_check_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 0;
+gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @sanity_check_gui_OpeningFcn, ...
-                   'gui_OutputFcn',  @sanity_check_gui_OutputFcn, ...
+                   'gui_OpeningFcn', @mia_sanity_check_gui_OpeningFcn, ...
+                   'gui_OutputFcn',  @mia_sanity_check_gui_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -42,14 +42,14 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-% --- Executes just before sanity_check_gui is made visible.
-function sanity_check_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before mia_sanity_check_gui is made visible.
+function mia_sanity_check_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
-% Choose default command line output for sanity_check_gui
+% Choose default command line output for mia_sanity_check_gui
 handles.output = hObject;
 
 handles.fname = cell2mat(varargin{1}) ; 
-
+% handles.fname = varargin{2} ;  
 handles = initialize_gui(hObject, handles, false);
 
 % Update handles structure
@@ -114,7 +114,7 @@ update_imagesc(handles);
 update_infos(handles) ;
 
 % --- Outputs from this function are returned to the command line.
-function varargout = sanity_check_gui_OutputFcn(hObject, eventdata, handles)
+function varargout = mia_sanity_check_gui_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.output;
   
 

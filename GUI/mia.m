@@ -282,8 +282,8 @@ if isfield(handles,'table')
         fname = fullfile(handles.extOPTIONS.outdir,list_pt{pt(1)},tmp.name) ;
 
         % Call sanity GUI 
-        sanity_check_gui(handles.list_patient,fname);
-
+        mia_sanity_check_gui({fname});
+     
         % Close progress bar
         delete(hwait) ;
 
@@ -429,7 +429,7 @@ else
         
         % Call main visualization GUI 
         % Conversion {} required (prevents warning : "The input to STR2FUNC...")
-        sanity_check_gui({fname});
+        mia_sanity_check_gui({fname});
         
     end
     

@@ -70,7 +70,7 @@ set(handles.figure1,'CloseRequestFcn',@my_closereq);
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes sanity_check_gui wait for user response (see UIRESUME)
+% UIWAIT makes mia_sanity_check_gui wait for user response (see UIRESUME)
 %permet de faire attendre la sortie de ce programme ?? sanity_check
 uiwait(handles.figure1);
 
