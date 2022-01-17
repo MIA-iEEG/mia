@@ -1,6 +1,6 @@
-function varargout = extract_frequency(varargin)
-% EXTRACT_FREQUENCY MATLAB code for extract_frequency.fig
-%      EXTRACT_FREQUENCY, by itself, creates a new EXTRACT_FREQUENCY or raises the existing
+function varargout = mia_extract_frequency(varargin)
+% MIA_EXTRACT_FREQUENCY MATLAB code for mia_extract_frequency.fig
+%      MIA_EXTRACT_FREQUENCY, by itself, creates a new MIA_EXTRACT_FREQUENCY or raises the existing
 %      singleton*.
 % 
 % This GUI was created with GUIDE
@@ -27,8 +27,8 @@ function varargout = extract_frequency(varargin)
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @extract_frequency_OpeningFcn, ...
-                   'gui_OutputFcn',  @extract_frequency_OutputFcn, ...
+                   'gui_OpeningFcn', @mia_extract_frequency_OpeningFcn, ...
+                   'gui_OutputFcn',  @mia_extract_frequency_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -41,10 +41,10 @@ else
     gui_mainfcn(gui_State, varargin{:});
 end
 
-% --- Executes just before extract_frequency is made visible.
-function extract_frequency_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before mia_extract_frequency is made visible.
+function mia_extract_frequency_OpeningFcn(hObject, eventdata, handles, varargin)
 
-% Choose default command line output for extract_frequency
+% Choose default command line output for mia_extract_frequency
 handles.output = hObject;
 
 %give a name to the figure
@@ -85,12 +85,12 @@ update_nPatient(handles);
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes extract_frequency wait for user response (see UIRESUME)
+% UIWAIT makes mia_extract_frequency wait for user response (see UIRESUME)
 uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = extract_frequency_OutputFcn(hObject, eventdata, handles)
+function varargout = mia_extract_frequency_OutputFcn(hObject, eventdata, handles)
 
 % This line handles the case where user close the window 
 if isfield(handles,'sFiles') ; varargout{1} = handles.sFiles ; else varargout{1} = [] ; end
