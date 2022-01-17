@@ -1,6 +1,6 @@
-function varargout = check_badchan_gui(varargin)
-% CHECK_BADCHAN_GUI MATLAB code for check_badchan_gui.fig
-%      CHECK_BADCHAN_GUI, by itself, creates a new CHECK_BADCHAN_GUI or raises the existing
+function varargout = mia_check_badchan_gui(varargin)
+% MIA_CHECK_BADCHAN_GUI MATLAB code for mia_check_badchan_gui.fig
+%      MIA_CHECK_BADCHAN_GUI, by itself, creates a new MIA_CHECK_BADCHAN_GUI or raises the existing
 %      singleton*.
 %
 % This GUI was created with GUIDE
@@ -27,8 +27,8 @@ function varargout = check_badchan_gui(varargin)
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
-    'gui_OpeningFcn', @check_badchan_gui_OpeningFcn, ...
-    'gui_OutputFcn',  @check_badchan_gui_OutputFcn, ...
+    'gui_OpeningFcn', @mia_check_badchan_gui_OpeningFcn, ...
+    'gui_OutputFcn',  @mia_check_badchan_gui_OutputFcn, ...
     'gui_LayoutFcn',  [] , ...
     'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -43,10 +43,10 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before check_badchan_gui is made visible.
-function check_badchan_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before mia_check_badchan_gui is made visible.
+function mia_check_badchan_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
-% Choose default command line output for check_badchan_gui
+% Choose default command line output for mia_check_badchan_gui
 handles.output = hObject;
 
 % Loads good channels list from previous execution
@@ -76,7 +76,7 @@ uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = check_badchan_gui_OutputFcn(hObject, eventdata, handles)
+function varargout = mia_check_badchan_gui_OutputFcn(hObject, eventdata, handles)
 
 % Cancel if user close window 
 if isempty(handles)

@@ -509,7 +509,7 @@ function Select_chan_Callback(hObject, eventdata, handles)
 % hObject    handle to Select_chan (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-[goodlabels,badlabels]=check_badchan_gui(handles.Labels(handles.iSel),handles.Labels(~handles.iSel));
+[goodlabels,badlabels]=mia_check_badchan_gui(handles.Labels(handles.iSel),handles.Labels(~handles.iSel));
 
 labels=handles.Labels;
 

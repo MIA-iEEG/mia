@@ -280,7 +280,7 @@ function SelectChannels_Callback(hObject, eventdata, handles)
 % Get signal at the appropriate montage
 [F,labels,iSel] = get_signals(handles) ;
 
-[goodlabels,badlabels]=check_badchan_gui(labels(iSel),labels(~iSel));
+[goodlabels,badlabels]=mia_check_badchan_gui(labels(iSel),labels(~iSel));
 
 % if monopolar montage 
 if (get(handles.popupmenu_montage,'Value') == get(handles.popupmenu_montage,'Max'))
