@@ -1,6 +1,6 @@
-function varargout = ganalysis_gui(varargin)
-% GANALYSIS_GUI MATLAB code for ganalysis_gui.fig
-%      GANALYSIS_GUI, by itself, creates a new GANALYSIS_GUI or raises the existing
+function varargout = mia_ganalysis_gui(varargin)
+% MIA_GANALYSIS_GUI MATLAB code for mia_ganalysis_gui.fig
+%      MIA_GANALYSIS_GUI, by itself, creates a new MIA_GANALYSIS_GUI or raises the existing
 %      singleton*.
 % 
 % This GUI was created with GUIDE
@@ -24,11 +24,11 @@ function varargout = ganalysis_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 0;
+gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
-    'gui_OpeningFcn', @ganalysis_gui_OpeningFcn, ...
-    'gui_OutputFcn',  @ganalysis_gui_OutputFcn, ...
+    'gui_OpeningFcn', @mia_ganalysis_gui_OpeningFcn, ...
+    'gui_OutputFcn',  @mia_ganalysis_gui_OutputFcn, ...
     'gui_LayoutFcn',  [] , ...
     'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -42,10 +42,10 @@ else
 end
 
 
-% --- Executes just before ganalysis_gui is made visible.
-function ganalysis_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before mia_ganalysis_gui is made visible.
+function mia_ganalysis_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
-% Choose default command line output for ganalysis_gui
+% Choose default command line output for mia_ganalysis_gui
 handles.output = hObject;
 
 %handles.sfiles=varargin{1};
@@ -111,7 +111,7 @@ guidata(hObject, handles);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = ganalysis_gui_OutputFcn(hObject, eventdata, handles)
+function varargout = mia_ganalysis_gui_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 varargout{1} = handles.output;
