@@ -1,4 +1,4 @@
-function varargout = create_a_study_gui(varargin)
+function varargout = mia_create_a_study_gui(varargin)
 % GROUP_ANALYSIS_GUI MATLAB code for group_analysis_gui.fig
 %      GROUP_ANALYSIS_GUI, by itself, creates a new GROUP_ANALYSIS_GUI or raises the existing
 %      singleton*.
@@ -31,8 +31,8 @@ function varargout = create_a_study_gui(varargin)
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @create_a_study_gui_OpeningFcn, ...
-                   'gui_OutputFcn',  @create_a_study_gui_OutputFcn, ...
+                   'gui_OpeningFcn', @mia_create_a_study_gui_OpeningFcn, ...
+                   'gui_OutputFcn',  @mia_create_a_study_gui_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -46,7 +46,7 @@ else
 end
 
 % --- Executes just before group_analysis_gui is made visible.
-function create_a_study_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+function mia_create_a_study_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for mia_statistics_gui
 handles.output = hObject;
@@ -112,7 +112,7 @@ uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = create_a_study_gui_OutputFcn(hObject, eventdata, handles)
+function varargout = mia_create_a_study_gui_OutputFcn(hObject, eventdata, handles)
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB

@@ -693,7 +693,7 @@ if isempty(idx)
 end
 
 % Call create_a_study GUI (guide)
-create_a_study_gui(idx,handles.extOPTIONS.outdir, handles.current_loctable);
+mia_create_a_study_gui(idx,handles.extOPTIONS.outdir, handles.current_loctable);
 
 % Update jtable
 handles= update_data_table(handles);
