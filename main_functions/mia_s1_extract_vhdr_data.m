@@ -142,7 +142,7 @@ for ii=1:length(sInputs)
         F(idx_null,:,:) = [];
         
         % Reorder labels
-        [~,res_index] = sort_nat(labels, 'ascend');
+        [~,res_index] = mia_sort_nat(labels, 'ascend');
         F=F(res_index,:,:) ; labels = labels(res_index) ;
         Favg = mean(F,3); 
         

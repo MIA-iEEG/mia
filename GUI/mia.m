@@ -638,7 +638,7 @@ if filename~=0
     dlg_title = 'ATLAS NAME';
     num_lines = 1;
     def = {strrep(filename,'.xlsx',''),'hsv'};
-    loctable_name = newid(prompt,dlg_title,num_lines,def);
+    loctable_name = mia_newid(prompt,dlg_title,num_lines,def);
 
     % Use of cancel button
     if isempty(loctable_name)

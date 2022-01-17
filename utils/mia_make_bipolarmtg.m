@@ -36,7 +36,7 @@ if length(labels)~=size(m,1)
 end
 
 % Sort SEEG lables in order (prefix + indices) 
-[~,res_index] = sort_nat(labels, 'ascend');
+[~,res_index] = mia_sort_nat(labels, 'ascend');
 labelo = labels(res_index) ;
 
 a = regexprep(labelo,'\d+','0');    

@@ -181,7 +181,7 @@ set(handles.bad_chan,'Value',1);
 
 goodlabels=cat(1,get(handles.good_chan,'string'),Opening_badlabels(find(Vec)));
  % Reorder labels
-        [~,res_index] = sort_nat(goodlabels, 'ascend');
+        [~,res_index] = mia_sort_nat(goodlabels, 'ascend');
         goodlabels = goodlabels(res_index) ;
         badlabels=Opening_badlabels(find(~Vec));
 
