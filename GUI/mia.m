@@ -984,8 +984,6 @@ end
 
 % --------------------------------------------------------------------
 function menu_quit_Callback(hObject, eventdata, handles)
-fprintf('\n*--------------- Goodbye! Thank you for using MarsPower -- Anne-Sophie Dubarry - CNRS - 2016-2018 -----------------*\n');
-
 close(handles.figure1);
 
 
@@ -1210,3 +1208,20 @@ function pushbutton_loadloctable_CreateFcn(hObject, eventdata, handles)
 % hObject    handle to pushbutton_loadloctable (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
+
+
+% --------------------------------------------------------------------
+function MIA_website_Callback(hObject, eventdata, handles)
+% hObject    handle to MIA_website (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+ web('http://www.neurotrack.fr/mia/', '-browser')
+ 
+
+
+% --------------------------------------------------------------------
+function troubleshoot_Callback(hObject, eventdata, handles)
+% hObject    handle to troubleshoot (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+web("mailto:anne-sophie.dubarry@univ-amu.fr") 
