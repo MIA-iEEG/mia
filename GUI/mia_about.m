@@ -59,7 +59,7 @@ imshow(icon,'Parent',handles.axes_png) ;
 % Update handles structure
 guidata(hObject, handles);
 
-set(hObject,'Name','About Marspower');
+set(hObject,'Name','About MIA');
 % UIWAIT makes mia_about wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
@@ -81,3 +81,36 @@ function axes_png_CreateFcn(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
 axes(hObject);
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over text4.
+function text4_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to text4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+web("http://www.neurotrack.fr/mia/", '-browser') 
+
+
+% --- Executes during object creation, after setting all properties.
+function text4_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to text4 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over text2.
+function text2_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to text2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+
+% --- If Enable == 'on', executes on mouse press in 5 pixel border.
+% --- Otherwise, executes on mouse press in 5 pixel border or over text5.
+function text5_ButtonDownFcn(hObject, eventdata, handles)
+% hObject    handle to text5 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+web("mailto:anne-sophie.dubarry@univ-amu.fr") 
