@@ -1,15 +1,14 @@
-function [h] = filter_timewin_signif(h, thresh) 
+function [h] = mia_filter_timewin_signif(h, thresh) 
 % ***********************************************************************
-%  [] = filter_timewin_signif(h) 
-%  Filters significative timestamps : consecutive significative 
-% that exceed thresh points 
-% ***********************************************************************
-%
-%
-% ***********************************************************************
+% Filters significative timestamps : removes from mask (h) the consecutive 
+% significant points that exceed a certain duration (thresh)
+% 
 % Inputs :
 % h : nsens x nsamples 
 % thres : consecutive significative points threshold (in samples)
+%
+% Ex : fh = filter_timewin_signif(h(:,:),fix(0.01*Fs)) ;
+%
 % ========================================================================
 % This file is part of MIA.
 % 
@@ -28,13 +27,11 @@ function [h] = filter_timewin_signif(h, thresh)
 % ========================================================================
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
-% Ex : fh = filter_timewin_signif(h(:,:),fix(0.01*Fs)) ;
 
 % Get electrodes that show any significant point
 elec_sig = find(max(h')==1) ; 
 
-
-% % Removes anything that does not last more than  thresh
+% For each electrode
 for jj=1:length(elec_sig) 
     
     c=h(elec_sig(jj),:);

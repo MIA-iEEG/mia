@@ -102,7 +102,7 @@ for ii=1:length(sInputs)
             labels=data.labels(find(data.isGood)) ;
             
             % Move the channel information to BIDS format
-            if ~exist(chan_file,'file') ; write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii},'MIA sanity rejection') ; end
+            if ~exist(chan_file,'file') ; mia_write_BIDS_compatible_channel_file(labels,data.isGood,sInputs{ii},'MIA sanity rejection') ; end
             
         end
         % New BIDS implementation : read the table and mark as good all
@@ -174,7 +174,7 @@ function [s, zs] = compute_wavelet(t,dc,Fs, freqs,zbaseline,ncycles)
 for contactidx=1:size(dc,1)
     
     % Compute TF decompo
-    wt = awt_freqlist(dc(contactidx,:)',Fs,freqs,'Gabor',ncycles);
+    wt = mia_awt_freqlist(dc(contactidx,:)',Fs,freqs,'Gabor',ncycles);
     
     %Z-score against baseline
     st = abs(wt)';
