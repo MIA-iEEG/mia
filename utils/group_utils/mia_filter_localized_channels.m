@@ -1,4 +1,4 @@
-function [id, labels, idx] = filter_localized_channels(m_table_as, idx_subjloc , id_contact, id_ncontact, bilabels, inclusive)
+function [id, labels, idx] = mia_filter_localized_channels(m_table_as, idx_subjloc , id_contact, id_ncontact, bilabels, inclusive)
 % ***********************************************************************
 % ***********************************************************************
 %

@@ -1,4 +1,4 @@
-function [struct_table] = read_rt_table(filename, OPTIONS)
+function [struct_table] = mia_read_rt_table(filename, OPTIONS)
 %
 % ========================================================================
 % This file is part of MIA.

@@ -1,4 +1,4 @@
-function [h,offset] = stackplot_ASD(t,x,color,labels, offset)
+function [h,offset] = mia_stackplot_ASD(t,x,color,labels, offset)
 %STACKPLOT Plot in a stacked fashion
 % function [h,offset] = stackplot(t,x,offset)
 % t is time (optional if offset NOT given)

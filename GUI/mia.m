@@ -135,7 +135,7 @@ handles = update_loctablepath_text(handles);
 function handles = create_data_table(handles)
 
 % Get table that contains all files (names) found in the working directory
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
+[handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
@@ -366,7 +366,7 @@ function handles = update_data_table(handles)
 all_idx = handles.table.jtable.getSelectedRows ; 
 
 % Get table that contains all files (names) found in the working directory
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
+[handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
@@ -442,7 +442,7 @@ end
 function display_stats_Callback(hObject, eventdata, handles)
 
 % ASD : is this line usefull?
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
+[handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 % Gets selected items in java table
 all_idx = handles.table.jtable.getSelectedRows ; 
@@ -612,7 +612,7 @@ if filename~=0
   
     % Read loc (excel) file 
     grpOPTIONS.maindir = handles.extOPTIONS.outdir;
-    [struct_table, status, message] = read_loc_table(fullfile(pathname,filename),grpOPTIONS) ;
+    [struct_table, status, message] = mia_read_loc_table(fullfile(pathname,filename),grpOPTIONS) ;
     
     % Return error if doublons exist
     if status==0
@@ -626,7 +626,7 @@ if filename~=0
     else
     
         % Map the contacts from loc table with the ones in the data 
-        [s.m_table_all, status, message] = get_dataloc_table(struct_table,grpOPTIONS);
+        [s.m_table_all, status, message] = mia_get_dataloc_table(struct_table,grpOPTIONS);
     end
     
     if status==0
@@ -872,7 +872,7 @@ end
 % --- Executes on button press in pushbutton_minusRmData.
 function pushbutton_minusRmData_Callback(hObject, eventdata, handles)
 
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
+[handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.extOPTIONS.outdir, handles.current_loctable) ;
 
 all_idx = handles.table.jtable.getSelectedRows ;
 

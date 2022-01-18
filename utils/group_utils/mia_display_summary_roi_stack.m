@@ -1,4 +1,5 @@
-function  [labels_o,colorm] = display_summary_roi_flat(roi,OPTIONS) 
+function  [labels_o,colorm] = mia_display_summary_roi_stack(roi,OPTIONS) 
+%
 % ========================================================================
 % This file is part of MIA.
 % 
@@ -18,10 +19,10 @@ function  [labels_o,colorm] = display_summary_roi_flat(roi,OPTIONS)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 %
-% 2016/10/13 : ASD creation
-% Display black and white averaged time series per regions
+% 2017/1/11 : ASD creation
 
-FONTSZ = 12 ;
+% Font size
+FONTSZ = 12; 
 
 for kk=1:length(roi)
 
@@ -55,24 +56,35 @@ labels_o = labels_roi(I) ;
 
 % set colors to timeseries 
 colorm = jet(length(labels_roi)) ; 
-% Write out number of electrodes/patients per regions
-fprintf('Number_electrode / Number of patients : \n');
-for ii=1:length(roi) ; fprintf(sprintf('%s : %d/%d\n',roi{I(ii)}.name,size(roi{I(ii)}.Fmask,2),size(roi{I(ii)}.signmoy,2))) ; end
 
-%Here this is specific to flat B&W display
+nleft = mod(length(labels_roi),OPTIONS.nsub);
+ct = 1 ;
 
-figure ; imagesc(roi{1}.t,1:length(labels_o),signmoy_o'.*(abs(signmoy_o')>OPTIONS.threshdisp)) ; set(gca,'YTick',1:length(labels_o),'YTickLabel',labels_o) ; 
-% toto = colormap ; toto(1,:) = [1 1 1]; colormap(toto) ; grid on ; set(gcf,'color','white');
-colormap jet; %toto = flipdim(colormap,1); toto(1,:) = [1 1 1];
-grid on ; set(gcf,'color','white');colorbar ;set(gca,'Fontsize',FONTSZ); xlabel('Time (sec'); title(sprintf('Mean timeseries (ordered at %0.2f zscore) ; Threshold at %0.2f',OPTIONS.thresh,OPTIONS.threshdisp));
+% % sans les rois
+%figure('Units','normalized','position',[0 0.5 0.5 0.7]); 
+figure('Units','normalized','position',[0 0 0.5 0.7],'Name','Mean ROIS','NumberTitle','off'); 
 
-% toto = colormap ; 
-% toto(1,:) = [1 1 1];
-% colormap(toto) ; colorbar ; caxis([1 7.69]) ; set(gca,'Fontsize',20);
-% colormap(toto) ; colorbar ;  set(gca,'Fontsize',20);
-caxis([-12 12]) ;
-% 
-% colorbounds = roi{1}.t(roi{1}.t>=0) ; 
-% colorm = jet(size(roi{1}.t,2)) ; 
-% % colorm = colorm(Y-sum(roi{1}.t<0),:) ; 
-% colorm = colorm(Y,:) ; 
+maxis = ceil(max(max(abs(signmoy_o))));
+
+for jj=1:OPTIONS.nsub
+
+    nsig = fix(length(labels_roi)/OPTIONS.nsub);
+    
+    if (nleft+1-jj)>0 
+        nsig = nsig +1 ; 
+    end
+    
+    set(0,'DefaultAxesColorOrder',colorm(ct:ct+nsig-1,:));
+    mia_stackplot_ASD(roi{1}.t,signmoy_o,[1 1 1],labels_o) ; hold on ; 
+    
+% subplot(OPTIONS.nsub,1,jj); plot(roi{1}.t,signmoy_o(:,ct:ct+nsig-1)','LineWidth',1.05); legend(labels_o(ct:ct+nsig-1)) ; grid on ; ylim([-maxis maxis]) ; xlim([roi{1}.t(1), roi{1}.t(end)]);
+%     ct = ct+nsig ;
+%     title(strrep(OPTIONS.title,'_','-'),'FontSize',FONTSZ) ;
+%     xlabel('Time(s)','FontSize',FONTSZ);
+%     ylabel('zscore','FontSize',FONTSZ);
+%     
+end
+
+title(sprintf('Mean timeseries (Z-scores) (ordered at %0.2f)',OPTIONS.thresh));
+    
+set(gcf,'color','white')

@@ -18,7 +18,7 @@
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 % This function browse recursivvely in MarsPower working directory to fill
 % out a table containgin all files (processes) that have been produced
-function [mia_table, sFiles] = create_table_workdir(varargin)
+function [mia_table, sFiles] = mia_create_table_workdir(varargin)
 
 MAINDIR = varargin{1};
 current_loctable = varargin{2};

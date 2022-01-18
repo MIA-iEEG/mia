@@ -17,7 +17,7 @@
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 % This function pops a dialog box to select files 
-function [RawFiles, FileFormat] = dialog_import_data(WindowTitle, DefaultDir, Filters)
+function [RawFiles, FileFormat] = mia_dialog_import_data(WindowTitle, DefaultDir, Filters)
 
 import javax.swing.JFileChooser;
 
@@ -100,3 +100,4 @@ function ActionPerformedCallback(hjFileChooser, eventData, hFig)
           % should never happen
   end
 end  % ActionPerformedCallback
+

@@ -1,4 +1,4 @@
-function [ganalysis] = s5_group_data_v1(sFiles,OPTIONS)
+function [ganalysis] = mia_s5_group_data_v1(sFiles,OPTIONS)
 % -------------------------------------------------------------------------
 % DESCRIPTION
 %   Group multiple patients data into one structure

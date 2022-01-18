@@ -16,7 +16,7 @@
 % ========================================================================
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
-function [roi] = get_rasters(roi,OPTIONS) 
+function [roi] = mia_get_rasters(roi,OPTIONS) 
 
 ct=1;
 %  Loop through regions

@@ -34,7 +34,7 @@ else
 end
 
 % BST function to open a Java file dialog box
-[RawFiles, FileFormat] = dialog_import_data('MIA : Open SEEG recordings...', ...  % Window title
+[RawFiles, FileFormat] = mia_dialog_import_data('MIA : Open SEEG recordings...', ...  % Window title
      datapath, ...           % Working directory
     inputFormat);    % List of available file formats
  

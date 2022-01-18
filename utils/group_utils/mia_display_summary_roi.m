@@ -1,4 +1,4 @@
-function  [labels_o,colorm] = display_summary_roi(roi,OPTIONS) 
+function  [labels_o,colorm] = mia_display_summary_roi(roi,OPTIONS) 
 %
 % ========================================================================
 % This file is part of MIA.

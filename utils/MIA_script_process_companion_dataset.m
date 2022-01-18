@@ -103,7 +103,7 @@ else
 end
 
 % Get one structure for group analysis (ganalysis)
-ganalysis = s5_group_data_v1(sFiles,groupOPTIONS);
+ganalysis = mia_s5_group_data_v1(sFiles,groupOPTIONS);
 
 % Create a study filename
 [~,b] = fileparts(ganalysis{1}.fname) ; 
@@ -120,13 +120,13 @@ save(fname,'ganalysis');
 %% Load labeling table
 %-----------------------------------------------------------------------------
 % Loads the localizations of all patients contacts 
-[struct_table, status, message] = read_loc_table(fullfile(zenodo_import_dir,'loc_table_MIA.xlsx'),groupOPTIONS) ;    
+[struct_table, status, message] = mia_read_loc_table(fullfile(zenodo_import_dir,'loc_table_MIA.xlsx'),groupOPTIONS) ;    
 
 loctable_name = 'MyTable' ;
 groupOPTIONS.maindir = mia_db ; 
 
 % Map the contacts from loc table with the ones in the data 
-[m_table_all, status, message] = get_dataloc_table(struct_table,groupOPTIONS);
+[m_table_all, status, message] = mia_get_dataloc_table(struct_table,groupOPTIONS);
   
 % Atlas filename 
 fname = fullfile(outdir,strcat('m_table_',loctable_name,'.mat'));
@@ -139,7 +139,7 @@ save(fname,'-struct','s');
 %-----------------------------------------------------------------------------
 % Filters out regions not interessting (out  blanc, etc.0)
 isGood =~(strcmp(m_table_all(:,5),'out')|strcmp(m_table_all(:,5),'lesion'));
-[m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_all(isGood,:), ganalysis);
+[m_table_effect, s, smask, all_labels] = mia_get_table_effect_clc(m_table_all(isGood,:), ganalysis);
 
 
 %% GET ROIS No stats on correlation 
@@ -155,7 +155,7 @@ getOPTIONS.montage = 'bipolar';
 gan = [ganalysis{1,:}] ;
  
 % Get all rois that has significant activity for this frequency band
-rois = get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{gan.freqb},getOPTIONS);
+rois = mia_get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{gan.freqb},getOPTIONS);
 
 
 %% GET ROIS with stats on correlations *
@@ -169,13 +169,13 @@ getOPTIONS.signmode = 'signed';
 gan = [ganalysis{1,:}] ;
  
 % Get all rois that has significant activity for this frequency band
-rois = get_roi_permute(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{gan.freqb},getOPTIONS);
+rois = mia_get_roi_permute(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{gan.freqb},getOPTIONS);
 
 %% DISPLAYS Statistics on correlations
 %-----------------------------------------------------------------------------
 dOPTIONS.clr = jet(numel(unique(m_table_all(:,1)))); % distinct colors for pt
 dOPTIONS.win_noedges = [-0.5,1.4] ;
-display_roi_and_permcorr(rois,dOPTIONS);
+mia_display_roi_and_permcorr(rois,dOPTIONS);
 
 
 %% DISPLAYS SUMMARY (MEAN ROIS)
@@ -183,7 +183,7 @@ display_roi_and_permcorr(rois,dOPTIONS);
 pOPTIONS.thresh =3; % -1 for no color chronological organization
 pOPTIONS.nsub =4; % number of subplot
 pOPTIONS.title = '';
-[labels_o, colorm] = display_summary_roi(rois,pOPTIONS) ;
+[labels_o, colorm] = mia_display_summary_roi(rois,pOPTIONS) ;
 
 %% DISPLAYS ONE PATIENT DATA (MEAN ROIS)
 %-----------------------------------------------------------------------------
@@ -191,4 +191,4 @@ pOPTIONS.thresh = 3; % -1 for no color chronological organization
 pOPTIONS.nsub =2; % number of subplot
 pOPTIONS.ptKey = 'PT_02';
 
-[labels_o_pt, colorm_pt] =display_summary_roi_pt(rois,pOPTIONS) ;
+[labels_o_pt, colorm_pt] =mia_display_summary_roi_pt(rois,pOPTIONS) ;

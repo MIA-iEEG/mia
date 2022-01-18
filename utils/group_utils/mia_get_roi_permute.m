@@ -1,4 +1,4 @@
-function [roi] = get_roi(m_table_effect,t, s, smask, all_labels,freqs,opt) 
+function [roi] = mia_get_roi_permute(m_table_effect,t, s, smask, all_labels,freqs,opt) 
 %
 % ***********************************************************************
 %
@@ -61,7 +61,7 @@ clr = hsv(numel(unsubj));
 % ROI counter
 ctRoi = 1; 
 
-% Show all contacts or Show only significant
+% Filters contacts (or not) based on significance of signal
 if opt.signifmode ~=0
     bool_signif = cell2mat(m_table_effect(:,starting_freq+opt.freq)) ; 
 else
@@ -89,34 +89,65 @@ for jj=1:length(un)
     % Gets indices without doublons
     idx_signals = idx_signals_doublons(ia) ; 
  
+    % PERMUTATIONS
+    for pp = 1:1000
+
+        idx_signals_perm = [] ; 
+
+        % Loop over patients with active contacts in this ROI
+        for ii=1:length(subj_active)
+            
+            % Current patient boolean in m_table_effect
+            bool_current_pt  = ismember(m_table_effect(:,id_subj),subj_active(ii)) ; 
+
+            % All contacts present for this region and this pt
+            ind_roi_subj = logical(bool_current_pt.*bool_roi.*bool_signif); 
+
+            % Here for permutation we select random contacts from this patient 
+            nbToSelect = length(unique(m_table_effect(ind_roi_subj,6)));
+            [c2,ia2,ic2] =  unique(m_table_effect(bool_current_pt,6)) ; 
+            
+            n = randperm(length(ia2),nbToSelect);
+
+            idx_signals_perm = cat(2,idx_signals_perm,ia2(n)'+find(bool_current_pt,1)-1) ; 
+
+            % Get indices of signals for this region/patient (valid in
+            % m_table_effect, s, smask and all_labels)
+    %         idx_signals = cat(1,idx_signals,idx1(ia)) ;      
+
+        end
+
+        all_sig = s(idx_signals_perm,:,opt.freq)';
+
+        % If FLIP option is used 
+        if isfield(opt, 'flip_thresh')
+            [~,~,labels_roi,r] = flip_signals(all_sig, smask(idx_signals_perm,:,opt.freq)', all_labels(idx_signals_perm), opt.flip_thresh) ; 
+        else
+            r = corrcoef(all_sig) ;
+            labels_roi = all_labels(idx_signals_perm) ; 
+        end
+
+        % Compute correlations between contacts
+%         r = corrcoef(all_sig) ; 
+        trChan = tril(r,-1) ; 
+        corr_permut(pp) = mean(trChan(trChan~=0)); 
+        labels_permut{pp} = labels_roi;
+        
+        if length(unique(all_labels(idx_signals_perm))) ~= length(all_labels(idx_signals_perm))
+            fprintf('Doublons exist\n') ;
+        end
+      
+
+    end
+
+
     all_sig = s(idx_signals,:,opt.freq)';
     masked_sig = smask(idx_signals,:,opt.freq)';
     labels_roi = all_labels(idx_signals);
     subj_in = find(ismember(unsubj,subj_active)); 
  
-    % Get each contact's patient name 
-     for cc=1:length(labels_roi)
-        ptchar = labels_roi{cc} ; 
-        idx_underscores = strfind(ptchar,'_');
-        %ptname{cc} = ptchar(1:idx_underscores(2)-1);
-        %ptname{cc} = ptchar(1:idx_underscores(1)-1);
-        if strcmp(opt.montage,'bipolar')
-            ptname{cc} = ptchar(1:idx_underscores(end-1)-1);
-        else 
-            ptname{cc} = ptchar(1:idx_underscores(end)-1);
-        end
-     end    
-   
- % If FLIP option is used 
-    if isfield(opt, 'flip_thresh')
-          [all_sig,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
-    else
-           r = corrcoef(all_sig) ; 
-    end
-     
     % Compute means per patients
-    [~,~,IC] = unique(ptname);
-    
+    [~,~,IC] = unique(cellfun( @(x) x(1:5), labels_roi, 'UniformOutput',false )); % BUG To fix : 1:5 is length of pt_name
     for ss=1:max(IC) 
         % Mean signals per patients
         if strcmp(opt.signmode,'signed') 
@@ -124,20 +155,31 @@ for jj=1:length(un)
         else 
             mean_sig_subj(:,ss) = mean(abs(all_sig(:,IC==ss)),2) ; 
         end
+     end
+
+    % If FLIP option is used 
+    if isfield(opt, 'flip_thresh')
+          [mean_sig_subj,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
+    else
+           r = corrcoef(all_sig) ; 
+ 
     end
 
-           
-    % Compute correlations between patients : interpatient correlation
-    rPt = corrcoef(mean_sig_subj) ;         % compute the correlation between all timeseries 
-    trPt = tril(rPt,-1) ;                   % Extract lower triangular part
-    roi{ctRoi}.corrPt = mean(trPt(trPt~=0));% Compute the average of all values from the lower triangular part
-    roi{ctRoi}.allCorrPt = trPt(trPt~=0);        
+   % Compute correlations between patients : interpatient correlation
+   rPt = corrcoef(mean_sig_subj) ; 
+   trPt = tril(rPt,-1) ; 
+   roi{ctRoi}.corrPt = mean(trPt(trPt~=0)); 
+   roi{ctRoi}.allCorrPt = trPt(trPt~=0);        
 
-    % Compute correlations between channels : intra+inter patients       
-    trChan = tril(r,-1) ;                           % Extract lower triangular part
-    roi{ctRoi}.corrChan =  mean(trChan(trChan~=0)); % Compute the average of all values from the lower triangular part
-    roi{ctRoi}.allCorrChan = trChan(trChan~=0);
+   % Compute correlations between channels : intra+inter patients       
+    trChan = tril(r,-1) ; 
+   roi{ctRoi}.corrChan =  mean(trChan(trChan~=0)); 
+   roi{ctRoi}.allCorrChan = trChan(trChan~=0);   
    
+   % Saves permutations
+    roi{ctRoi}.corr_permut = corr_permut ; 
+    roi{ctRoi}.labels_permut = labels_permut ; 
+
     % Find onset of the first significant period
     d = sum(masked_sig',1) ; 
     detect = diff(d) ; 
@@ -156,19 +198,16 @@ for jj=1:length(un)
 
     ctRoi=ctRoi+1;
 
-    clear r mean_sig_subj ptname ; 
+    clear r mean_sig_subj ; 
 
+ 
 end
 
 % This function flip signals if option is checked (for broadband "LFP"signals) 
-function  [all_sig,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig, labels_roi, flip_thresh)
+function  [mean_sig_subj,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig, labels_roi, flip_thresh)
 
     % Computes correlations
     r = corrcoef(all_sig) ; 
-
-%     % Alternative flip with SVD 
-%     [u,s,v] = svd(all_sig,0); 
-%     fl = sign(v(:,1))' ; 
 
     % Select min in R 
     A = (r<flip_thresh) ; 
@@ -193,6 +232,12 @@ function  [all_sig,masked_sig,labels_roi,r]  =  flip_signals(all_sig, masked_sig
     % Recompute correlations between FLIPPED contacts
     r = corrcoef(all_sigFl) ; 
     all_sig = all_sigFl ;
+
+    % Recompute means per patients
+    [C,IA,IC] = unique(cellfun( @(x) x(1:5), labels_roi, 'UniformOutput',false )) ;% BUG To fix : 1:5 is length of pt_name
+    for ss=1:max(IC) 
+        mean_sig_subj(:,ss) = mean(all_sig(:,IC==ss),2);
+    end
     
     % Add _FLP at the end of the contacts labels that were flipped
     labels_roi(fl==-1) = strcat(labels_roi(fl==-1),'_FLP') ; 

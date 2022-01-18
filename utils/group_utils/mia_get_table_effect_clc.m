@@ -1,17 +1,34 @@
-function [m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_as, ganalysis) 
+% ========================================================================
+% This file is part of MIA.
+% 
+% MIA is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% MIA is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%  
+% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+%
+% ========================================================================
+% This software was developed by
+%       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
+function [m_table_effect, s, smask, all_labels] = mia_get_table_effect_clc(m_table_as, ganalysis) 
 
 id_contact = 2; 
 id_ncontact = 3;
 id_subj = 1 ; 
 
-threshp = 0.001; 
-
+threshp = [] ; 
 m_table_effect = [] ;
 idx_ganalysisloc = [] ;
 all_labels = [] ;
 s = [];
 smask = [];
-Fs = 1/(ganalysis{1}.Time(2)-ganalysis{2}.Time(1)) ; 
+Fs = 1/(ganalysis{1}.Time(2)-ganalysis{1}.Time(1)) ; 
 
 % Adds 'p' for left contact in labels %% for CLC
 % m_table_as(strcmp(m_table_as(:,4),'L'),2) = strcat(m_table_as(strcmp(m_table_as(:,4),'L'),2),'p') ; 
@@ -20,14 +37,19 @@ Fs = 1/(ganalysis{1}.Time(2)-ganalysis{2}.Time(1)) ;
 % there will be no more correspondance with the data
 % left_labels = m_table_as(strcmp(m_table_as(:,4),'L'),2) ;
 
-% ASD for now loop ; COULD BE vectorized? 
+% ASD for now loop throught the localization table ; COULD BE vectorized? 
 for ii=1:size(m_table_as,1)
+    % If contact is left lateralized
    if strcmp(m_table_as(ii,4),'L')
         tmp = cell2mat(m_table_as(ii,2));    
         last_char = tmp(end); 
     if ~strcmp(last_char,'p')
-        % Add a 'p' at the end of the contact name 
-        m_table_as(strcmp(m_table_as(:,4),'L'),2) = strcat(m_table_as(strcmp(m_table_as(:,4),'L'),2),'p') ; 
+        % Add a 'p' at the end of the contact name if it is left
+        % lateralized (CCF)
+        
+        m_table_as(ii,2) = strcat(m_table_as(ii,2),'p');
+%         m_table_as( strcmp(m_table_as(:,4),'L'),2) = strcat(m_table_as(strcmp(m_table_as(:,4),'L'),2),'p') ; 
+       
     end
    end
 end
@@ -52,8 +74,10 @@ for ii=1:size(ganalysis,1)
     end
      
     idx_ganalysisloc = cat(1,idx_ganalysisloc,ii);
-    
-    [id, labels,idx] = filter_localized_channels(m_table_as, idx_subjloc , id_contact, id_ncontact, gana.labels) ; 
+
+   % Here use restrictive option : TODO : define inclusive from GUI 
+    inclusive = 0 ;
+    [id, labels,idx] = mia_filter_localized_channels(m_table_as, idx_subjloc , id_contact, id_ncontact, gana.labels,inclusive) ; 
    
     [un, ia, ic] = unique(labels,'stable');
   
@@ -72,22 +96,20 @@ for ii=1:size(ganalysis,1)
     
     % For all freq.
     for jj=1:size(ganalysis,2)
-
        
         gana = ganalysis{ii,jj};
         
-%         pvals = [gana.pvals]; 
         tvals = [gana.tvals];
         df = gana.df;
-
-        % ASD For only increase
-%         h = tvals>tinv(1-threshp/2,df) ; 
-        h = abs(tvals)>tinv(1-threshp/2,df) ; 
-
+    
+        % Get mask of significance 
+        h = abs(tvals)>mia_tinv(1-gana.threshp/2,df) ; 
+        
         % Removes segments of significance shorter than a threshold duration
         [hf] = filter_timewin_signif(h,gana.threshdur*Fs);
       
-        % 
+        % Get electrodes that show at least one signififcant time point in
+        % the post stim period (positively or negatively)
         tmp = sum(hf(:,gana.Time>0)')~=0 ;
         gana.effect = tmp(id(ic));
         
@@ -98,14 +120,8 @@ for ii=1:size(ganalysis,1)
         tmp =sum(abs(tvals(:,gana.Time>0).*hf(:,gana.Time>0)),2);      
         gana.sumt = tmp(id(ic))'; 
 
-%         h=figure('Name',gana.subj,'units','normalized','position',[0,0,0.3,1]);
-%         imagesc(gana.tvals.*hf) ; title(num2str(jj)); set(gca,'Ytick',1:size(gana.tvals,1),'YTicklabel',gana.labels); caxis([-10 10]) ; grid on;
-%         pause
-%          close(h) ;
-
         %% idx : monopolaire  to bipol
         %% ic bipol to mono 
-        
         ganalysis{ii,jj} = gana; 
     
         % Adds bipolar labels in table
@@ -115,8 +131,6 @@ for ii=1:size(ganalysis,1)
     
     s= cat(1,s,sig);
     smask= cat(1,smask,sigmask);
-    
-   
     m_table_effect = cat(1,m_table_effect,table_tmp);
 
 end

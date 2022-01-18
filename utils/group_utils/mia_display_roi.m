@@ -1,4 +1,4 @@
-function [] = display_roi(roi,OPTIONS) 
+function [] = mia_display_roi(roi,OPTIONS) 
 %
 % ========================================================================
 % This file is part of MIA.

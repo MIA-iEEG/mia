@@ -22,7 +22,7 @@
 % out a table containgin all files (processes) that have been produced
 % 2017/1/17 : ASD add options.allow_signflip
 % 2018/4/19 : ASD add output montage (for raster display) 
-function [rois,mia_table,edges,datafiles, montage, freqb, wdir]=create_table_of_rois(m_table_as,ganaFile, OPTIONS)
+function [rois,mia_table,edges,datafiles, montage, freqb, wdir]=mia_create_table_of_rois(m_table_as,ganaFile, OPTIONS)
 
 % Loads study file 
 gana=load(ganaFile,'ganalysis');
@@ -51,7 +51,7 @@ if ~isfield(ganalysis{1,1},'threshp')
 end
 
 % Create table of effects 
-[m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_as, ganalysis);
+[m_table_effect, s, smask, all_labels] = mia_get_table_effect_clc(m_table_as, ganalysis);
 
 %Define OPTIONS for group anlaysis and display
 getOPTIONS.freq = 1; % Morlet or Hilbert what freqid? 
@@ -65,7 +65,7 @@ if OPTIONS.allow_flipsign
 end
 
 % Get all rois that has significant activity for this frequency band
-rois = get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{ganalysis{1}.freqb},getOPTIONS);
+rois = mia_get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{ganalysis{1}.freqb},getOPTIONS);
 
 % mia_table column index 
 id_name=1;

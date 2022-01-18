@@ -23,8 +23,8 @@
 function [rois,mia_table,edges,datafiles]=create_struct_of_rois(m_table_as,ganalysis, OPTIONS)
 
 isGood =~(strcmp(m_table_as(:,5),'out')|strcmp(m_table_as(:,5),'lesion')|strcmp(m_table_as(:,5),'les'));
-% [m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_as(isGood,:), ganalysis);
-[m_table_effect, s, smask, all_labels] = get_table_effect_clc(m_table_as(isGood,:), ganalysis);
+% [m_table_effect, s, smask, all_labels] = mia_get_table_effect_clc(m_table_as(isGood,:), ganalysis);
+[m_table_effect, s, smask, all_labels] = mia_get_table_effect_clc(m_table_as(isGood,:), ganalysis);
 
 %Define OPTIONS for group anlaysis and display
 % getOPTIONS.freq = 1; % Morlet or Hilbert what freqid? 
@@ -43,7 +43,7 @@ if OPTIONS.allow_flipsign
 end
 
 % Get all rois that has significant activity for this frequency band
-rois = get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{gan.freqb},getOPTIONS);
+rois = mia_get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{gan.freqb},getOPTIONS);
 
 %remove blanc
 r = [rois{:}];

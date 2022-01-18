@@ -1,4 +1,4 @@
-function [m_table_as, status, message] = get_dataloc_table(struct_table, OPTIONS)
+function [m_table_as, status, message] = mia_get_dataloc_table(struct_table, OPTIONS)
 % -------------------------------------------------------------------------
 % DESCRIPTION
 %   Reads localization table

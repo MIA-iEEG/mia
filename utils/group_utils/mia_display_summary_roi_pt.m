@@ -1,4 +1,4 @@
-function  [labels_o,colorm] = display_summary_roi_pt(roi,OPTIONS) 
+function  [labels_o,colorm] = mia_display_summary_roi_pt(roi,OPTIONS) 
 %
 % ========================================================================
 % This file is part of MIA.
@@ -87,7 +87,7 @@ for jj=1:OPTIONS.nsub
     set(0,'DefaultAxesColorOrder',colorm(ct:ct+nsig-1,:));
     subplot(OPTIONS.nsub,1,jj); 
     plot(roi{1}.t,signmoy_o(:,ct:ct+nsig-1)','LineWidth',1.05); legend(labels_o(ct:ct+nsig-1)) ; grid on ; ylim([-maxis maxis]); xlim([roi{1}.t(1), roi{1}.t(end)]);
-%     stackplot_ASD(roi{1}.t,signmoy_o(:,ct:ct+nsig-1),[1 1 1],labels_o(ct:ct+nsig-1)) ; hold on ; xlim([roi{1}.t(1), 1])%roi{1}.t(end)]);
+%     mia_stackplot_ASD(roi{1}.t,signmoy_o(:,ct:ct+nsig-1),[1 1 1],labels_o(ct:ct+nsig-1)) ; hold on ; xlim([roi{1}.t(1), 1])%roi{1}.t(end)]);
     ct = ct+nsig ;
     title(strrep(OPTIONS.title,'_','-'),'FontSize',FONTSZ) ;
 %     title(titles{jj},'FontSize',FONTSZ) ;

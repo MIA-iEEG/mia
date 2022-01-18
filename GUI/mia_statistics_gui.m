@@ -64,7 +64,7 @@ movegui(gcf,'center');
 
 %  ASD : create a copy of the table  (could be optimized??)
 % Read the working directory in order to build the table
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.outdir, handles.current_loctable) ;
+[handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
 

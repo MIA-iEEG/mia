@@ -1,4 +1,4 @@
-function [struct_table, status, message] = read_loc_table(filename, OPTIONS)
+function [struct_table, status, message] = mia_read_loc_table(filename, OPTIONS)
 % -------------------------------------------------------------------------
 % DESCRIPTION
 %   Reads localization table

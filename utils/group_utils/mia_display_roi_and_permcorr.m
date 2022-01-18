@@ -1,4 +1,4 @@
-function [] = display_roi_and_permcorr(roi,OPTIONS) 
+function [] = mia_display_roi_and_permcorr(roi,OPTIONS) 
 %
 % ***********************************************************************
 %

@@ -18,7 +18,7 @@
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 % 2021/9/14 : ASD creation
 
-function output = write_BIDS_compatible_channel_file(labels, isGood, fname, tag)
+function output = mia_write_BIDS_compatible_channel_file(labels, isGood, fname, tag)
 
 % Prepare list of labels and corresponding status (BIDS compatibility)) 
 name = labels ; 

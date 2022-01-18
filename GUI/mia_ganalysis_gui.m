@@ -104,7 +104,7 @@ OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ;
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
  
 % Update handles structure
 guidata(hObject, handles);
@@ -139,7 +139,7 @@ if get(handles.togglebutton1,'Value')==1
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
  
 %     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
@@ -193,7 +193,7 @@ else
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
 end
   guidata(hObject, handles);
 
@@ -225,7 +225,7 @@ if (get(hObject,'Value') == get(hObject,'Max'))
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
     
     % Enlarge main figure in height and shift down
     fig_position = get(handles.figure1,'Position') ;
@@ -365,7 +365,7 @@ else
   
         dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); % distinct colors for pt
         dOPTIONS.win_noedges = handles.edges;
-        display_roi(handles.rois(idx),dOPTIONS);
+        mia_display_roi(handles.rois(idx),dOPTIONS);
     end
 end
   guidata(hObject, handles);
@@ -402,7 +402,7 @@ else
             pOPTIONS.threshdisp = 1.96; 
             pOPTIONS.nsub =1; % number of subplot
             pOPTIONS.title = '';
-            [labels_o, colorm] = display_summary_roi(handles.rois(idx),pOPTIONS) ;
+            [labels_o, colorm] = mia_display_summary_roi(handles.rois(idx),pOPTIONS) ;
         case 'Flat display',
             %pOPTIONS.thresh =1.96; % -1 for no color chronological organization
             pOPTIONS.thresh =3; % -1 for no color chronological organization
@@ -410,7 +410,7 @@ else
             pOPTIONS.nsub =1; % number of subplot
             pOPTIONS.title = '';
        
-            [labels_o, colorm] = display_summary_roi_flat(handles.rois(idx),pOPTIONS) ;
+            [labels_o, colorm] = mia_display_summary_roi_flat(handles.rois(idx),pOPTIONS) ;
          
       case 'Stack plot',
            pOPTIONS.thresh =1.96; % -1 for no color chronological organization
@@ -418,7 +418,7 @@ else
             pOPTIONS.nsub =1; % number of subplot
            pOPTIONS.title = '';
        
-           [labels_o, colorm] = display_summary_roi_stack(handles.rois(idx),pOPTIONS) ;
+           [labels_o, colorm] = mia_display_summary_roi_stack(handles.rois(idx),pOPTIONS) ;
           
 %            while(1) 
                 [x,y]=ginput(1); % get a click
@@ -468,7 +468,7 @@ else
                 pOPTIONS.nsub =1; % number of subplot
                 
                 % Display data for one specific patient
-                [labels_o_pt, colorm_pt] =display_summary_roi_pt(froi,pOPTIONS) ;
+                [labels_o_pt, colorm_pt] =mia_display_summary_roi_pt(froi,pOPTIONS) ;
                 
             end
         end
@@ -494,7 +494,7 @@ if filename==0 ; return; end
 % pathname =  '/Users/anne-sophiedubarry/Documents/2_DATA/Dorsal/' ; 
     
 % Read the RT table
-[rt_byPatients] = read_rt_table(fullfile(pathname,filename));
+[rt_byPatients] = mia_read_rt_table(fullfile(pathname,filename));
 
 % Get montage (from file name) 
 rOPTIONS.freq= handles.freqb ;
@@ -530,7 +530,7 @@ rOPTIONS.win_noedges = handles.edges;
 rOPTIONS.clr = handles.dOPTIONS.clr ;
 
 % Get signals (single trials) 
-[handles.rois] = get_rasters(handles.rois,rOPTIONS) ;
+[handles.rois] = mia_get_rasters(handles.rois,rOPTIONS) ;
 
 % TODO : ASD Here save new ROI strucutre with Rts
 % for next exceution (if not we will have to reload signals
@@ -563,7 +563,7 @@ else
         rOPTIONS.win_noedges = handles.edges;
         rOPTIONS.clr = handles.dOPTIONS.clr ;
 
-        display_roi_and_raster(handles.rois(idx),rOPTIONS) ;
+        mia_display_roi_and_raster(handles.rois(idx),rOPTIONS) ;
     end
 end
 

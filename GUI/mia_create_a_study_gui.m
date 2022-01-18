@@ -60,7 +60,7 @@ movegui(gcf,'center');
 
 %  ASD : create a copy of the table  (could be optimized??)
 % Read the working directory in order to build the table
-[handles.table.mia_table,handles.table.sFiles] = create_table_workdir(handles.outdir, handles.current_loctable) ;
+[handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.outdir, handles.current_loctable) ;
 
 jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
@@ -347,11 +347,11 @@ mkdir(char(fullfile(outdir,NAME)));
 
 %generate and save ganalysis = table of structure containing time and
 %statistical data about selected subjects for the current study
-ganalysis = s5_group_data_v1(handles.table.sFiles(idx),ganalysisOPTIONS);
+ganalysis = mia_s5_group_data_v1(handles.table.sFiles(idx),ganalysisOPTIONS);
 
 % ASD 2018/1/26 : comment this line (at that point we don<t need the
 % localisation table)
-% [handles.rois,handles.table.mia_table,handles.edges,handles.datafiles] = create_struct_of_rois(handles.m_table_as, ganalysis, OPTIONS) ;
+% [handles.rois,handles.table.mia_table,handles.edges,handles.datafiles] = mia_create_struct_of_rois(handles.m_table_as, ganalysis, OPTIONS) ;
 
 %save ganalysis
 [subj,~,~]=unique(mia_table(:,1));

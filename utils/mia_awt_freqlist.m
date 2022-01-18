@@ -1,7 +1,7 @@
-function [wt,freqlist,psi_array] = awt_freqlist(x,Fs,freqlist,type,xi)
-%   awt_freqlist  analytical wavelet transform, where one can specify the list of desired frequencies 
+function [wt,freqlist,psi_array] = mia_awt_freqlist(x,Fs,freqlist,type,xi)
+%   mia_awt_freqlist  analytical wavelet transform, where one can specify the list of desired frequencies 
 %   
-%   [wt,freqlist,psi_array] = awt_freqlist(x,Fs,freqlist,type,xi)
+%   [wt,freqlist,psi_array] = mia_awt_freqlist(x,Fs,freqlist,type,xi)
 %
 %   Inputs:
 %       x           the signal to be analyzed
