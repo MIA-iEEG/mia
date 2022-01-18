@@ -36,7 +36,6 @@ function [struct_table, status, message] = mia_read_loc_table(filename, OPTIONS)
 [~, text_data, all_data] = xlsread(filename) ;
 text_data = all_data ;
 
-
 status = 1 ;
 
 message = '' ; % init
@@ -65,11 +64,13 @@ text_data(strcmp(text_data(:,2),''),:) = [] ;
 text_data(strcmp(text_data(:,3),''),:) = [] ;
 text_data(strcmp(text_data(:,4),''),:) = [] ;
 
-% Removes other stuff than charaters ([NaN])
-text_data(~cell2mat(cellfun(@ischar, text_data(:,1),'UniformOutput', false)),:) = [] ;
-text_data(~cell2mat(cellfun(@ischar, text_data(:,2),'UniformOutput', false)),:) = [] ;
-text_data(~cell2mat(cellfun(@ischar, text_data(:,3),'UniformOutput', false)),:) = [] ;
-text_data(~cell2mat(cellfun(@ischar, text_data(:,4),'UniformOutput', false)),:) = [] ;
+% Removes [NaN]
+idx_nan=cellfun(@isnan,text_data,'uni',false); idx_nan=cellfun(@any,idx_nan);
+text_data(sum(idx_nan,2)~=0,:)=[];
+
+% Converts numeric to characters
+idx_numeric=cellfun(@isnumeric,text_data,'uni',false); idx_numeric = cellfun(@any,idx_numeric) ; 
+text_data(idx_numeric) = cellfun(@num2str, text_data(idx_numeric),'uni',false) ;
 
 % Removes the header line
 text_data = text_data(2:end,:);
