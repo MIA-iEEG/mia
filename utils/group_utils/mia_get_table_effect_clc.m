@@ -106,7 +106,7 @@ for ii=1:size(ganalysis,1)
         h = abs(tvals)>mia_tinv(1-gana.threshp/2,df) ; 
         
         % Removes segments of significance shorter than a threshold duration
-        [hf] = filter_timewin_signif(h,gana.threshdur*Fs);
+        [hf] = mia_filter_timewin_signif(h,gana.threshdur*Fs);
       
         % Get electrodes that show at least one signififcant time point in
         % the post stim period (positively or negatively)
