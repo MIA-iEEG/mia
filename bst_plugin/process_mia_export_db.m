@@ -50,7 +50,7 @@ function sProcess = GetDescription() %#ok<DEFNU>
         'dirs', ...                          % Selection mode: {files,dirs,files_and_dirs}
        };                     
    % Option: MIA database folder
-    sProcess.options.mia_db.Comment = 'MIA databas folder:';
+    sProcess.options.mia_db.Comment = 'MIA database folder:';
     sProcess.options.mia_db.Type    = 'filename';
     sProcess.options.mia_db.Value   = SelectOptions;
     
@@ -107,16 +107,18 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
     iGroups = cell(1, length(uniqueSubj));
     for i = 1:length(uniqueSubj)
         iGroups{i} = find(J == i)';
-        GroupNames{i} = sInputs(iGroups{i}(1)).SubjectName;
+        SubjectNames{i} = sInputs(iGroups{i}(1)).SubjectName;
+        ConditionNames{i} = sInputs(iGroups{i}(1)).Condition;
     end   
     
     % Create database folder if it does not exist 
     if ~exist(mia_db, 'file') ; mkdir(mia_db) ; end
 
     % Move all patient data files into one folder patient directory 
-    for pp=1:length(GroupNames)
+    for pp=1:length(SubjectNames)
         
-        pt_dir = fullfile(mia_db,GroupNames{pp}) ;
+        % Create the name of the subject in MIA (SubjectNameCondition)
+        pt_dir = fullfile(mia_db,strcat(SubjectNames{pp},ConditionNames{pp})) ;
         
         % Load channel file
         ChannelMat = in_bst_channel(sInputs(iGroups{pp}(1)).ChannelFile);
@@ -141,7 +143,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
            error('Patient exist, please remove patient from MIA_db'); 
         else
             % Create Output name
-            outname = fullfile(pt_dir,strcat(GroupNames{pp},'_signal_LFP'));
+            outname = fullfile(pt_dir,strcat(SubjectNames{pp},'_signal_LFP'));
             flag_good_chan =sDataIn.ChannelFlag ==1 ; 
             
             % Get data and remove bad channels
