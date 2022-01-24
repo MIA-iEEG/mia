@@ -143,7 +143,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
            error('Patient exist, please remove patient from MIA_db'); 
         else
             % Create Output name
-            outname = fullfile(pt_dir,strcat(SubjectNames{pp},'_signal_LFP'));
+            outname = fullfile(pt_dir,strcat(SubjectNames{pp},ConditionNames{pp},'_signal_LFP'));
             flag_good_chan =sDataIn.ChannelFlag ==1 ; 
             
             % Get data and remove bad channels
