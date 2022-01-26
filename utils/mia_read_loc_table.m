@@ -1,11 +1,10 @@
-function [struct_table, status, message] = mia_read_loc_table(filename, OPTIONS)
+function [struct_table, status, message] = mia_read_loc_table(filename)
 % -------------------------------------------------------------------------
 % DESCRIPTION
 %   Reads localization table
 %
 % Inputs :
-%         filename : Excel file containg the table formatted as follow :
-
+%         filename : Full path of the excel labelling table 
 %
 % Output:   status  : integrity of table (-1 if doublons exist ; 1
 % otherwise) 
@@ -120,7 +119,8 @@ for iPt=1:length(u_pt)
     struct_table{iPt}.lat = lat ; 
     struct_table{iPt}.elec = elec; 
     struct_table{iPt}.roi= roi; 
-    
+    struct_table.atlas= 'Custom'; 
+
 end
 
 end

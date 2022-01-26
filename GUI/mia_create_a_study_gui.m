@@ -91,10 +91,10 @@ a = handles.idx_selected;
 deb= [a(1);a(find(diff(a)~=1)+1)] ;
 fin = [a(find(diff(a)~=1));a(end)] ;
 
-% It only works by giving intervals of selection..
-for ss=1:length(deb)
-    jtable.addRowSelectionInterval(deb(ss),fin(ss));
-end
+% % It only works by giving intervals of selection..
+% for ss=1:length(deb)
+%     jtable.addRowSelectionInterval(deb(ss),fin(ss));
+% end
 
 % data initialization
 set(handles.nboot,'string','500');
