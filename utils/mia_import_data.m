@@ -33,8 +33,8 @@ else
     datapath = handles.extOPTIONS.outdir ; 
 end
 
-% BST function to open a Java file dialog box
-[RawFiles, FileFormat] = mia_dialog_import_data('MIA : Open SEEG recordings...', ...  % Window title
+% Function to open a Java file dialog box
+[RawFiles, FileFormat] = mia_dialog_getfile('MIA : Open SEEG recordings...', ...  % Window title
      datapath, ...           % Working directory
     inputFormat);    % List of available file formats
  

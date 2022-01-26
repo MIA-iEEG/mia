@@ -605,64 +605,82 @@ function [handles] = resetPatientLoc(handles)
 % % --- Executes on button press in pushbutton_statistics.
 function pushbutton_loadloctable_Callback(hObject, eventdata, handles)
 
-% Open a directory browser
-[filename, pathname] = uigetfile('*.xlsx', 'Pick a EXCEL file',handles.extOPTIONS.outdir);
 
-if filename~=0
-  
-    % Read loc (excel) file 
-    grpOPTIONS.maindir = handles.extOPTIONS.outdir;
-    [struct_table, status, message] = mia_read_loc_table(fullfile(pathname,filename),grpOPTIONS) ;
-    
-    % Return error if doublons exist
-    if status==0
-        message = sprintf('%s  :\n%s\n\n%s','Some contacts were found twice in the table : ',message,'Table was NOT loaded : Please remove duplicates and try again');
-        errordlg(message) ;
-        return
-    % Return error if no header in file
-    elseif status == -1 
-        errordlg(message);   
-        return
-    else
-    
-        % Map the contacts from loc table with the ones in the data 
-        [s.m_table_all, status, message] = mia_get_dataloc_table(struct_table,grpOPTIONS);
+inputFormat{2,1} = {'xlsx'};
+inputFormat{2,2} = 'Excel table (.xlsx)';
+
+inputFormat{1,1} = {'tsv'};
+inputFormat{1,2} = 'Brainstorm file (.tsv)';
+
+% Open a Java file dialog box to browse a table 
+[RawFile, FileFormat] = mia_dialog_getfile('MIA : Pick a labeling table...', ...  % Window title
+                                            handles.extOPTIONS.outdir, ...          % Working directory
+                                            inputFormat);    % List of available file formats
+
+% Labeling table is in Excel format
+if strcmp(FileFormat,'Excel table (.xlsx)')
+    [struct_table, status, message] = mia_read_loc_table(RawFile{1}) ;
+
+% Labeling table is in Braintorm .tsv format
+elseif strcmp(FileFormat,'Brainstorm file (.tsv)')
+    OPTIONS.patients = get(handles.list_patient,'String');
+    if isempty(OPTIONS.patients)  
+        errordlg('You must import patient data into MIA first','Error');
+        return ;
     end
-    
-    if status==0
-        warndlg(message) ;
-       %return
-    end    
-     % Prompt user for a study name
-    prompt = {'Enter an Atlas name:'};
-    dlg_title = 'ATLAS NAME';
-    num_lines = 1;
-    def = {strrep(filename,'.xlsx',''),'hsv'};
-    loctable_name = mia_newid(prompt,dlg_title,num_lines,def);
+    [struct_table, status, message] = mia_read_loc_tsv_table(RawFile{1}, OPTIONS) ;
 
-    % Use of cancel button
-    if isempty(loctable_name)
-        return;
-    end
-   
-    resetPatientLoc(handles) ; 
-    
-    % GA_Results directory 
-    group_dir=fullfile(fileparts(grpOPTIONS.maindir),'GA_Results') ; 
-    
-    % Create GA_Results if does not exist
-    if ~exist(group_dir,'dir') ; mkdir(group_dir); end
-    
-    % Atlas filename 
-    fname = cell2mat(fullfile(group_dir,strcat('m_table_',loctable_name,'.mat')));
-    s.table_fname = fullfile(pathname,filename) ;
-    
-    % Save m_table fopr this atlas
-    save(fname,'-struct','s');
+else ; return ; 
 
-    handles = update_atlas_list(handles) ;
-  
 end
+   
+% Return error if doublons exist
+if status==0
+    message = sprintf('%s  :\n%s\n\n%s','Some contacts were found twice in the table : ',message,'Table was NOT loaded : Please remove duplicates and try again');
+    errordlg(message) ;
+    return
+% Return error if no header in file
+elseif status == -1 
+    errordlg(message);   
+    return
+% User cancelled operation
+elseif status == 2 
+    return
+else
+    grpOPTIONS.maindir =  handles.extOPTIONS.outdir ; 
+    % Map the contacts from loc table with the ones in the data 
+    [s.m_table_all, status, message] = mia_get_dataloc_table(struct_table,grpOPTIONS);
+end
+
+if status==0
+    warndlg(message) ;
+   %return
+end    
+ % Prompt user for a study name
+[~,NAME,~] = fileparts(RawFile{1}) ; 
+def = {NAME,'hsv'};
+loctable_name = mia_newid({'Enter an Atlas name:'},'ATLAS NAME',1,def);
+
+% Use of cancel button : nothing happens
+if isempty(loctable_name); return; end
+
+resetPatientLoc(handles) ; 
+
+% GA_Results directory 
+group_dir=fullfile(fileparts(grpOPTIONS.maindir),'GA_Results') ; 
+
+% Create GA_Results if does not exist
+if ~exist(group_dir,'dir') ; mkdir(group_dir); end
+
+% Atlas filename 
+fname = cell2mat(fullfile(group_dir,strcat('m_table_',loctable_name,'.mat')));
+s.table_fname = RawFile{1} ;
+
+% Save m_table fopr this atlas
+save(fname,'-struct','s');
+
+handles = update_atlas_list(handles) ;
+
 
 % --- Executes on button press in pushbutton_newStudy.
 function pushbutton_newStudy_Callback(hObject, eventdata, handles)
