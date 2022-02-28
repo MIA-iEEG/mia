@@ -505,7 +505,7 @@ rOPTIONS.win_noedges = handles.edges;
 rOPTIONS.clr = handles.dOPTIONS.clr ;
 
 % Inject the RTs (organized by patients at this point) into ROIs
-[handles.rois] = add_rts(handles.rois,rt_byPatients, rOPTIONS) ; 
+[handles.rois] = mia_add_rts(handles.rois,rt_byPatients, rOPTIONS) ; 
 
 % TODO : ASD Here save new ROI strucutre with Rts
 % for next exceution (if not we will have to reload RT

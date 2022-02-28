@@ -63,6 +63,7 @@ for ii=1:length(roi)
         % Displays one figure per ROI 
         hfigrast = figure('Name',croi.name,'Units','Normalized','Position',[0.5 , 0.5, 0.3,1]); 
     end
+    
     imagesc(Time,1:size(mat_csig,2),mat_csig(:,I)') ;
     title(croi.name,'FontSize', FONTSZ); 
  
