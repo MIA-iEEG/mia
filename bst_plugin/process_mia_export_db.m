@@ -77,32 +77,10 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
   
     % Get option values
     mia_db= sProcess.options.mia_db.Value{1};
-    
-    % ===== LOAD THE DATA =====
-    % Read the first file in the list, to initialize the loop
-    DataMat = in_bst(sInputs(1).FileName, [], 0);
-    epochSize = size(DataMat.F);
-    Time = DataMat.Time;
-    % Initialize the load matrix: [Nchannels x Ntime x Nepochs]
-    AllMat = zeros(epochSize(1), epochSize(2), length(sInputs));
-    % Reading all the input files in a big matrix
-    for i = 1:length(sInputs)
-        % Read the file #i
-        DataMat = in_bst(sInputs(i).FileName, [], 0);
-        % Check the dimensions of the recordings matrix in this file
-        if ~isequal(size(DataMat.F), epochSize)
-            % Add an error message to the report
-            bst_report('Error', sProcess, sInputs, 'One file has a different number of channels or a different number of time samples.');
-            % Stop the process
-            return;
-        end
-        % Add the current file in the big load matrix
-        AllMat(:,:,i) = DataMat.F;
-    end
-    
+      
     % ===== PROCESS =====
-     
-%     Get all unique subjects
+    
+    % Get all unique subjects
     [uniqueSubj,I,J] = unique({sInputs.SubjectFile});
     iGroups = cell(1, length(uniqueSubj));
     for i = 1:length(uniqueSubj)
@@ -118,7 +96,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
     for pp=1:length(SubjectNames)
         
         % Create the name of the subject in MIA (SubjectNameCondition)
-        pt_dir = fullfile(mia_db,strcat(SubjectNames{pp},ConditionNames{pp})) ;
+        mia_pt_dir = fullfile(mia_db,strcat(SubjectNames{pp},ConditionNames{pp})) ;
         
         % Load channel file
         ChannelMat = in_bst_channel(sInputs(iGroups{pp}(1)).ChannelFile);
@@ -137,23 +115,47 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
             return;
         end
        
-        sDataIn = in_bst_data(sInputs(iGroups{pp}(1)).FileName);
+        % Read the first file in the list, to initialize the loop
+        DataMat = in_bst(sInputs(iGroups{pp}(1)).FileName, [], 0);
+        epochSize = size(DataMat.F);
+        Time = DataMat.Time;
+        
+        % Select 'good' Channels (not marked as BAD)
+        flag_good_chan =DataMat.ChannelFlag ==1 ; 
+        
+        % Initialize the load matrix: [Nchannels x Ntime x Nepochs]
+        F = zeros(sum(flag_good_chan(iChannels)), epochSize(2), length(iGroups{pp}));
+  
+        % Reading all the group files in a big matrix
+        for i = 1:length(iGroups{pp})
 
-        if exist(pt_dir) 
+            % Read the file #i
+            DataMat = in_bst(sInputs(iGroups{pp}(i)).FileName, [], 0);
+
+            % Check the dimensions of the recordings matrix in this file
+            if ~isequal(size(DataMat.F), epochSize)
+                % Add an error message to the report
+                bst_report('Error', sProcess, sInputs, 'One file has a different number of channels or a different number of time samples.');
+                % Stop the process
+                return;
+            end
+            % Add the current file in the big load matrix
+            F(:,:,i) = DataMat.F(flag_good_chan(iChannels),:,:);
+        end
+
+        if exist(mia_pt_dir) 
            error('Patient exist, please remove patient from MIA_db'); 
         else
             % Create Output name
-            outname = fullfile(pt_dir,strcat(SubjectNames{pp},'_signal_LFP'));
-            flag_good_chan =sDataIn.ChannelFlag ==1 ; 
-            
+            outname = fullfile(mia_pt_dir,strcat(SubjectNames{pp},ConditionNames{pp},'_signal_LFP'));
+                       
             % Get data and remove bad channels
-            F = AllMat(flag_good_chan(iChannels),:,iGroups{pp}) ; 
-            Favg = mean(AllMat(:,:,iGroups{pp}),3) ; 
+            Favg = mean(F,3) ; 
             labels = {ChannelMat.Channel(flag_good_chan(iChannels)).Name}; 
             Time = DataMat.Time;
             
             %Create patient direcotry and save file
-            mkdir(pt_dir);
+            mkdir(mia_pt_dir);
             save(outname, 'Time', 'F' ,'labels','Favg') ;
 
         end 
@@ -161,4 +163,4 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
     
     % Launch MIA main GUI on the new created database
     mia(mia_db);
-  end
+end
