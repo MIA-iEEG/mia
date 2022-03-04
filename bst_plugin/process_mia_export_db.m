@@ -141,6 +141,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
             end
             % Add the current file in the big load matrix
             F(:,:,i) = DataMat.F(flag_good_chan(iChannels),:,:);
+            bst_history{i} = DataMat.History ; 
         end
 
         if exist(mia_pt_dir) 
@@ -153,10 +154,11 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
             Favg = mean(F,3) ; 
             labels = {ChannelMat.Channel(flag_good_chan(iChannels)).Name}; 
             Time = DataMat.Time;
+            bst_version = bst_get('Version')  ;
             
             %Create patient direcotry and save file
             mkdir(mia_pt_dir);
-            save(outname, 'Time', 'F' ,'labels','Favg') ;
+            save(outname, 'Time', 'F' ,'labels','Favg','bst_history','bst_version') ;
 
         end 
     end
