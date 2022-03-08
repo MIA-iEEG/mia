@@ -86,15 +86,15 @@ else
 end
 
 if directoryname~=0
-                
-        % Set the new working directory
-        handles = set_workingdirectory(handles,directoryname) ; 
-        
-        % Initialize the GUI
-        handles = initialize_gui(hObject, handles, false);
+    
+    % Set the new working directory
+    handles = set_workingdirectory(handles,directoryname);
 
-        % Update handles structure
-        guidata(hObject, handles);
+    % Initialize the GUI
+    handles = initialize_gui(hObject, handles, false);
+
+    % Update handles structure
+    guidata(hObject, handles);
 
 else
     close(handles.figure1);
