@@ -140,7 +140,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
                 return;
             end
             % Add the current file in the big load matrix
-            F(:,:,i) = DataMat.F(flag_good_chan(iChannels),:,:);
+            F(:,:,i) = DataMat.F(iChannels(flag_good_chan(iChannels)),:,:);
             bst_history{i} = DataMat.History ; 
         end
 
@@ -152,7 +152,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
                        
             % Get data and remove bad channels
             Favg = mean(F,3) ; 
-            labels = {ChannelMat.Channel(flag_good_chan(iChannels)).Name}; 
+            labels = {ChannelMat.Channel(iChannels(flag_good_chan(iChannels))).Name}; 
             Time = DataMat.Time;
             bst_version = bst_get('Version')  ;
             
