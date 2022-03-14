@@ -606,11 +606,14 @@ function [handles] = resetPatientLoc(handles)
 function pushbutton_loadloctable_Callback(hObject, eventdata, handles)
 
 
-inputFormat{2,1} = {'xlsx'};
-inputFormat{2,2} = 'Excel table (.xlsx)';
+inputFormat{1,1} = {'xlsx'};
+inputFormat{1,2} = 'MIA custom anatomical labels (.xlsx)';
 
-inputFormat{1,1} = {'tsv'};
-inputFormat{1,2} = 'Brainstorm file (.tsv)';
+inputFormat{2,1} = {'tsv'};
+inputFormat{2,2} = 'Brainstorm anatomical labels (.tsv)';
+
+inputFormat{3,1} = {'xlsx'};
+inputFormat{3,2} = 'Fieldtrip anatomical labels(.xlsx)';
 
 % Open a Java file dialog box to browse a table 
 [RawFile, FileFormat] = mia_dialog_getfile('MIA : Pick a labeling table...', ...  % Window title
@@ -618,17 +621,27 @@ inputFormat{1,2} = 'Brainstorm file (.tsv)';
                                             inputFormat);    % List of available file formats
 
 % Labeling table is in Excel format
-if strcmp(FileFormat,'Excel table (.xlsx)')
+if strcmp(FileFormat,inputFormat{1,2})
     [struct_table, status, message] = mia_read_loc_table(RawFile{1}) ;
 
-% Labeling table is in Braintorm .tsv format
-elseif strcmp(FileFormat,'Brainstorm file (.tsv)')
+% Labeling table is in Brainstorm .tsv format
+elseif strcmp(FileFormat,inputFormat{2,2})
     OPTIONS.patients = get(handles.list_patient,'String');
     if isempty(OPTIONS.patients)  
         errordlg('You must import patient data into MIA first','Error');
         return ;
     end
     [struct_table, status, message] = mia_read_loc_tsv_table(RawFile{1}, OPTIONS) ;
+
+% Labeling table is in Fieldtrip .xlsx format
+elseif strcmp(FileFormat,inputFormat{3,2})
+    OPTIONS.patients = get(handles.list_patient,'String');
+    if isempty(OPTIONS.patients)  
+        errordlg('You must import patient data into MIA first','Error');
+        return ;
+    end
+    [struct_table, status, message] = mia_read_fieldtrip_loc_table(RawFile{1}, OPTIONS) ;
+
 
 else ; return ; 
 
@@ -655,7 +668,12 @@ end
 if status==0
     warndlg(message) ;
    %return
-end    
+elseif status == -1 
+    fprintf(message);
+    fprintf('Nothing to do.\n');
+    return
+end 
+
  % Prompt user for a study name
 [~,NAME,~] = fileparts(RawFile{1}) ; 
 def = {NAME,'hsv'};

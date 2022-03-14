@@ -1,4 +1,4 @@
-function [struct_table, status, message] = mia_read_loc_tsv_table(filename, OPTIONS)
+function [struct_table, status, message] = mia_read_fieldtrip_loc_table(filename, OPTIONS)
 % -------------------------------------------------------------------------
 % DESCRIPTION
 %   Reads a Brainstorm iEEG atlas table (.tsv)
@@ -30,63 +30,81 @@ function [struct_table, status, message] = mia_read_loc_tsv_table(filename, OPTI
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
+%Load excel file
+[~, text_data, all_data] = xlsread(filename) ;
+text_data = all_data ;
+
+status = 1 ;
+
+message = '' ; % init
+struct_table = [];
+
+% Get the header line and remove spaces
+hdr = deblank(text_data(1,:)) ;
+idpt = find(strcmpi(hdr,'Patient'));
+
+
 % Init output variables 
 message = '' ; 
 struct_table = [];
 status = 1 ; 
 
-% Read the tsv file
-T = readtable(filename,'FileType','text','ReadVariableNames',true) ;
-% This throw a warning message due to semi column present in some headers 
-% (e.g. cortex_148917V:Schaefer_100_17net) Matlab replaces with _
-% 
+% Get the header line and remove spaces
+hdr = deblank(text_data(1,:)) ;
 
-% Get table column headers
-atlases = T.Properties.VariableNames ;
+% idelec can either be Electrode or Contact
+idelec = find(strcmpi(hdr,'Electrode'));
 
-% Excludes _prob and coordinates
-atlases = atlases(~contains(atlases,'_prob')) ;
-atlases = atlases(~ismember(atlases,'Channel')&...
-                    ~ismember(atlases,'SCS')&...
-                    ~ismember(atlases,'MNI')&...
-                    ~ismember(atlases,'World')) ; 
+not_atlas = {'Electrode','Coordinates','Discard','Epileptic', 'Out of Brain', 'Notes','Loc Meeting'} ; 
 
-[ptname,atlas]=mia_inputdialog(OPTIONS.patients,atlases) ; 
+atlases = hdr(~ismember(hdr,not_atlas)) ; 
 
-if isempty(ptname)||isempty(atlas) ; status =2 ; return ; end 
+% Something is wrong with the format (missing column or missing header)
+if isempty(idelec) 
+    status =-1; 
+    message = ' Table should contain a column "Electrode"';
+else
+  
+    % Converts numeric to characters
+    idx_numeric=cellfun(@isnumeric,text_data,'uni',false); idx_numeric = cellfun(@any,idx_numeric) ; 
+    text_data(idx_numeric) = cellfun(@num2str, text_data(idx_numeric),'uni',false) ;
+
+    % Removes the header line
+    text_data = text_data(2:end,:);
+
+    [ptname,atlas]=mia_inputdialog(OPTIONS.patients,atlases) ; 
+
+    if isempty(ptname)||isempty(atlas) ; status =2 ; return ; end 
+   
+    % Find columns containg regions labels
+    idroi = find(strcmpi(hdr,atlas));
+    roi = text_data(:,idroi);
     
-idx = find(ismember(fieldnames(T),atlas)) ; 
+    % Get laterality from coordinates (x>0 = Rigth ; x<0 = Left)
+    idcoord = find(strcmpi(hdr,'Coordinates'));
+    coord  = text_data(:,idcoord) ;
+    idx_left = find(strcmp(cellfun(@(x) x(1), coord, 'UniformOutput',false),'-')) ; 
+    idx_right = find(~strcmp(cellfun(@(x) x(1), coord, 'UniformOutput',false),'-')) ; 
+  
+    lat(idx_left) = {'L'}; lat(idx_right) = {'R'}; 
+    
+    % Get electrode names
+    idelec = find(strcmpi(hdr,'Electrode'));
+    elec = text_data(:,idelec);
+    
+    % Removes any anoying character
+    elec = strrep(elec,'''',''); elec = strrep(elec,',',''); elec = strrep(elec,'"','');
 
-% Get region labels
-roi = T.(idx);
+    % There is only patient in a file that is why we use {1} (otherwise
+    % several patient table can be stored in struct_table
+    struct_table{1}.pt = ptname; 
+    struct_table{1}.lat = lat ; 
+    struct_table{1}.elec = elec; 
+    struct_table{1}.roi= roi; 
+    struct_table{1}.atlas= atlas; 
 
-idx_left = contains(roi,' L') | contains(roi,'Left') ; 
-idx_right = contains(roi,' R') | contains(roi,'Right') ; 
-
-lat(idx_left) = {'L'}; lat(idx_right) = {'R'}; 
-
-% Only keeps data for which we have a lateraltiy (exclude de facto N/A)
-roi = roi(idx_left|idx_right);
-lat = lat(idx_left|idx_right)';
-elec = T.Channel(idx_left|idx_right);
-
-% Removes any anoying character
-elec = strrep(elec,'''',''); elec = strrep(elec,',',''); elec = strrep(elec,'"','');
-
-% % Something is wrong with the format (missing column or missing header)
-% if isempty(idpt)|| isempty(idelec) || isempty(idlat)|| isempty(idroi)
-%     status =-1; 
-%     message = ' Table should contain 4 columns : "Patient", "Contact (or Electrode)", "Lateralization","Region" ';
-% else
-
-struct_table{1}.pt = ptname; 
-struct_table{1}.lat = lat ; 
-struct_table{1}.elec = elec; 
-struct_table{1}.roi= roi; 
-struct_table{1}.atlas= atlas; 
-
-% end
-end 
+end
+end
 
 function [opt1,opt2]=mia_inputdialog(opt_list1,opt_list2)
 
