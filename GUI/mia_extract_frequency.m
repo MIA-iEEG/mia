@@ -257,8 +257,10 @@ else %% COMPUTE TIME-FREQUENCY EXTRACTION
     end
 
     %Options = Select descomposition mode, frequency band and baseline
-    OPTIONS.modetf=get(handles.popupmenu_methods,'String');
-
+    modetf=get(handles.popupmenu_methods,'String');
+    val = get(handles.popupmenu_methods,'Value');
+    OPTIONS.modetf = modetf{val}; 
+    
     OPTIONS.freqs= [lfreq:step:ufreq];
     OPTIONS.subjects = list_patients(selected_patient) ; 
     OPTIONS.removeEvoked = removeEvoked;
@@ -266,7 +268,21 @@ else %% COMPUTE TIME-FREQUENCY EXTRACTION
 
     % Compute frequecy analysis
     handles.sFiles = mia_s4_compute_tf_bandwise(OPTIONS);
-   
+    
+    subjs = sprintf('%s,',OPTIONS.subjects{:}) ; 
+    
+    % Stack in history
+    mia_cmd_history(sprintf('MIA command : mia_s4_compute_tf_bandwise(OPTIONS). \nOPTIONS = \n\tmtg = %s\n\toutdir= %s\n\tsubjects = %s\n\tzbaseline = [%d,%d]\n\toverwrite = %s\n\tmodetf = %s\n\tfreqs = [%s]\n\tremoveEvoked = %s \n\tncycles = %s\n',...
+            OPTIONS.mtg,...
+            OPTIONS.outdir,...
+            subjs(1:end-1),...
+            OPTIONS.zbaseline(1),OPTIONS.zbaseline(2),...
+            OPTIONS.overwrite,...
+            OPTIONS.modetf,...
+            num2str(OPTIONS.freqs),...
+            num2str(OPTIONS.removeEvoked),...
+            num2str(OPTIONS.ncycles)));
+
 end
 
 % Close GUI

@@ -119,7 +119,7 @@ for iPt=1:length(u_pt)
     struct_table{iPt}.lat = lat ; 
     struct_table{iPt}.elec = elec; 
     struct_table{iPt}.roi= roi; 
-    struct_table.atlas= 'Custom'; 
+    struct_table{iPt}.atlas= 'Custom'; 
 
 end
 
