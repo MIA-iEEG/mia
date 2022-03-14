@@ -158,30 +158,24 @@ for iPt=1:length(struct_table)
     clear list_table list_data tab bads
 end
 
-% Add 'p' at thend of the contacts labelled if there are left lateralized
-endsByP = strcmp(cellfun(@(x)x(end),m_table_as(:,2),'UniformOutput', false),'p') ;
-isLeft = strcmp(m_table_as(:,4),'L') ;
+% There is no correponsdance between electrode labels in table and data
+if isempty(m_table_as)
+    status = -1 ;
+    message=sprintf('There is no correspondance between electrode labels from table and from data.\n');
 
-idx_needsP = isLeft&~endsByP ; 
-m_table_as(idx_needsP,2) = strcat(m_table_as(idx_needsP,2),'p');
+else
+    % Add 'p' at thend of the contacts labelled if there are left lateralized
+    endsByP = strcmp(cellfun(@(x)x(end),m_table_as(:,2),'UniformOutput', false),'p') ;
+    isLeft = strcmp(m_table_as(:,4),'L') ;
 
-if sum(~isLeft&endsByP)~=0 
-    fprintf('\nWarning : There are (rigth electrodes) labels ending with ''p'' MIA does not support labels ending with p (confusion possible with left mlateralized channels)');  
+    idx_needsP = isLeft&~endsByP ; 
+    m_table_as(idx_needsP,2) = strcat(m_table_as(idx_needsP,2),'p');
+
+    if sum(~isLeft&endsByP)~=0 
+        fprintf('\nWarning : There are (rigth electrodes) labels ending with ''p'' MIA does not support labels ending with p (confusion possible with left mlateralized channels)');  
+    end
+
 end
-
-% % Fix : Replace ' by p
-% for iPt=1:size(m_table_as,1)
-%     lab = m_table_as(iPt,3) ; 
-%     % If it is left ateralized and there is no 'p' already at the end of the label
-%     if strcmp(m_table_as(iPt,4),'L') && ~strcmp(lab(end),'p')
-%         m_table_as(iPt,2) = strcat(m_table_as(iPt,2),'p');
-%     end
-% end
-
-%     % Save main table
-%     [PATH,~,~]=fileparts(OPTIONS.maindir);
-%     save(fullfile(PATH,'m_table_as'),'m_table_as');
-% 
     % Remove wait bar
     delete(hwait_pt) ;
 
