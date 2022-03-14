@@ -20,7 +20,7 @@
 
 function [outname] = mia_s5_compute_stats(varargin)
 
-sInputs = varargin{1} ;
+sInputs = char(varargin{1}) ;
 OPTIONS = varargin{2} ;
 
 % % Create progress bar for patients processing
@@ -30,19 +30,18 @@ OPTIONS = varargin{2} ;
 % pos = get(hwait_pt,'Position'); pos(2)= pos(2) +0.1;
 % set(hwait_pt,'Position',pos);
 
-fname = sInputs ;
-[~,filename,~] = fileparts(fname);
+[~,filename,~] = fileparts(sInputs);
 
 % There is NO data file for LFP
 if isempty(strfind(filename,'data'))
     zOPTIONS.overwrite='no';
     % Compute zscore and save file
-    fname=mia_s3_zscore(cellstr(sInputs(ii)),zOPTIONS);
-    fname=char(fname);
+    sInputs=mia_s3_zscore(cellstr(sInputs(ii)),zOPTIONS);
+
 end
 
 % Prepare output name
-[PATHSTR,filename,~] = fileparts(fname);
+[PATHSTR,filename,~] = fileparts(sInputs);
 [~,patient,~] = fileparts(char(PATHSTR));
 
 % Create output file name
@@ -75,7 +74,7 @@ end
 
 fprintf('\nComputing Stats. Patient = %s  %d / %d\n\n',patient , 1, length(sInputs) );
 
-load(fname,'Time','zs','zbaseline','labels','freqb' );
+load(sInputs,'Time','zs','zbaseline','labels','freqb' );
 
 % % Compute t he t-test
 % [tvals,pvals] = mia_compute_ttest(zs);
@@ -85,7 +84,7 @@ Fs=1/(Time(2)-Time(1));
 [threshdur, ~, ~] = mia_get_bootthresh(OPTIONS.nboot, zs(:,(Time>OPTIONS.baseline(1))&(Time<=OPTIONS.baseline(2)),:), OPTIONS.alpha) ;
 
 % Saves structure
-stat.stats(ct).fname = fname;
+stat.stats(ct).fname = sInputs;
 stat.stats(ct).pthresh = OPTIONS.alpha;
 stat.stats(ct).nboot = OPTIONS.nboot;
 stat.stats(ct).baseline= OPTIONS.baseline ;

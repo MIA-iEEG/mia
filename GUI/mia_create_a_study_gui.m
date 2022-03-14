@@ -349,9 +349,18 @@ mkdir(char(fullfile(outdir,NAME)));
 %statistical data about selected subjects for the current study
 ganalysis = mia_s5_group_data_v1(handles.table.sFiles(idx),ganalysisOPTIONS);
 
-% ASD 2018/1/26 : comment this line (at that point we don<t need the
-% localisation table)
-% [handles.rois,handles.table.mia_table,handles.edges,handles.datafiles] = mia_create_struct_of_rois(handles.m_table_as, ganalysis, OPTIONS) ;
+files_list = sprintf('''%s'',',handles.table.sFiles{idx});
+subjs = sprintf('%s,',ganalysisOPTIONS.subjects{:});
+
+% Stack in history
+mia_cmd_history(sprintf('MIA command : mia_s5_group_data_v1(files,OPTIONS). \n files = \n%s\nOPTIONS = \n\tnOPTIONS.subjects = %s\n\tOPTIONS.nboot= %s\n\tOPTIONS.alpha = %0.3f\n\tOPTIONS.twin= [%0.3f,%0.3f]\n\tOPTIONS.outdir = %s\n\tOPTIONS.baseline = [%0.3f,%0.3f]\n',...
+            files_list,...
+            subjs(1:end-1),...
+            num2str(ganalysisOPTIONS.nboot),...
+            ganalysisOPTIONS.alpha,...
+            ganalysisOPTIONS.twin(1),ganalysisOPTIONS.twin(2),...
+            ganalysisOPTIONS.outdir,...
+            ganalysisOPTIONS.baseline(1), ganalysisOPTIONS.baseline(2)));  
 
 %save ganalysis
 [subj,~,~]=unique(mia_table(:,1));
@@ -359,7 +368,8 @@ ganalysis = mia_s5_group_data_v1(handles.table.sFiles(idx),ganalysisOPTIONS);
 fname =char(fullfile(outdir,NAME,strcat(NAME,'_',num2str(length(subj)),'_',method,'_',montage,'_',freq)));
 save(fname,'ganalysis');
 
-
+close(handles.figure1);
+ 
 % %save ganalysis
 % [subj,~,~]=unique(mia_table(:,1));
 % % Gets the frequency band for this processing 

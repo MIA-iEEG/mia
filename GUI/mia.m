@@ -46,6 +46,9 @@ end
 % --- Executes just before mia is made visible.
 function mia_OpeningFcn(hObject, eventdata, handles, varargin)
 
+global MIA_HISTORY_CMD;
+MIA_HISTORY_CMD = [] ; 
+
 % Choose default command line output for mia
 handles.output = hObject;
 
@@ -62,11 +65,13 @@ handles.current_loctable = [];
 % Move window to the center of the screen 
 movegui(gcf,'center');
 
+
 % Loads database (either from filepath in varagin, history file or promtp
 % user
 if  ~isempty(varargin)
     % BST plugin was used to call MIA with a database dir 
     directoryname = varargin{1} ; 
+    mia_cmd_history(sprintf('MIA command : mia(''%s'')',directoryname)); 
     
 elseif exist(fullfile(dirname,'.mia_history.mat'),'file')
 
@@ -75,13 +80,15 @@ elseif exist(fullfile(dirname,'.mia_history.mat'),'file')
     directoryname = hist.history.dirname ; 
     handles.history = hist.history ;
     set(handles.outdir,'String',hist.history.dirname);
-    
+    mia_cmd_history('MIA command : mia()'); 
+   
 else
         
      % Open a directory browser
     hwarn= warndlg('This is the first time you run MIA. Please pick an empty directory for MIA to store its database','Database');
     waitfor(hwarn);
     directoryname = uigetdir('Pick a DataBase Directory');
+    mia_cmd_history('MIA command : mia()'); 
     
 end
 
@@ -283,7 +290,7 @@ if isfield(handles,'table')
 
         % Call sanity GUI 
         mia_sanity_check_gui({fname});
-     
+        
         % Close progress bar
         delete(hwait) ;
 
@@ -321,6 +328,9 @@ end
 
 % Set the new working directory
 handles = set_workingdirectory(handles,directoryname) ; 
+
+% Stack in the history
+mia_cmd_history(sprintf('MIA GUI action : Browse new database directory : %s\n',directoryname)) ;
 
 guidata(hObject,handles);
 
@@ -581,7 +591,7 @@ end
 handles_stats = mia_statistics_gui(idx,handles.extOPTIONS.outdir,  handles.current_loctable);
 
 % Update the list 
-handles = update_patientlist(handles) ; %% ASD : WONT WORK??
+handles = update_patientlist(handles) ; 
 handles= update_data_table(handles);
 
 %--- Removes localisation table for a specific patient
@@ -619,7 +629,7 @@ inputFormat{3,2} = 'Fieldtrip anatomical labels(.xlsx)';
 [RawFile, FileFormat] = mia_dialog_getfile('MIA : Pick a labeling table...', ...  % Window title
                                             handles.extOPTIONS.outdir, ...          % Working directory
                                             inputFormat);    % List of available file formats
-
+                                        
 % Labeling table is in Excel format
 if strcmp(FileFormat,inputFormat{1,2})
     [struct_table, status, message] = mia_read_loc_table(RawFile{1}) ;
@@ -699,7 +709,9 @@ save(fname,'-struct','s');
 
 handles = update_atlas_list(handles) ;
 
-
+% Stack in history
+mia_cmd_history(sprintf('MIA GUI action : Load new labelling table : %s\n',RawFile{1}));
+            
 % --- Executes on button press in pushbutton_newStudy.
 function pushbutton_newStudy_Callback(hObject, eventdata, handles)
 

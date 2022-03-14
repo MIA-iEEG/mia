@@ -40,6 +40,8 @@ end
  
 if isempty(RawFiles) ; return ; end 
 
+mia_cmd_history(sprintf('MIA GUI action : Import New patient : %s\n', RawFiles{:})) ; 
+
 % Brainvision single patient
 if strcmp(FileFormat,inputFormat{1,2})
 

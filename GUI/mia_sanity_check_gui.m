@@ -49,6 +49,10 @@ function mia_sanity_check_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 handles.output = hObject;
 
 handles.fname = cell2mat(varargin{1}) ; 
+
+% Stack in history
+mia_cmd_history(sprintf('MIA command : mia_sanity_check_gui(%s)',handles.fname));
+        
 % handles.fname = varargin{2} ;  
 handles = initialize_gui(hObject, handles, false);
 

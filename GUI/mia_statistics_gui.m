@@ -58,6 +58,7 @@ handles.output = hObject;
 idx_selected = varargin{1};
 handles.outdir = varargin{2};
 handles.current_loctable = varargin{3};
+handles.INDEX = 8 ;
 
 % Move window to the center of the screen 
 movegui(gcf,'center');
@@ -66,12 +67,12 @@ movegui(gcf,'center');
 % Read the working directory in order to build the table
 [handles.table.mia_table,handles.table.sFiles] = mia_create_table_workdir(handles.outdir, handles.current_loctable) ;
 
-jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Nb stats','Localized Contacts','ID'});
+jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Patient','Method','Montage','Freq. band','Fs','Remove Avg','Nb stats','Localized Contacts','ID'});
 
 % Trick to hide to indexing column
-jtable.getColumnModel().getColumn(6).setMinWidth(0);
-jtable.getColumnModel().getColumn(6).setMaxWidth(0);
-jtable.getColumnModel().getColumn(6).setWidth(0);
+jtable.getColumnModel().getColumn(handles.INDEX).setMinWidth(0);
+jtable.getColumnModel().getColumn(handles.INDEX).setMaxWidth(0);
+jtable.getColumnModel().getColumn(handles.INDEX).setWidth(0);
 
 tableHeader = com.jidesoft.grid.AutoFilterTableHeader(jtable);
 tableHeader.setAutoFilterEnabled(true)
@@ -198,11 +199,13 @@ function pushbutton_calculate_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 idx = [] ; 
+
+
 % Gets selected items in java table (+1 because java starts indexing at 0)
 all_idx = handles.table.jtable.getSelectedRows ; 
 
 % Get proper indices in case table is sorted
-for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),6)) ; end
+for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.INDEX)) ; end
 
 if isempty(idx)
     
@@ -215,7 +218,19 @@ else
     statOPTIONS.alpha =str2num(get(handles.edit_alpha,'String'));
     statOPTIONS.baseline =[str2num(get(handles.edit3,'String')),str2num(get(handles.edit4,'String'))] ;
 
-    mia_s5_compute_stats( handles.table.sFiles(idx),statOPTIONS);
+    for ii=1:length(idx)
+        mia_s5_compute_stats(handles.table.sFiles{idx(ii)},statOPTIONS);
+    end
+    
+    files_list = sprintf('''%s'',',handles.table.sFiles{idx});
+    
+     % Stack in history
+    mia_cmd_history(sprintf('MIA command : mia_s5_compute_stats(files,OPTIONS). \nfiles = \n%s\nOPTIONS = \n\toutdir = %s\n\tnboot= %s\n\talpha = %0.3f\n\tbaseline = [%0.3f,%0.3f]\n',...
+                files_list,...
+                statOPTIONS.outdir,...
+                num2str(statOPTIONS.nboot),...
+                statOPTIONS.alpha,...
+                statOPTIONS.baseline(1),statOPTIONS.baseline(2)));
 
     close(handles.figure1);
 end
