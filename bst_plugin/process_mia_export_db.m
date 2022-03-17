@@ -155,10 +155,11 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
             labels = {ChannelMat.Channel(iChannels(flag_good_chan(iChannels))).Name}; 
             Time = DataMat.Time;
             bst_version = bst_get('Version')  ;
+            df = size(F,3) ; 
             
             %Create patient direcotry and save file
             mkdir(mia_pt_dir);
-            save(outname, 'Time', 'F' ,'labels','Favg','bst_history','bst_version') ;
+            save(outname, 'Time', 'F' ,'df','labels','Favg','bst_history','bst_version') ;
 
         end 
     end
