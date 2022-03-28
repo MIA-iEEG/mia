@@ -77,7 +77,11 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
   
     % Get option values
     mia_db= sProcess.options.mia_db.Value{1};
-      
+    
+    % Display progress bar
+     startValue = bst_progress('get');
+     bst_progress('text', 'Extracting data to MIA');
+        
     % ===== PROCESS =====
     
     % Get all unique subjects
@@ -95,6 +99,10 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
     % Move all patient data files into one folder patient directory 
     for pp=1:length(SubjectNames)
         
+        bst_progress('set',  round(startValue + pp/length(SubjectNames)*100));
+
+        bst_progress('text', SubjectNames{pp});
+  
         % Create the name of the subject in MIA (SubjectNameCondition)
         mia_pt_dir = fullfile(mia_db,strcat(SubjectNames{pp},ConditionNames{pp})) ;
         
