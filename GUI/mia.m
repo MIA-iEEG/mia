@@ -1272,4 +1272,4 @@ function troubleshoot_Callback(hObject, eventdata, handles)
 % hObject    handle to troubleshoot (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-web("mailto:anne-sophie.dubarry@univ-amu.fr") 
+web('mailto:anne-sophie.dubarry@univ-amu.fr') 
