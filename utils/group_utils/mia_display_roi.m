@@ -51,9 +51,16 @@ for ii=1:length(roi)
     %% Plot mean signals
     hplot = subplot(2,1,1) ;   
     
+    OPTIONS.clr(croi.idPt(1),:) = [155,205,15] / 255 ;
+    OPTIONS.clr(croi.idPt(2),:) = [200,20,250] / 255 ; 
+    
     for jj=1:length(croi.idPt)  
         % Plot patient averaged timeseries
         plot(croi.t,croi.signmoy(:,jj)','color',OPTIONS.clr(croi.idPt(jj),:), 'LineWidth',2); hold on ;  
+        
+        % Plot halo to show variance (mean absolute deviation)
+        hPatch = plotHaloPatchMAD(hplot, croi.t, croi.signmoy(:,jj), OPTIONS.clr(croi.idPt(jj),:)) ;
+        
     end    
     
     % Add patient' id in the legend (if they are present in the plot!)
@@ -61,22 +68,32 @@ for ii=1:length(roi)
 
     % Add title (name of the ROI and frequencies explored (or LFP) 
     title(strrep(tmp,'_','\_'),'FontSize', FONTSZ); grid on ; 
-    xlim(OPTIONS.win_noedges);  ylim([-15,15]); 
+    xlim(OPTIONS.win_noedges);  ylim([-12,12]); 
     hcol1 = colorbar ; set(hcol1,'visible','off')
     ylabel('zscore','FontSize',FONTSZ);
     set(gca,'color',BackgroundColor);
+    set(gca,'FontSize',FONTSZ);
+    
+    % Save x-tick to apply to second planel display (masks)
+    xticks =  get(gca, 'XTick') ; 
     
     %% Plot masks
     himage = subplot(2,1,2) ; h= imagesc(croi.t,1:size(croi.Fmask,2),croi.Fmask'); caxis([-12 12]); hcol2 = colorbar; xlim(OPTIONS.win_noedges)
     colormap(jet);
+    
     % Light grey color for middle of the scale 
     cmap = colormap ; cmap(33,:) = BackgroundColor ; colormap(cmap) ;
     
-    set(gca,'YTick',1:size(croi.Fmask,2),'YTickLabel', strrep(croi.labels,'_','\_'),'Fontsize',8);  grid on ;
+    set(gca,'YTick',1:size(croi.Fmask,2),'YTickLabel', strrep(croi.labels,'_','\_'),'XTick',xticks); grid on ;
+    % Change fontsize spearately for xtick and ytick 
+    ax = gca;
+    ax.XAxis.FontSize = FONTSZ;
+    ax.YAxis.FontSize = 10; %Smaller font for channel labels (which can be long)
+    
     title(sprintf('[R_p = %0.3f]  [R_c = %0.3f]',croi.corrPt,croi.corrChan), 'FontSize', FONTSZ);
     xlabel('Time(s)','FontSize',FONTSZ);
 
-    % Moves legend to the left (everything else to the rigth) 
+    %% Moves legend to the left (everything else to the rigth) 
     set(hleg,'units','pixels');
     set(hplot,'units','pixels');
     set(himage,'units','pixels');
@@ -95,5 +112,27 @@ for ii=1:length(roi)
     set(hleg,'Position',[10,pos_hl(2),pos_hl(3),pos_hl(4)]);
     
 end
+end
 
+function hPatch = plotHaloPatchMAD(hAxes, vTime, Y, color)
 
+% Compute median absolute deviation (MAD)
+% Note: mad = median(abs(X - median(X)))
+mad = median(abs(Y-repmat(median(Y'),size(Y,2),1)')');
+
+% Set mean, low and high halo borders
+avg=mean(Y,2) ;
+Lhi=mean(Y,2) + mad' ; 
+Llow=mean(Y,2) - mad' ; 
+    
+% Draw halo patch 
+hPatch = patch([vTime fliplr(vTime)], [Llow'  fliplr(Lhi')], [0.6 0.6 0.6],...
+        'FaceAlpha', 0.25, ...
+        'FaceColor', color, ...
+        'EdgeColor', 'none', ...
+        'Parent',    hAxes);
+
+% Skip the name of the previous plot from the legend
+hPatch.Annotation.LegendInformation.IconDisplayStyle = 'off';
+
+end
