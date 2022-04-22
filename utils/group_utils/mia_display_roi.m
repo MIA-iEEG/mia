@@ -50,10 +50,7 @@ for ii=1:length(roi)
     
     %% Plot mean signals
     hplot = subplot(2,1,1) ;   
-    
-    OPTIONS.clr(croi.idPt(1),:) = [155,205,15] / 255 ;
-    OPTIONS.clr(croi.idPt(2),:) = [200,20,250] / 255 ; 
-    
+
     for jj=1:length(croi.idPt)  
         % Plot patient averaged timeseries
         plot(croi.t,croi.signmoy(:,jj)','color',OPTIONS.clr(croi.idPt(jj),:), 'LineWidth',2); hold on ;  
