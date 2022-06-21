@@ -1105,7 +1105,7 @@ if isfield(handles,'table')
             dlg_title = 'ROI TABLE NAME';
             num_lines = 1;
             def = {strrep(selected_table{1},'.xlsx',''),'hsv'};
-            loctable_name = newid(prompt,dlg_title,num_lines,def);
+            loctable_name = mia_newid(prompt,dlg_title,num_lines,def);
 
             % Atlas filename 
             fname_old = cell2mat(fullfile(group_foldnam,strcat('m_table_',selected_table,'.mat')));
