@@ -13,7 +13,7 @@ function [] = mia_display_roi(roi,OPTIONS)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
