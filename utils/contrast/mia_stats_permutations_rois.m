@@ -17,7 +17,7 @@
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 % ***********************************************************************
-function [roi] = stats_permutations_rois(roi,OPTIONS) 
+function [roi] = mia_stats_permutations_rois(roi,OPTIONS) 
 
 %  Loop through regions
 for ii=1:length(roi) 
