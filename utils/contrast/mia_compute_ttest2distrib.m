@@ -12,7 +12,7 @@ function [tarray, parray] = mia_compute_ttest2distrib(dc1,dc2)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2018 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -27,15 +27,11 @@ function [tarray, parray] = mia_compute_ttest2distrib(dc1,dc2)
 % 
 % Output:   t-values and p-value
 % 
-% Author : Anne-Sophie Dubarry 
-% Copyright (C) 2013 CNRS - INSERM - Universite Aix-Marseille
-%
 % -------------------------------------------------------------------------
 
 % Initialize stat arrays (tvals and pvals)
 tarray = zeros(size(dc1,1),size(dc1,2));
 parray = zeros(size(dc1,1),size(dc1,2));
-
 
 % Loop over contact
 for contactidx=1:size(dc1,1)
@@ -44,6 +40,6 @@ for contactidx=1:size(dc1,1)
  
 %     [~,P,~,STATS] = ttest2(squeeze(dc1(contactidx,:,:))',squeeze(dc2(contactidx,:,:))');
     tarray(contactidx,:) = tstat ; 
-    parray(contactidx,:) = 1-tcdf(tstat,df-1) ;% Probability of larger t-statistic    
+    parray(contactidx,:) = 1-mia_tcdf(tstat,df-1) ;% Probability of larger t-statistic    
 %     end
 end
