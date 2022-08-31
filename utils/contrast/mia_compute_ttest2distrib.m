@@ -36,7 +36,7 @@ parray = zeros(size(dc1,1),size(dc1,2));
 % Loop over contact
 for contactidx=1:size(dc1,1)
 
-    [tstat df] = ttest2_cell({ squeeze(dc1(contactidx,:,:)) squeeze(dc2(contactidx,:,:)) });
+    [tstat df] = mia_ttest2_cell({ squeeze(dc1(contactidx,:,:)) squeeze(dc2(contactidx,:,:)) });
  
 %     [~,P,~,STATS] = ttest2(squeeze(dc1(contactidx,:,:))',squeeze(dc2(contactidx,:,:))');
     tarray(contactidx,:) = tstat ; 
