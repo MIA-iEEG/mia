@@ -36,7 +36,7 @@ twpval = onsetpval>OPTIONS.tw(1)&onsetpval<OPTIONS.tw(2);
 % Compute FDR only for pvalues in tw 
 pdur = [allroi.pdur];
 indur = pdur(twdur) ;
-seg_dur = ft_fdr(indur,OPTIONS.qFDR);
+seg_dur = mia_ft_fdr(indur,OPTIONS.qFDR);
 
 % Get the boolean vector of clusters that were on/off back in the whole tw
 twdur(find(twdur)) = seg_dur ; seg_dur = twdur ; 
