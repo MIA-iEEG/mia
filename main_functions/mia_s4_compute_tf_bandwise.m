@@ -51,7 +51,9 @@ else % old but we keep for compatibility
 end
 
 %Read all the options
-if ~isempty(strfind(OPTIONS.modetf,'Morlet')) ; modetf = 'morlet'; end
+if contains(lower(OPTIONS.modetf),'morlet') ; modetf = 'morlet'; end
+if contains(lower(OPTIONS.modetf),'hilbert') ; modetf = 'hilbert'; end
+if contains(lower(OPTIONS.modetf),'lfp') ; modetf = 'LFP'; end
 zbaseline = OPTIONS.zbaseline;
 freqb=OPTIONS.freqs  ;
 freqstep = fix(freqb(2)-freqb(1));
@@ -157,10 +159,17 @@ hwait_trials = waitbar(0,sprintf('Computing trial %d/%d...',0, size(dc,3))) ;
 
 % Trial by trial
 for trialidx=1:size(dc,3)
+    
     % update progress bar
     waitbar(trialidx/size(dc,3),hwait_trials,sprintf('Computing trial %d/%d...',trialidx, size(dc,3))) ;
-    [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline,ncycles) ;
-
+    
+    % Compute either Morlet or Hilbert
+    if strcmp(modetf,'morlet')
+        [s(:,:,trialidx),zs(:,:,trialidx)] =  compute_wavelet(t,dc(:,:,trialidx),Fs,freqs,zbaseline,ncycles) ;
+    elseif strcmp(modetf,'hilbert')
+        [s(:,:,trialidx),zs(:,:,trialidx)] = compute_hilbert(t,dc(:,:,trialidx),Fs,freqs,zbaseline) ;
+    end
+    
 end
 % Close progress bar
 delete(hwait_trials) ;
@@ -191,5 +200,32 @@ for contactidx=1:size(dc,1)
     end
 end
 end
+
+
+
+function [s, zs] = compute_hilbert(t,dc,Fs,freqs,zbaseline )
+
+% For all contacts
+for contactidx=1:size(dc,1)
+    % For all freq ranges
+    for ff=1:length(freqs)-1
+        x = squeeze(dc(contactidx,:)) ;
+         
+        % Use Brainstorm code to compute Hilbert (process_bandpass -> line 230)
+        [tmp, FiltSpec, Messages] = bst_bandpass_hfilter(double(x), Fs, freqs(ff), freqs(ff+1), 0, 0, [], [], 'bst-hfilter-2019');
+        
+        % Apply Hilbert transform
+        wt = hilbert(tmp);
+        
+        % Normalization : Z-score against baseline
+        st(ff,:)= abs(wt);
+        baseline = st(ff,(t>zbaseline(1))&(t<=zbaseline(2)))' ;
+        wtz (ff,:)=  ( abs(wt) - repmat(mean(baseline),length( abs(wt)),1)')./repmat(std(baseline),length( abs(wt)),1)';
+    end
+    s(contactidx,:)=mean(st);
+    zs(contactidx,:)=mean(wtz);
+end
+end
+
 
 

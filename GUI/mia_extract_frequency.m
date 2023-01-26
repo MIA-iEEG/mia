@@ -313,7 +313,7 @@ function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
 % --- Executes on selection change in popupmenu_methods.
 function popupmenu_methods_Callback(hObject, eventdata, handles)
 
-% Get current value in the popupmenu : Morlet? LFP?
+% Get current value in the popupmenu : Morlet, Hilbert, else  OR LFP? 
 contents = cellstr(get(hObject,'String')) ;
 method =contents{get(hObject,'Value')}  ;
 
@@ -353,7 +353,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % set(hObject,'String',{'Morlet wavelet';'LFP';'Morse'});
-set(hObject,'String',{'Morlet wavelet';'LFP'});
+set(hObject,'String',{'Morlet wavelet';'Hilbert transform';'LFP'});
 
 % --- Executes on selection change in listbox_patients.
 function listbox_patients_Callback(hObject, eventdata, handles)

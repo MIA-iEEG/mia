@@ -73,7 +73,7 @@ for pp=1:length(pt)
             [method remain] = strtok(remain,'_') ;
             
             % Valid methods continue to analyse
-            if  strcmpi(method,'LFP') || strcmpi(method,'morlet')
+            if  strcmpi(method,'LFP') || strcmpi(method,'morlet') || strcmpi(method,'hilbert')
                 
                  [datatype remain] = strtok(remain,'_') ;
            
