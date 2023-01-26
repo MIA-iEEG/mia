@@ -62,7 +62,6 @@ if isempty(list_patients)
     errordlg('You must import patient first','Error');
     return;
 end
-
     
 if isempty(selected_patient)
     selected_patient  = 1 ; 
