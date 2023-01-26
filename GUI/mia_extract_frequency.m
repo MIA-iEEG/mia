@@ -58,6 +58,12 @@ handles.DEFAULTNCYCLES = 7;
 list_patients = get(varargin{1},'String');
 selected_patient = get(varargin{1},'Value'); 
 
+if isempty(list_patients) 
+    errordlg('You must import patient first','Error');
+    return;
+end
+
+    
 if isempty(selected_patient)
     selected_patient  = 1 ; 
 end
