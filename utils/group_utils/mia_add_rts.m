@@ -16,7 +16,7 @@
 % ========================================================================
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
-function [roi] = add_rts(roi,rt_table, OPTIONS) 
+function [roi] = mia_add_rts(roi,rt_table, OPTIONS) 
 
 % Get RT table
 tmp = [rt_table{:}];
