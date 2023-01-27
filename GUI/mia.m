@@ -549,6 +549,10 @@ if ~isempty(atlas)
     set(handles.list_atlas,'Value',1);
     set(handles.list_atlas,'String',atlas);
     handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',atlas{1})));
+else
+    % No localisation table 
+    set(handles.list_atlas,'Value',0);
+    set(handles.list_atlas,'String','');
 end
 % set(handles.list_study,'Max',length(studies)); % Make it so you can select more than 1.
 
@@ -706,6 +710,8 @@ s.table_fname = RawFile{1} ;
 
 % Save m_table fopr this atlas
 save(fname,'-struct','s');
+
+handles= update_data_table(handles);
 
 handles = update_atlas_list(handles) ;
 
