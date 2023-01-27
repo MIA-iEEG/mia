@@ -204,7 +204,6 @@ end
 
 
 function [s, zs] = compute_hilbert(t,dc,Fs,freqs,zbaseline )
-
 % For all contacts
 for contactidx=1:size(dc,1)
     % For all freq ranges
