@@ -70,7 +70,7 @@ for kk=1:length(un)
     if strcmp(OPTIONS.freq(1),'0')
         tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*LFP_data*','.mat')));    
     else
-        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
+        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'*.mat')));
     end
     
     % A montage file was found

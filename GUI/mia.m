@@ -549,6 +549,10 @@ if ~isempty(atlas)
     set(handles.list_atlas,'Value',1);
     set(handles.list_atlas,'String',atlas);
     handles.current_loctable = load(fullfile(group_foldnam,strcat('m_table_',atlas{1})));
+else
+    % No localisation table 
+    set(handles.list_atlas,'Value',0);
+    set(handles.list_atlas,'String','');
 end
 % set(handles.list_study,'Max',length(studies)); % Make it so you can select more than 1.
 
@@ -706,6 +710,8 @@ s.table_fname = RawFile{1} ;
 
 % Save m_table fopr this atlas
 save(fname,'-struct','s');
+
+handles= update_data_table(handles);
 
 handles = update_atlas_list(handles) ;
 
@@ -941,8 +947,19 @@ else
     switch ButtonName,
         case 'Yes',
            for pp=1:length(idx)
-               fprintf(sprintf('Remove %s\n',char(handles.table.sFiles(idx(pp)))));
-               delete(char(handles.table.sFiles(idx(pp))));
+               
+               % Get filename to delete 
+               fname = char(handles.table.sFiles(idx(pp))); 
+               [filepath,name,ext] = fileparts(fname);
+               
+               % Deletes data file 
+               mia_delete_file(char(handles.table.sFiles(idx(pp))));
+               
+               % Delete any associated montage file
+               mia_delete_file(fullfile(filepath,strcat(name,'_montage.mat'))); 
+                
+               % Delete any associated statsfile
+               mia_delete_file(fullfile(filepath,strcat(strrep(name,'_data_','_stats_'),'.mat'))); 
                
            end            
         case 'No'
@@ -954,7 +971,7 @@ else
     handles= update_data_table(handles);
     
     % Update Patient table
-    handles = update_patientlist(handles) ;
+    handles = update_patientlist(handles);
 
     guidata(hObject,handles);
 
@@ -1273,3 +1290,16 @@ function troubleshoot_Callback(hObject, eventdata, handles)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 web('mailto:anne-sophie.dubarry@univ-amu.fr') 
+
+% --- Delete any file and printout a message in console
+function mia_delete_file(fname)
+
+% Check if file exists
+if exist(fname)
+              
+    % Delete file
+    delete(fname) ; 
+
+    % Print the name of the file to be deleted
+    fprintf(strcat('Remove File : ',fname,'\n'));
+end
