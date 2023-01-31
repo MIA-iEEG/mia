@@ -129,13 +129,15 @@ for jj=1:length(un)
            
     % Compute correlations between patients : interpatient correlation
     rPt = corrcoef(mean_sig_subj) ;         % compute the correlation between all timeseries 
+    rPt = atanh(rPt);                       % apply Fisher-tansformation (convert r to Fisher's z)
     trPt = tril(rPt,-1) ;                   % Extract lower triangular part
-    roi{ctRoi}.corrPt = mean(trPt(trPt~=0));% Compute the average of all values from the lower triangular part
+    roi{ctRoi}.corrPt = tanh(mean(trPt(trPt~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
     roi{ctRoi}.allCorrPt = trPt(trPt~=0);        
 
-    % Compute correlations between channels : intra+inter patients       
+    % Compute correlations between channels : intra+inter patients 
+    r = atanh(r);                                   % apply Fisher-tansformation (convert r to Fisher's z)
     trChan = tril(r,-1) ;                           % Extract lower triangular part
-    roi{ctRoi}.corrChan =  mean(trChan(trChan~=0)); % Compute the average of all values from the lower triangular part
+    roi{ctRoi}.corrChan =  tanh(mean(trChan(trChan~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
     roi{ctRoi}.allCorrChan = trChan(trChan~=0);
    
     % Find onset of the first significant period
