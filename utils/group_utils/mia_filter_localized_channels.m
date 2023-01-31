@@ -2,7 +2,7 @@ function [id, labels, idx] = mia_filter_localized_channels(m_table_as, idx_subjl
 % ***********************************************************************
 % ***********************************************************************
 %
-%  Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+%  Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 %  This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)

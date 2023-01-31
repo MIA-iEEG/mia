@@ -11,7 +11,7 @@
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -70,7 +70,7 @@ for kk=1:length(un)
     if strcmp(OPTIONS.freq(1),'0')
         tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*LFP_data*','.mat')));    
     else
-        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'.mat')));
+        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'*.mat')));
     end
     
     % A montage file was found

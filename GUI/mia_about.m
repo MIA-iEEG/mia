@@ -18,7 +18,7 @@ function varargout = mia_about(varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -89,7 +89,7 @@ function text4_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to text4 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-web("http://www.neurotrack.fr/mia/", '-browser') 
+web('http://www.neurotrack.fr/mia/', '-browser') 
 
 
 % --- Executes during object creation, after setting all properties.
@@ -113,4 +113,4 @@ function text5_ButtonDownFcn(hObject, eventdata, handles)
 % hObject    handle to text5 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-web("mailto:anne-sophie.dubarry@univ-amu.fr") 
+web('mailto:anne-sophie.dubarry@univ-amu.fr') 

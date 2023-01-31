@@ -19,13 +19,13 @@ function varargout = mia_display_images_stats_gui(varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 1;
+gui_Singleton = 0;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
                    'gui_OpeningFcn', @mia_display_images_stats_gui_OpeningFcn, ...

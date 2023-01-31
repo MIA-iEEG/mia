@@ -18,7 +18,7 @@ function varargout = mia_extract_frequency(varargin)
 % MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 % GNU General Public License for more details.
 %  
-% Copyright (C) 2016-2021 CNRS - Universite Aix-Marseille
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
 % ========================================================================
 % This software was developed by
@@ -58,6 +58,11 @@ handles.DEFAULTNCYCLES = 7;
 list_patients = get(varargin{1},'String');
 selected_patient = get(varargin{1},'Value'); 
 
+if isempty(list_patients) 
+    errordlg('You must import patient first','Error');
+    return;
+end
+    
 if isempty(selected_patient)
     selected_patient  = 1 ; 
 end
@@ -308,7 +313,7 @@ function unitgroup_SelectionChangedFcn(hObject, eventdata, handles)
 % --- Executes on selection change in popupmenu_methods.
 function popupmenu_methods_Callback(hObject, eventdata, handles)
 
-% Get current value in the popupmenu : Morlet? LFP?
+% Get current value in the popupmenu : Morlet, Hilbert, else  OR LFP? 
 contents = cellstr(get(hObject,'String')) ;
 method =contents{get(hObject,'Value')}  ;
 
@@ -348,7 +353,7 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
 end
 
 % set(hObject,'String',{'Morlet wavelet';'LFP';'Morse'});
-set(hObject,'String',{'Morlet wavelet';'LFP'});
+set(hObject,'String',{'Morlet wavelet';'Hilbert transform';'LFP'});
 
 % --- Executes on selection change in listbox_patients.
 function listbox_patients_Callback(hObject, eventdata, handles)
