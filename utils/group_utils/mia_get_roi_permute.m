@@ -129,8 +129,9 @@ for jj=1:length(un)
 
         % Compute correlations between contacts
 %         r = corrcoef(all_sig) ; 
+        r = atanh(r);                                   % apply Fisher-tansformation (convert r to Fisher's z)
         trChan = tril(r,-1) ; 
-        corr_permut(pp) = mean(trChan(trChan~=0)); 
+        corr_permut(pp) = tahn(mean(trChan(trChan~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
         labels_permut{pp} = labels_roi;
         
         if length(unique(all_labels(idx_signals_perm))) ~= length(all_labels(idx_signals_perm))
@@ -167,13 +168,15 @@ for jj=1:length(un)
 
    % Compute correlations between patients : interpatient correlation
    rPt = corrcoef(mean_sig_subj) ; 
+   rPt = atanh(rPt);                       % apply Fisher-tansformation (convert r to Fisher's z)
    trPt = tril(rPt,-1) ; 
-   roi{ctRoi}.corrPt = mean(trPt(trPt~=0)); 
+   roi{ctRoi}.corrPt = tanh(mean(trPt(trPt~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value
    roi{ctRoi}.allCorrPt = trPt(trPt~=0);        
 
-   % Compute correlations between channels : intra+inter patients       
-    trChan = tril(r,-1) ; 
-   roi{ctRoi}.corrChan =  mean(trChan(trChan~=0)); 
+   % Compute correlations between channels : intra+inter patients   
+   r = atanh(r);                                   % apply Fisher-tansformation (convert r to Fisher's z)
+   trChan = tril(r,-1) ; 
+   roi{ctRoi}.corrChan =  tanh(mean(trChan(trChan~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value
    roi{ctRoi}.allCorrChan = trChan(trChan~=0);   
    
    % Saves permutations
