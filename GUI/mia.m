@@ -711,6 +711,9 @@ s.table_fname = RawFile{1} ;
 % Save m_table fopr this atlas
 save(fname,'-struct','s');
 
+% Update current loctable
+handles.current_loctable = s; 
+ 
 handles= update_data_table(handles);
 
 handles = update_atlas_list(handles) ;
@@ -1193,6 +1196,17 @@ else
     % Update Atlas table
     handles = update_atlas_list(handles) ;
 
+    % If there is other loctable in list update 
+    if isempty(get(handles.list_atlas,'String'))
+        handles.current_loctable = [] ; 
+    else 
+        %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% ASD :  TO BE CORRECTED 
+        handles.current_loctable = list_atlas(idx_selected) ; 
+    end
+    
+    % Update jtable
+    handles= update_data_table(handles);
+ 
     guidata(hObject,handles);
 
 end

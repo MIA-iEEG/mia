@@ -211,34 +211,7 @@ OPTIONS.overwrite = 'no'; % Overwrite any existing files
 all_methods =get(handles.popupmenu_methods,'String')  ;
 modetf = all_methods(get(handles.popupmenu_methods,'Value'));
 
-if strcmpi(modetf,'Morse') %% COMPUTE LFP EXTRACTION
-    
-    %% Frequency extraction 
-    % Test if frequency bounds are valid
-    lfreq = str2num(get(handles.low_freq,'String')); 
-    ufreq = str2num(get(handles.up_freq,'String')); 
-    step =  str2num(get(handles.step,'String')); 
-    
-    if ufreq<=lfreq 
-       warndlg('High Frequency bound must be > Low frequency bound') ;
-       return ;
-    end
-
-    if isempty(step)||(step==0)
-        warndlg('Missing value : Frequency step') ;
-       return ;
-    end
-
-    %Options = Select descomposition mode, frequency band and baseline
-    OPTIONS.modetf=modetf ; 
-    OPTIONS.freqs= [lfreq:step:ufreq];
-    OPTIONS.subjects = list_patients(selected_patient) ; 
-
-    % Compute frequecy analysis
-    handles.sFiles = mia_compute_morse(OPTIONS);
-   
-    
-elseif strcmp(modetf,'LFP') %% COMPUTE LFP EXTRACTION
+if strcmp(modetf,'LFP') %% COMPUTE LFP EXTRACTION
     
    handles.sFiles = mia_s3_zscore(OPTIONS) ; 
  
@@ -319,17 +292,24 @@ method =contents{get(hObject,'Value')}  ;
 
 % If LFP : disable all frequency related edit fields
 if strcmp(method,'LFP')
-    set(handles.low_freq, 'String', '0');
-    set(handles.up_freq,  'String', '0');
-    set(handles.step,     'String', '0');     
-    set(handles.edit_ncycles,     'String', '0');     
-    set(handles.text_edges,'String','');
-
+%     set(handles.low_freq, 'String', 'NA');
+%     set(handles.up_freq,  'String', 'NA');
+%     set(handles.step,     'String', 'NA');     
+%     set(handles.edit_ncycles,     'String', 'NA');     
+%     set(handles.text_edges,'String','');
     set(handles.low_freq, 'enable', 'off');
     set(handles.up_freq,  'enable', 'off');
     set(handles.step,     'enable', 'off');     
     set(handles.edit_ncycles,     'enable', 'off');     
     set(handles.checkbox_remove_evoked, 'enable','off');
+elseif strcmp(method,'Hilbert transform')
+    
+    set(handles.low_freq, 'enable', 'on');
+    set(handles.up_freq,  'enable', 'on');
+    set(handles.step,     'enable', 'on');     
+    set(handles.edit_ncycles,     'String', 'NA');    
+    set(handles.edit_ncycles,     'enable', 'off');
+    set(handles.checkbox_remove_evoked, 'enable','on');
 else
     set(handles.low_freq, 'enable', 'on');
     set(handles.up_freq,  'enable', 'on');
