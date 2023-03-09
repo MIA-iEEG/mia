@@ -797,7 +797,7 @@ load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
 % ASD : add message expliciting the atlas that was taken for group GUI
 
 % Start group GUI
-mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS);
+mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS.outdir);
 
 
 % --- Executes when figure1 is resized.

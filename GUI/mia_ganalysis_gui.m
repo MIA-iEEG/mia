@@ -52,7 +52,7 @@ handles.output = hObject;
 handles.m_table_as=varargin{1};
 handles.maindir=varargin{2};
 selected_atlas = varargin{3};
-handles.extOPTIONS =varargin{4};
+handles.db_dir =varargin{4};
 
 % Jtable position offset in Y (down)
 handles.shift = 42 ;
@@ -86,6 +86,8 @@ handles.sfiles(ismember(handles.sfiles,{'.','..','.DS_Store'})) = [];
 handles.sfiles(~logical(cellfun(@isempty,strfind(handles.sfiles,'cfroi'))))=[];
 handles.sfiles=handles.sfiles';
 
+% Here extract the name of the method out of handles.sFiles(Study_nbpt_name)
+
 % Update listbox
 set(handles.list_study,'string',handles.NAMES);
 set(handles.list_study,'max',1);
@@ -95,6 +97,7 @@ set(handles.list_study,'max',1);
 sfiles=handles.sfiles;
 sFile=sfiles(get(handles.list_study,'Value'));
 sFile=char(fullfile(handles.maindir,handles.NAMES(get(handles.list_study,'Value')),sFile));
+
 OPTIONS.allow_flipsign = get(handles.allow_flipsign,'value') ; 
 OPTIONS.signifmode = get(handles.checkbox_significant_only,'value') ; 
 OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ; 
@@ -484,7 +487,7 @@ hwarn = warndlg('This will erase previous RT (Press cancel on next window to can
 waitfor(hwarn);
 
 % Open a directory browser
-[filename, pathname] = uigetfile('*.xlsx', 'Pick a EXCEL file',handles.extOPTIONS.outdir);
+[filename, pathname] = uigetfile('*.xlsx', 'Pick a EXCEL file',handles.db_dir);
 
 % CANCEL
 if filename==0 ; return; end 
@@ -499,7 +502,7 @@ if filename==0 ; return; end
 % Get montage (from file name) 
 rOPTIONS.freq= handles.freqb ;
 rOPTIONS.mtg = handles.mtg ;
-rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
+rOPTIONS.maindir = handles.db_dir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
 rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
 rOPTIONS.win_noedges = handles.edges;
 rOPTIONS.clr = handles.dOPTIONS.clr ;
@@ -524,10 +527,12 @@ function load_rasters_Callback(hObject, eventdata, handles) %#ok<DEFNU>
 % Get montage (from file name) 
 rOPTIONS.mtg = handles.mtg ;
 %rOPTIONS.freq= handles.freqb ;
-rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
+rOPTIONS.maindir = handles.db_dir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
 rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
 rOPTIONS.win_noedges = handles.edges;
 rOPTIONS.clr = handles.dOPTIONS.clr ;
+
+if isempty(handles.method) ; rOPTIONS.method = 'hilbert' ; else rOPTIONS.method = handles.method ; end
 
 % Get signals (single trials) 
 [handles.rois] = mia_get_rasters(handles.rois,rOPTIONS) ;
@@ -558,7 +563,7 @@ else
         % Get montage (from file name) 
         rOPTIONS.mtg = handles.mtg ;
         rOPTIONS.freq= handles.freqb ;
-        rOPTIONS.maindir = handles.extOPTIONS.outdir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
+        rOPTIONS.maindir = handles.db_dir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove handles.wdir elsewhere (no use) 
         rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
         rOPTIONS.win_noedges = handles.edges;
         rOPTIONS.clr = handles.dOPTIONS.clr ;
