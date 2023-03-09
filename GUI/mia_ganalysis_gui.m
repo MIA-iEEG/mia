@@ -24,7 +24,7 @@ function varargout = mia_ganalysis_gui(varargin)
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-gui_Singleton = 1;
+gui_Singleton = 0;
 gui_State = struct('gui_Name',       mfilename, ...
     'gui_Singleton',  gui_Singleton, ...
     'gui_OpeningFcn', @mia_ganalysis_gui_OpeningFcn, ...
@@ -48,55 +48,38 @@ function mia_ganalysis_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % Choose default command line output for mia_ganalysis_gui
 handles.output = hObject;
 
-%handles.sfiles=varargin{1};
-handles.m_table_as=varargin{1};
-handles.maindir=varargin{2};
+%handles.group_files=varargin{1};
+handles.m_table_as = varargin{1};
+handles.group_dir = varargin{2};
 selected_atlas = varargin{3};
-handles.db_dir =varargin{4};
+handles.db_dir = varargin{4};
+handles.list_study_mia = varargin{5};
 
 % Jtable position offset in Y (down)
-handles.shift = 42 ;
-% table_size = [15,10,735,290];
+handles.shift = 42;
 handles.table_size = [15,10,735,600];
 
-% Move window to the center of the screen 
-% movegui(gcf,'center');
-% set(handles.figure1,'Units', 'normalized') ; 
-% fig_dim = get(handles.figure1,'Position') ; 
-% set(handles.figure1,'Position', [0.8 0.3 fig_dim(3) fig_dim(4)]);
- 
-handles.dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); % distinct colors for pt
+% Set distinct colors for pt
+handles.dOPTIONS.clr = jet(numel(unique(handles.m_table_as(:,1)))); 
        
 % Set title with the name of the input atlas 
 set(handles.text_title,'string',strcat('GROUP ANALYSIS : ',selected_atlas));
 
-%get studies name
-d = dir(handles.maindir);
-isub = [d(:).isdir]; % returns logical vector if is folder
-handles.NAMES={d(isub).name}';
-handles.NAMES(ismember(handles.NAMES,{'.','..','.DS_Store'})) = [];
-
-%get the study ganalysis files name
-handles.sfiles={};
-for ii=1:length(handles.NAMES)
-    d=dir(fullfile(handles.maindir,handles.NAMES{ii}));
-    handles.sfiles=cat(1,handles.sfiles,{d.name}');
+% Find all files containg group analysis (rois, etc.)
+group_folders = fullfile(handles.group_dir,handles.list_study_mia.String,strcat(handles.list_study_mia.String,'*.mat')); 
+for ii=1:length(group_folders)
+    d = dir(group_folders{ii});
+    handles.group_files{ii} = d.name;   
 end
-handles.sfiles(ismember(handles.sfiles,{'.','..','.DS_Store'})) = [];
-handles.sfiles(~logical(cellfun(@isempty,strfind(handles.sfiles,'cfroi'))))=[];
-handles.sfiles=handles.sfiles';
 
-% Here extract the name of the method out of handles.sFiles(Study_nbpt_name)
+ % Here extract the name of the method out of handles.group_files(Study_nbpt_name)
 
 % Update listbox
-set(handles.list_study,'string',handles.NAMES);
-set(handles.list_study,'max',1);
+set(handles.list_study,'String',handles.list_study_mia.String);
+set(handles.list_study,'Value',handles.list_study_mia.Value);
 
-%compute create table of rois to get the right mia_table, edges and datafiles,
-%according to the selected study
-sfiles=handles.sfiles;
-sFile=sfiles(get(handles.list_study,'Value'));
-sFile=char(fullfile(handles.maindir,handles.NAMES(get(handles.list_study,'Value')),sFile));
+% Get current group file
+current_grp_file = fullfile(handles.group_dir, handles.list_study_mia.String{handles.list_study_mia.Value}, handles.group_files{handles.list_study_mia.Value}) ; 
 
 OPTIONS.allow_flipsign = get(handles.allow_flipsign,'value') ; 
 OPTIONS.signifmode = get(handles.checkbox_significant_only,'value') ; 
@@ -107,7 +90,7 @@ OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ;
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, current_grp_file, OPTIONS) ;
  
 % Update handles structure
 guidata(hObject, handles);
@@ -129,9 +112,9 @@ if get(handles.togglebutton1,'Value')==1
     delete(handles.hjtable);
     guidata(hObject, handles);
     
-    sfiles=handles.sfiles;
-    sFile=sfiles(get(handles.list_study,'Value'));
-    sFile=char(fullfile(handles.maindir,handles.NAMES(get(handles.list_study,'Value')),sFile));
+    % Get current group file
+    current_grp_file = fullfile(handles.group_dir, handles.list_study.String{handles.list_study.Value}, handles.group_files{handles.list_study.Value}) ; 
+    
     OPTIONS.signifmode = get(handles.checkbox_significant_only,'value') ;
     OPTIONS.allow_flipsign = get(handles.allow_flipsign,'value') ; 
     OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ; 
@@ -142,7 +125,7 @@ if get(handles.togglebutton1,'Value')==1
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, current_grp_file,OPTIONS) ;
  
 %     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Onset','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
     jtable = com.jidesoft.grid.SortableTable(handles.table.mia_table,{'Region','Patients Correlation','Channels Correlation','N patients','N contacts','ID'});
@@ -172,21 +155,9 @@ if get(handles.togglebutton1,'Value')==1
 
 else
     
-    %if jtable is not  displayed we just compute create table of rois to
-    %get the right mia_table, edges and datafiles, according to the selected
-    %study
-%     sfiles=handles.sfiles;
-%     sFile=sfiles(get(handles.list_study,'Value'));
-%     sFile=char(fullfile(handles.maindir,handles.NAMES(get(handles.list_study,'Value')),sFile));
-%   
-    % Reads all folders that are in the study folder
-    d = dir(fullfile(handles.maindir,cell2mat(handles.NAMES(get(handles.list_study,'Value'))))) ; 
-     
-    isub = [d(:).isdir]; % returns logical vector if is folder
-    sFile = {d(~isub).name}';
-    sFile(ismember(sFile,{'.DS_Store'})) = []; % Removes .DS_Store if any 
-    
-    sFile = cell2mat(fullfile(handles.maindir,cell2mat(handles.NAMES(get(handles.list_study,'Value'))),sFile)) ; 
+    % Get current group file
+    current_grp_file = fullfile(handles.group_dir, handles.list_study.String{handles.list_study.Value}, handles.group_files{handles.list_study.Value}) ; 
+
     OPTIONS.signifmode = get(handles.checkbox_significant_only,'value') ; 
     OPTIONS.allow_flipsign = get(handles.allow_flipsign,'value') ; 
     OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ; 
@@ -196,7 +167,7 @@ else
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, current_grp_file, OPTIONS) ;
 end
   guidata(hObject, handles);
 
@@ -215,9 +186,9 @@ function togglebutton1_Callback(hObject, eventdata, handles)
 
 if (get(hObject,'Value') == get(hObject,'Max'))
     
-    sfiles=handles.sfiles;
-    sFile=sfiles(get(handles.list_study,'Value'));
-    sFile=char(fullfile(handles.maindir,handles.NAMES(get(handles.list_study,'Value')),sFile));
+    % Get current group file
+    current_grp_file = fullfile(handles.group_dir, handles.list_study_mia.String{handles.list_study_mia.Value}, handles.group_files{handles.list_study_mia.Value}) ; 
+    
     OPTIONS.signifmode = get(handles.checkbox_significant_only,'value') ; 
     OPTIONS.allow_flipsign = get(handles.allow_flipsign,'value') ; 
     OPTIONS.flip_thresh = str2double(get(handles.flip_thresh,'String')) ; 
@@ -228,7 +199,7 @@ if (get(hObject,'Value') == get(hObject,'Max'))
      handles.edges,handles.datafiles,...
      handles.mtg,...
      handles.freqb,...
-     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, sFile,OPTIONS) ;
+     handles.wdir] = mia_create_table_of_rois(handles.m_table_as, current_grp_file,OPTIONS) ;
     
     % Enlarge main figure in height and shift down
     fig_position = get(handles.figure1,'Position') ;
@@ -532,7 +503,7 @@ rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end))
 rOPTIONS.win_noedges = handles.edges;
 rOPTIONS.clr = handles.dOPTIONS.clr ;
 
-if isempty(handles.method) ; rOPTIONS.method = 'hilbert' ; else rOPTIONS.method = handles.method ; end
+% if isempty(handles.method) ; rOPTIONS.method = 'hilbert' ; else rOPTIONS.method = handles.method ; end
 
 % Get signals (single trials) 
 [handles.rois] = mia_get_rasters(handles.rois,rOPTIONS) ;

@@ -42,32 +42,21 @@ function [ganalysis] = mia_s5_group_data_v1(sFiles,OPTIONS)
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 %
 
+% Init output 
 ganalysis=[];
-
-% % Create a wait bar 
-% hwait=waitbar(0,sprintf('Processing %d/%d',1,length(sFiles)),'Name','Group analysis');
-% 
-% % Make the waitbar stay on top
-% set(hwait,'WindowStyle','modal')
 
 % This indice is here because previous versions of MIA was handling several
 % col
 ii=1;
 
-% Check that all files have same sampling rate
-
-
-% for pp=1:length(subj)
 for pp=1:length(sFiles)
     
     [~,sSubj,~] = fileparts(fileparts(sFiles{pp})) ; 
 
-%     waitbar(pp/length(sFiles),hwait,sprintf('%s %d/%d',strrep(sSubj,'_',' '),pp,length(sFiles)))
-    
     % Load data
     data = load(sFiles{pp});
         
-    ganalysis{pp,ii}.fname=sFiles{ii};
+    ganalysis{pp,ii}.fname=sFiles{pp};
     ganalysis{pp,ii}.subj=sSubj;
     ganalysis{pp,ii}.df=size(data.F,3);
     ganalysis{pp,ii}.freqb=data.freqb;
@@ -144,12 +133,7 @@ minL = min(cell2mat(cellfun(@(x)(length(x)), {tmp.Time}, 'UniformOutput', false)
 
 % Remove extra Time point if needed
 for pp=1:length(ganalysis)
-%     for ii=1:length(sFiles) 
         ganalysis{pp,1}.Time=ganalysis{pp,ii}.Time(1:minL);
         ganalysis{pp,1}.tvals=ganalysis{pp,ii}.tvals(:,1:minL);
         ganalysis{pp,1}.pvals=ganalysis{pp,ii}.pvals(:,1:minL);
-%     end
 end
-
-%Close waitbar
-% close(hwait)
