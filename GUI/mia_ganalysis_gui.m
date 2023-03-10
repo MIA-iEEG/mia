@@ -502,8 +502,7 @@ rOPTIONS.maindir = handles.db_dir;%handles.wdir; % ASD 2018/6/25 : TODO : Remove
 rOPTIONS.freq = strcat(num2str(handles.freqb(1)),'_',num2str(handles.freqb(end)));
 rOPTIONS.win_noedges = handles.edges;
 rOPTIONS.clr = handles.dOPTIONS.clr ;
-
-% if isempty(handles.method) ; rOPTIONS.method = 'hilbert' ; else rOPTIONS.method = handles.method ; end
+rOPTIONS.datafiles= handles.datafiles ;
 
 % Get signals (single trials) 
 [handles.rois] = mia_get_rasters(handles.rois,rOPTIONS) ;

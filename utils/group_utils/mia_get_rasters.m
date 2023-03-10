@@ -60,31 +60,21 @@ hwait_pt = waitbar(0,'','Units','Normalized','Name','Loading data...');
 % Make the waitbar stay on top
 set(hwait_pt,'WindowStyle','modal')
 
+% Make sure the datafiles are in the same order then patient 
+[~,pt,~] = fileparts(fileparts(OPTIONS.datafiles)) ; 
+[~,id_reorder]=ismember(un,pt) ; 
+OPTIONS.datafiles = OPTIONS.datafiles(id_reorder) ; 
+
 % For each patient load single trial data 
 for kk=1:length(un)
 
     % Update progress bar 
     waitbar(kk/length(un),hwait_pt,sprintf('%s %s','Loading rasters',un{kk})) ;
-
-    % Make an exception for LFP (OPTIONS.freq does not match the filename).
-    if strcmp(OPTIONS.freq(1),'0')
-        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*LFP_data*','.mat')));    
-    else
-        tmp = dir(fullfile(OPTIONS.maindir,un{kk},strcat('*',OPTIONS.mtg,'*data*',num2str(OPTIONS.freq),'*.mat')));
-    end
-    
-    % A montage file was found
-    if size(tmp,1)~=1
-        tmp = tmp(cell2mat(cellfun(@isempty, strfind({tmp.name},'montage'), 'UniformOutput',false)));
-    end
-    
-    fname = fullfile(OPTIONS.maindir,un{kk},tmp.name);
-
-    fileg = dir(fullfile(OPTIONS.maindir,un{kk},'*signal_LFP*.mat'));
-          
-    dat = load(fname);      
+        
+    % Loads data to display
+    dat = load(OPTIONS.datafiles{kk});      
    
-    % Replace all ' by p
+    % Replace all ' by p (if any)
     dat.labels = strrep(dat.labels,'''','p') ; 
     
     % Get channel to display

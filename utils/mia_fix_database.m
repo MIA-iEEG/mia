@@ -44,9 +44,6 @@ for ss=1:length(studies)
         [~,wrong_subject,~] = fileparts(fileparts(dat.ganalysis{gg}.fname)) ; 
         correct_subject = dat.ganalysis{gg}.subj ; 
         
-        % There is nothing to change
-        if strcmp(correct_subject, wrong_subject) ; continue; end
-        
         [~,fname,~] = fileparts(dat.ganalysis{gg}.fname);
       
         dat.ganalysis{gg}.fname = fullfile(fileparts(group_dir),db_name,correct_subject, strrep(fname,wrong_subject,correct_subject));
