@@ -731,8 +731,6 @@ end
 
 idx = [] ;
 
-% ASD : DOES NOT WORK??
-
 % Gets selected items in java table
 if isfield(handles,'jtable')
     all_idx = handles.table.jtable.getSelectedRows ; 
@@ -789,7 +787,6 @@ if isempty(list_altas)
         return ;
 end
 
-
 selected_atlas = list_altas(idx_selected);
 
 load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
@@ -797,15 +794,15 @@ load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
 % ASD : add message expliciting the atlas that was taken for group GUI
 
 % Start group GUI
-mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS);
+mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS.outdir, handles.list_studies);
 
 
 % --- Executes when figure1 is resized.
 function [handles] = figure1_SizeChangedFcn(hObject, eventdata, handles)
 
 % Update jtable size only if it exists
-if isfield(handles,'table');
-    if ~isempty(handles.table.mia_table);
+if isfield(handles,'table')
+    if ~isempty(handles.table.mia_table)
         [handles] = copy_jtable(handles);
        
     end

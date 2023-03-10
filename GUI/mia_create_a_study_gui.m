@@ -370,14 +370,6 @@ save(fname,'ganalysis');
 
 close(handles.figure1);
  
-% %save ganalysis
-% [subj,~,~]=unique(mia_table(:,1));
-% % Gets the frequency band for this processing 
-% freqb = ganalysis{1}.freqb ;
-% fname =char(fullfile(outdir,NAME,strcat(NAME,'_',num2str(length(subj)),'pts_',method,'_',montage,'_',strcat(num2str(freqb(1)),'_',num2str(freqb(end))))));
-% save(fname,'ganalysis');
-
-
 
 % --- Executes on button press in cancel.
 function cancel_Callback(hObject, eventdata, handles)

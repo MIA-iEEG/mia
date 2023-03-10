@@ -17,11 +17,6 @@
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 
-
-% This function browse recursivvely in working directory to fill
-% out a table containgin all files (processes) that have been produced
-% 2017/1/17 : ASD add options.allow_signflip
-% 2018/4/19 : ASD add output montage (for raster display) 
 function [rois,mia_table,edges,datafiles, montage, freqb, wdir]=mia_create_table_of_rois(m_table_as,ganaFile, OPTIONS)
 
 % Loads study file 
@@ -68,8 +63,7 @@ end
 rois = mia_get_roi(m_table_effect,ganalysis{1,1}.Time, s, smask, all_labels,{ganalysis{1}.freqb},getOPTIONS);
 
 % mia_table column index 
-id_name=1;
-% id_onset=2;
+id_roiname=1;
 id_corrPt=2;
 id_corrChan=3;
 id_numPT=4;
@@ -83,8 +77,7 @@ cChan = [] ;
 %% Fill in table with rois
 for ii=1:length(rois)
     
-    mia_table{ii,id_name}=rois{ii}.name;
-%     mia_table{ii,id_onset}=num2str(rois{ii}.onset);
+    mia_table{ii,id_roiname}=rois{ii}.name;
     if isnan(rois{ii}.corrPt); cPt = '-'; else ; cPt = num2str(rois{ii}.corrPt);end
     mia_table{ii,id_corrPt}=cPt ; 
     if isnan(rois{ii}.corrChan); cChan = '-'; else ; cChan = num2str(rois{ii}.corrChan);end
@@ -99,16 +92,8 @@ end
 edges=ganalysis{1}.edges;
 
 %% Get list of data files for this study 
-n=1;
-for ii=1:size(ganalysis,1)
-    for jj=1:size(ganalysis,2)
-        if ~isempty(ganalysis{ii,jj})
-         datafiles{n,1}=char(ganalysis{ii,jj}.fname);
-         n=n+1;
-        end
-    end
-end
-
+tmp = [ganalysis{:}];
+datafiles =  {tmp.fname}' ; 
 
 %% Get freq 
 freqb = ganalysis{1}.freqb;
