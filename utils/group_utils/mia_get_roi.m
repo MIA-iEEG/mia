@@ -1,27 +1,23 @@
-function [roi] = mia_get_roi(m_table_effect,t, s, smask, all_labels,freqs,opt) 
+% ========================================================================
+% This file is part of MIA.
+% 
+% MIA is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+% 
+% MIA is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%  
+% Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
 %
-% ***********************************************************************
-%
-%  Copyright (C) 2016-2022 CNRS - Universite Aix-Marseille
-%
-%  This software was developed by
+% ========================================================================
+% This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
-%
-% ***********************************************************************
-%
-% 2015/5/15 : ASD creation
-% 2017 : ASD modif flip according to description : 
-% We computed the correlation matrix across all signals within one region 
-%   (i.e. across contacts and patients).
-%   This matrix was thresholded separately for positive and negative values, 
-%   based on a threshold chosen by the user (default thr = -0.7). 
-%   We counted the number of high negative correlation (-thr) 
-%   and pick the channel with the highest number of anti-correlated channels.
-% All channels highly correlated with this channel were flipped. 
-%
-% 2018/12/7 : correct flip : do not flip if nothing needs to be flipped! 
-%
-% 2019/10/28 : ASD : remove idx to count region - useless
+
+function [roi] = mia_get_roi(m_table_effect,t, s, smask, all_labels,freqs,opt) 
 
 id_loc2 =5; 
 id_lat=4;
@@ -135,9 +131,9 @@ for jj=1:length(un)
     roi{ctRoi}.allCorrPt = trPt(trPt~=0);        
 
     % Compute correlations between channels : intra+inter patients 
-    r = atanh(r);                                   % apply Fisher-tansformation (convert r to Fisher's z)
-    trChan = tril(r,-1) ;                           % Extract lower triangular part
-    roi{ctRoi}.corrChan =  tanh(mean(trChan(trChan~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
+    r = atanh(r);                                           % apply Fisher-tansformation (convert r to Fisher's z)
+    trChan = tril(r,-1) ;                                   % Extract lower triangular part
+    roi{ctRoi}.corrChan =  tanh(mean(trChan(trChan~=0)));   % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
     roi{ctRoi}.allCorrChan = trChan(trChan~=0);
    
     % Find onset of the first significant period
