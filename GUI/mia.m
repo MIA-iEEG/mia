@@ -193,8 +193,7 @@ idx = [] ;
 % Get proper indices in case table is sorted
 for kk=1:length(all_idx); idx(kk) = str2num(handles.table.jtable.getValueAt(all_idx(kk),handles.table.jtable.getColumnCount - 1)) ; end
 
-stats = [] ;
-
+% Update the main table
 handles= update_data_table(handles);
 
 % Get file name (data)
@@ -559,12 +558,12 @@ end
 % --- Executes on button press in pushbutton_statistics.
 function pushbutton_statistics_Callback(hObject, eventdata, handles)
 
-handles = compute_statistics(handles) ;
+compute_statistics(handles) ;
 
 % --- Executes on menu item "Statistics..." 
 function menu_compute_stats_Callback(hObject, eventdata, handles)
 
-handles = compute_statistics(handles) ;
+compute_statistics(handles) ;
 
 % --- Compute statistics 
 function [handles] = compute_statistics(handles) 
@@ -592,7 +591,7 @@ if isempty(idx)
 end
 
 % Call statistic analysis GUI
-handles_stats = mia_statistics_gui(idx,handles.extOPTIONS.outdir,  handles.current_loctable);
+mia_statistics_gui(idx,handles.extOPTIONS.outdir,  handles.current_loctable);
 
 % Update the list 
 handles = update_patientlist(handles) ; 
@@ -716,7 +715,7 @@ handles.current_loctable = s;
  
 handles= update_data_table(handles);
 
-handles = update_atlas_list(handles) ;
+update_atlas_list(handles) ;
 
 % Stack in history
 mia_cmd_history(sprintf('MIA GUI action : Load new labelling table : %s\n',RawFile{1}));
@@ -835,8 +834,7 @@ end
 handles = mia_import_data(handles) ;
 
 % Update Patient table
-handles = update_patientlist(handles) ;
-
+update_patientlist(handles) ;
 
 % --- Executes on button press in pushbutton_minusRemovePt.
 function pushbutton_minusRemovePt_Callback(hObject, eventdata, handles)
@@ -873,12 +871,12 @@ guidata(hObject,handles);
 % --- Execute on pushbutton extract frequency.
 function menu_freq_extract_Callback(hObject, eventdata, handles)
 
-handles = compute_frequencies(handles) ;
+compute_frequencies(handles) ;
 
 % --- Executes on button press in pushbutton_plusExtractFreq.
 function pushbutton_plusExtractFreq_Callback(hObject, eventdata, handles)
 
-handles = compute_frequencies(handles) ;
+compute_frequencies(handles) ;
 
 % --- Executes on button press in pushbutton_ExtractFreq.
 function pushbutton_ExtractFreq_Callback(hObject, eventdata, handles)
@@ -886,7 +884,7 @@ function pushbutton_ExtractFreq_Callback(hObject, eventdata, handles)
 handles = compute_frequencies(handles) ;
 
 % Update the table
-handles = update_data_table(handles);
+update_data_table(handles);
 
 % --- Extract frequencies and highlight results in jtable
 function [handles] = compute_frequencies(handles)
@@ -1140,7 +1138,7 @@ if isfield(handles,'table')
 
          end
          % Update text field with localization table path
-         handles = update_loctablepath_text(handles);
+         update_loctablepath_text(handles);
 
     end
     
