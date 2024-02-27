@@ -131,6 +131,9 @@ end
 % --------------------------------------------------------------------
 function handles = initialize_gui(fig_handle, handles, isreset)
 
+% Turn off warning about javacomponents
+warning('off', 'MATLAB:ui:javacomponent:FunctionToBeRemoved');
+ 
 % initialize the whole interface 
 handles = update_patientlist(handles) ;
 handles = update_studies_list(handles) ;
@@ -791,6 +794,8 @@ selected_atlas = list_altas(idx_selected);
 load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
 
 % ASD : add message expliciting the atlas that was taken for group GUI
+
+%% ASD : HERE work on the possibility to call the study gui in a "stand alone" mode" 
 
 % Start group GUI
 mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS.outdir, handles.list_studies);
