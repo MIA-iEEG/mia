@@ -32,16 +32,22 @@ function [struct_table, status, message] = mia_read_loc_table(filename)
 % one of the keywords "Patient", "Electrodes", "Lateralization" and "Region"
 
 %Load excel file
-[~, text_data, all_data] = xlsread(filename) ;
-text_data = all_data ;
+[~, ~, text_data] = xlsread(filename) ;
 
 status = 1 ;
 
 message = '' ; % init
 struct_table = [];
 
-% Get the header line and remove spaces
-hdr = deblank(text_data(1,:)) ;
+% Get the header line and remove spaces and Nan
+hdr = text_data(1,:); 
+valid_column = ~cellfun(@(x) any(isnan(x)),hdr) ;
+hdr(~valid_column) = []; 
+hdr = deblank(hdr) ; 
+
+% Removes any unecessary column (e.g. NAN)
+text_data = text_data(:,valid_column) ; 
+
 idpt = find(strcmpi(hdr,'Patient'));
 
 % idelec can either be Electrode or Contact
