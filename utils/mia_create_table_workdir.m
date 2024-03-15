@@ -118,7 +118,14 @@ for pp=1:length(pt)
                     % Computes sampling rate
                     sFreq = 1 / (d.Time(2) - d.Time(1));
 
-                    mia_table{ct,ID_SRATE} = sprintf('%.0f Hz',sFreq);
+                    % For lower sampling frequencies: display decimals
+                    if (sFreq < 100)
+                        strSmp = sprintf('%1.2f', sFreq);
+                    else
+                        strSmp = sprintf('%d', round(sFreq));
+                    end
+
+                    mia_table{ct,ID_SRATE} = strSmp;
                     mia_table{ct,ID_REMEVK} = remEvk;
 
                     % Fill out the list of file 
