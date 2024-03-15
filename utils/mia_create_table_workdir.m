@@ -109,9 +109,16 @@ for pp=1:length(pt)
                         freq = sprintf('%s-%s Hz (step %s)',strfreq{3},strfreq{4},strfreq{2});
                         remEvk = num2str(double(length(strfreq)==5 && isequal(strfreq{5},'removeEvoked'))); % check if tf decomp processed with removal of evk response or not
                     end
+                    
                     mia_table{ct,ID_FREQS} = freq;
-                    d = load(dat_filename,'Time') ; 
-                    mia_table{ct,ID_SRATE} = sprintf('%d Hz',ceil(1/mean(diff(d.Time))));
+                    
+                    % Loads time vector 
+                    d = load(dat_filename,'Time'); 
+                    
+                    % Computes sampling rate
+                    sFreq = 1 / (d.Time(2) - d.Time(1));
+
+                    mia_table{ct,ID_SRATE} = sprintf('%.0f Hz',sFreq);
                     mia_table{ct,ID_REMEVK} = remEvk;
 
                     % Fill out the list of file 
