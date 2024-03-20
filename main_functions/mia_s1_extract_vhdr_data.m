@@ -17,7 +17,7 @@
 % This software was developed by
 %       Anne-Sophie Dubarry (CNRS Universite Aix-Marseille)
 function [OutputFile] = mia_s1_extract_vhdr_data(varargin)
-
+tic
 % DATA INPUT INITIALISATION
 if nargin<2
     OPTIONS = varargin{1};
@@ -97,7 +97,7 @@ for ii=1:length(sInputs)
         % Load grand avergae data (EEG.data : [nbSamp x nbTrials]
         EEG = pop_loadbv(file_PATHSTR, file_NAME, [], []);
         F = EEG.data ;
-        Time = EEG.times/ EEG.srate ;
+        Time = EEG.times/ 1000 ; % Convert ms into seconds
         
         % Display number of trials and channels
         fprintf('\n\nNumber of trials = %d\n',size(F,3))
@@ -165,5 +165,5 @@ for ii=1:length(sInputs)
     
 end
 delete(hwait);
-
+toc
 end
