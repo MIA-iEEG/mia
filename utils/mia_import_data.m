@@ -29,6 +29,8 @@ inputFormat{2,2} = 'SEEG: Brainstorm directory (*.*)';
 
 if isfield(handles,'history')&&isfield(handles.history,'datapath')
     datapath = handles.history.datapath;
+    % For AT convinience
+    datapath = 'W:\Agnes_Clinique';
 else
     datapath = handles.extOPTIONS.outdir ; 
 end
@@ -88,6 +90,14 @@ if strcmp(FileFormat,inputFormat{1,2})
         handles.extOPTIONS.maindir = PathName;
         handles.extOPTIONS.overwrite = 'Yes';
         [OutputFile] = mia_s1_extract_vhdr_data(RawFiles(ff),handles.extOPTIONS,Name);
+
+        % save patient position in list to highligth
+        d = dir(get(handles.outdir,'String'));
+        isub = [d(:).isdir]; % returns logical vector if is folder
+        subjects = {d(isub).name}';
+        subjects(ismember(subjects,{'.','..'})) = []; % Removes . and ..
+        
+        handles.lastPtImportIDX =  find(ismember(subjects,Name)); 
 
         % Close progress bar
         delete(hwait) ;
@@ -175,7 +185,7 @@ if ~isempty(NAMES)
         end
         
         % ask for overwriting or choose an other one
-        choice = questdlg(sprintf('Those names alerady exist :%s',list) , ...
+        choice = questdlg(sprintf('Those names alerady exist :%s',cell2mat(NAME)) , ...
             'PATIENT NAME','Overwrite','Choose an other Name','Overwrite');
         switch choice
             case 'Overwrite'

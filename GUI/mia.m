@@ -514,7 +514,13 @@ isub = [d(:).isdir]; % returns logical vector if is folder
 subjects = {d(isub).name}';
 subjects(ismember(subjects,{'.','..'})) = []; % Removes . and ..
 
-set(handles.list_patient,'Value',1);
+% Highlight last imported patient 
+if isfield(handles,'lastPtImportIDX')
+    set(handles.list_patient,'Value',handles.lastPtImportIDX);
+else
+    set(handles.list_patient,'Value',1);
+end
+
 set(handles.list_patient,'String',subjects);
 set(handles.list_patient,'Max',length(subjects)); % Make it so you can select more than 1.
             
