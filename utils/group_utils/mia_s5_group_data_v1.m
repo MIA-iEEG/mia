@@ -117,6 +117,8 @@ for pp=1:length(sFiles)
 
     % Place the p(for left contacts) at the right place on contact name
     data.labels=strrep(data.labels,'''','p');
+    data.labels=strrep(data.labels,'`','p');
+    
     ganalysis{pp,ii}.labels=data.labels;
 
     % Save mean zscore 

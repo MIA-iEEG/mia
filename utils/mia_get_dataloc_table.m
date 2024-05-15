@@ -79,16 +79,18 @@ for iPt=1:length(struct_table)
             isGood = ones(1,length(labels));
         end
     end
-    %% ASD to fix so that it works for both configuration
     % Preparte a list of electrode labels from the data appending L or R
     % (laterality)
+    
     idx_left_prime = ~logical(cellfun(@isempty,strfind(labels,''''))) ;%subject01 case      
+    idx_left_other_prime = ~logical(cellfun(@isempty,strfind(labels,'`'))) ;%subject01 case      
     idx_left_pletter = ~logical(cellfun(@isempty,strfind(labels,'p'))) ; %BRUSE case
-    idx_left = idx_left_pletter|idx_left_prime; % for both case of OTp or OT'
+    idx_left = idx_left_pletter|idx_left_prime |idx_left_other_prime; % for both case of OTp or OT'
 
     list_data(idx_left) = strcat(labels(idx_left),'L') ;
     list_data(~idx_left) = strcat(labels(~idx_left),'R') ;
     list_data = strrep(list_data,'''','');
+    list_data = strrep(list_data,'`','');
     
     % Preparte a list of electrode labels from the data appending L or R
     % (laterality)
