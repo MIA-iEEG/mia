@@ -134,6 +134,9 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
         % Initialize the load matrix: [Nchannels x Ntime x Nepochs]
         F = zeros(sum(flag_good_chan(iChannels)), epochSize(2), length(iGroups{pp}));
   
+         % Initialize the bst_history : [Nepochs x Nprocesses x 3) ]
+        bst_history = cell(size(DataMat.History,1), size(DataMat.History,2),length(iGroups{pp}));
+
         % Reading all the group files in a big matrix
         for i = 1:length(iGroups{pp})
 
@@ -149,7 +152,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
             end
             % Add the current file in the big load matrix
             F(:,:,i) = DataMat.F(iChannels(flag_good_chan(iChannels)),:,:);
-            bst_history{i} = DataMat.History ; 
+            bst_history(:,:,i) = DataMat.History ; 
         end
 
         if exist(mia_pt_dir) 
