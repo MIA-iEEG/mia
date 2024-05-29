@@ -693,7 +693,7 @@ end
  % Prompt user for a study name
 [~,NAME,~] = fileparts(RawFile{1}) ; 
 def = {NAME,'hsv'};
-loctable_name = mia_newid({'Enter an Atlas name:'},'ATLAS NAME',1,def);
+loctable_name = inputdlg({'Enter an Atlas name:'},'ATLAS NAME',1,def);
 
 % Use of cancel button : nothing happens
 if isempty(loctable_name); return; end
@@ -1125,14 +1125,14 @@ if isfield(handles,'table')
             dlg_title = 'ROI TABLE NAME';
             num_lines = 1;
             def = {strrep(selected_table{1},'.xlsx',''),'hsv'};
-            loctable_name = mia_newid(prompt,dlg_title,num_lines,def);
+            studyn = inputdlg(prompt,dlg_title,num_lines,def);
 
             % Atlas filename 
             fname_old = cell2mat(fullfile(group_foldnam,strcat('m_table_',selected_table,'.mat')));
-            fname_new = cell2mat(fullfile(group_foldnam,strcat('m_table_',loctable_name,'.mat')));
+            fname_new = cell2mat(fullfile(group_foldnam,strcat('m_table_',studyn,'.mat')));
 
             % Use of cancel button OR use same name as previous one
-            if isempty(loctable_name)||strcmp(fname_old,fname_new)==1
+            if isempty(studyn)||strcmp(fname_old,fname_new)==1
                 return;
             end
 
