@@ -140,8 +140,29 @@ for jj=1:length(un)
     labels_roi = all_labels(idx_signals);
     subj_in = find(ismember(unsubj,subj_active)); 
  
+    
+        % Get each contact's patient name 
+     for cc=1:length(labels_roi)
+        ptchar = labels_roi{cc} ; 
+        idx_underscores = strfind(ptchar,'_');
+        if strcmp(opt.montage,'bipolar')
+            ptname{cc} = ptchar(1:idx_underscores(end-1)-1);
+        else 
+            ptname{cc} = ptchar(1:idx_underscores(end)-1);
+        end
+     end  
+
+     % If FLIP option is used 
+    if isfield(opt, 'flip_thresh')
+          [mean_sig_subj,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
+    else
+           r = corrcoef(all_sig) ; 
+ 
+    end
+
     % Compute means per patients
-    [~,~,IC] = unique(cellfun( @(x) x(1:5), labels_roi, 'UniformOutput',false )); % BUG To fix : 1:5 is length of pt_name
+    [~,~,IC] = unique(ptname);
+        
     for ss=1:max(IC) 
         % Mean signals per patients
         if strcmp(opt.signmode,'signed') 
@@ -150,14 +171,6 @@ for jj=1:length(un)
             mean_sig_subj(:,ss) = mean(abs(all_sig(:,IC==ss)),2) ; 
         end
      end
-
-    % If FLIP option is used 
-    if isfield(opt, 'flip_thresh')
-          [mean_sig_subj,masked_sig,labels_roi,r] = flip_signals(all_sig, masked_sig, labels_roi, opt.flip_thresh) ; 
-    else
-           r = corrcoef(all_sig) ; 
- 
-    end
 
    % Compute correlations between patients : interpatient correlation
    rPt = corrcoef(mean_sig_subj) ; 
@@ -194,7 +207,7 @@ for jj=1:length(un)
 
     ctRoi=ctRoi+1;
 
-    clear r mean_sig_subj ; 
+    clear r mean_sig_subj ptname ; 
 
  
 end
