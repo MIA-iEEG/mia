@@ -123,16 +123,14 @@ for jj=1:length(un)
         end
 
         % Compute correlations between contacts
-%         r = corrcoef(all_sig) ; 
         r = atanh(r);                                   % apply Fisher-tansformation (convert r to Fisher's z)
         trChan = tril(r,-1) ; 
-        corr_permut(pp) = tahn(mean(trChan(trChan~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
+        corr_permut(pp) = tanh(mean(trChan(trChan~=0))); % Compute the average of all Fisher's z values from the lower triangular part then convert to r value 
         labels_permut{pp} = labels_roi;
         
         if length(unique(all_labels(idx_signals_perm))) ~= length(all_labels(idx_signals_perm))
             fprintf('Doublons exist\n') ;
         end
-      
 
     end
 
