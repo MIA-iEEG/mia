@@ -37,7 +37,7 @@ for jj=1:length(bilabels)
     %Cas monoplolaire : On v??rifie juste que le canal a ??t?? localis?? dans
     %m_table_as
     if isempty(second{1})
-        idx1 = find(ismember(lower(contacts),lower(first))) ; 
+        idx1 = find(ismember(contacts,first)) ; 
         if ~isempty(idx1)
          labels = cat(1,labels,bilabels(jj)) ;
          idx = cat(1, idx, idx1);
@@ -50,8 +50,8 @@ for jj=1:length(bilabels)
         %table et si c'est le cas on d??double la ligne
         % Ne conserve que les indices des canaux bipolaires pour lesquels on a une
         % localisation
-        idx1 = find(ismember(lower(contacts),lower(first))) ; 
-        idx2 = find(ismember(lower(contacts),lower(second))) ;
+        idx1 = find(ismember(contacts,first)) ; 
+        idx2 = find(ismember(contacts,second)) ;
 
         % At this point if length(idx1) or length(idx2) == 2 - the contact was
         % labelled twice 
