@@ -57,7 +57,7 @@ function sProcess = GetDescription() %#ok<DEFNU>
     % === Process description
     sProcess.options.label1.Comment = ['Warning: Edges should be removed from baseline <BR>' ...
                                        'Wavelet length <BR>'...
-                                       '&nbsp; <B>&sigma;</B> = &nbsp;&nbsp;&nbsp;<FONT color=#7F7F7F>[std(x(iBaseline))]</FONT><BR><BR>'];
+                                       '&nbsp; <B>&d;</B> = &nbsp;&nbsp;&nbsp;<FONT color=#7F7F7F>nCycles./(pi*[lower freq bound])</FONT><BR><BR>'];
     sProcess.options.label1.Type = 'label';
     
     % === Baseline time window
