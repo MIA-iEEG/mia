@@ -1,4 +1,4 @@
-function [] = mia_display_roi(roi,OPTIONS) 
+function [hfig] = mia_display_roi(roi,OPTIONS) 
 %
 % ========================================================================
 % This file is part of MIA.
@@ -21,8 +21,13 @@ function [] = mia_display_roi(roi,OPTIONS)
 % 2015/5/15 : ASD creation
 
 % Font size
-FONTSZ = 12 ; 
-BackgroundColor = [0.8275, 0.8275, 0.8275] ; 
+OPTIONS.FONTSZ = 12 ; 
+
+% Limit of Y axis (and colorbar for significance)
+OPTIONS.YLIM = 1.5; 
+
+% Default plots background color
+OPTIONS.BCKGDCOLOR = [0.8275, 0.8275, 0.8275] ; 
 
 %  Loop through regions
 for ii=1:length(roi) 
@@ -36,60 +41,65 @@ for ii=1:length(roi)
         tmp=sprintf('%s\nfreq band [%sH;%sHz] (step %sHz)',croi.name,num2str(croi.freq(1)),num2str(croi.freq(end)),num2str(croi.freq(2)-croi.freq(1)));
     end
     
-    
+    % Define figure name
+    if isfield(OPTIONS,'Condition') ; figure_name = OPTIONS.Condition ; else figure_name =croi.name; end
+
     if strcmp(croi.name(1),'L')
         % Displays one figure per ROI 
-       hfig = figure('Name',croi.name,'Units','Pixels','Position', [1   271   432   450],'NumberTitle','off');
+       hfig(ii) = figure('Name',figure_name,'Units','Pixels','Position', [1   271   432   800],'NumberTitle','off');
     else 
         % Displays one figure per ROI 
-        hfig = figure('Name',croi.name,'Units','Pixels','Position',[721   271   432   450],'NumberTitle','off'); 
+        hfig(ii) = figure('Name',figure_name,'Units','Pixels','Position',[721   271   432   800],'NumberTitle','off'); 
+        % hfig = figure('Name',croi.name,'Units','Normalized','Position',[0.5 0.1 0.2  0.4],'NumberTitle','off'); 
     end
     
     % window background white 
     set(gcf,'color','white');
     
     %% Plot mean signals
-    hplot = subplot(2,1,1) ;   
+    hplot = subplot(5,1,1) ;   
 
     for jj=1:length(croi.idPt)  
         % Plot patient averaged timeseries
         plot(croi.t,croi.signmoy(:,jj)','color',OPTIONS.clr(croi.idPt(jj),:), 'LineWidth',2); hold on ;  
         
-        % Plot halo to show variance (mean absolute deviation)
-        hPatch = plotHaloPatchMAD(hplot, croi.t, croi.signmoy(:,jj), OPTIONS.clr(croi.idPt(jj),:)) ;
-        
+        % % Plot halo to show variance (mean absolute deviation)
+        % hPatch = plotHaloPatchMAD(hplot, croi.t, croi.signmoy(:,jj), OPTIONS.clr(croi.idPt(jj),:)) ;
+        % 
     end    
     
+
     % Add patient' id in the legend (if they are present in the plot!)
-    hleg = legend(strrep(croi.namePt,'_','-'),'Location','NorthWest');
+    str_legend = arrayfun(@(i) ...
+    sprintf('%s - (n = %d)', strrep(croi.namePt{i}, '_', '-'), ...
+    sum(contains(croi.labels, croi.namePt{i}))), ...
+    1:numel(croi.namePt), 'UniformOutput', false);
+
+    hleg = legend(str_legend,'Location','NorthWest');
+
 
     % Add title (name of the ROI and frequencies explored (or LFP) 
-    title(strrep(tmp,'_','\_'),'FontSize', FONTSZ); grid on ; 
-    xlim(OPTIONS.win_noedges);  ylim([-12,12]); 
+    title(strrep(tmp,'_','\_'),'FontSize', OPTIONS.FONTSZ); grid on ; 
+    xlim(OPTIONS.win_noedges);  ylim([-OPTIONS.YLIM ,OPTIONS.YLIM]); 
     hcol1 = colorbar ; set(hcol1,'visible','off')
-    ylabel('zscore','FontSize',FONTSZ);
-    set(gca,'color',BackgroundColor);
-    set(gca,'FontSize',FONTSZ);
+    ylabel('zscore','FontSize',OPTIONS.FONTSZ);
+    set(gca,'color',OPTIONS.BCKGDCOLOR);
+    set(gca,'FontSize',OPTIONS.FONTSZ);
     
     % Save x-tick to apply to second planel display (masks)
     xticks =  get(gca, 'XTick') ; 
     
     %% Plot masks
-    himage = subplot(2,1,2) ; h= imagesc(croi.t,1:size(croi.Fmask,2),croi.Fmask'); caxis([-12 12]); hcol2 = colorbar; xlim(OPTIONS.win_noedges)
-    colormap(jet);
+    himage = subplot(5,1,[2 5]) ; 
     
-    % Light grey color for middle of the scale 
-    cmap = colormap ; cmap(33,:) = BackgroundColor ; colormap(cmap) ;
-    
-    set(gca,'YTick',1:size(croi.Fmask,2),'YTickLabel', strrep(croi.labels,'_','\_'),'XTick',xticks); grid on ;
-    % Change fontsize spearately for xtick and ytick 
-    ax = gca;
-    ax.XAxis.FontSize = FONTSZ;
-    ax.YAxis.FontSize = 10; %Smaller font for channel labels (which can be long)
-    
-    title(sprintf('[R_p = %0.3f]  [R_c = %0.3f]',croi.corrPt,croi.corrChan), 'FontSize', FONTSZ);
-    xlabel('Time(s)','FontSize',FONTSZ);
-
+    if isfield(croi,'F')
+         hcol2 = display_individual_channels_image(croi.F, croi,OPTIONS) ; 
+    else
+        hcol2 = display_significance_masks(croi.Fmask,croi,OPTIONS) ; 
+    end
+  
+    pos_fig = get(hfig(ii), 'position'); 
+  
     %% Moves legend to the left (everything else to the rigth) 
     set(hleg,'units','pixels');
     set(hplot,'units','pixels');
@@ -101,15 +111,65 @@ for ii=1:length(roi)
     pos_im = get(himage, 'position'); 
 
     n = 150 ;
-    pos_fig = get(hfig, 'position'); 
     
-    set(hfig,'Position',[pos_fig(1),pos_fig(2)-n,pos_fig(3)+n,pos_fig(4)]);
+    % % Write the name of the condition(s) below the legend
+    % htext = text(1,1,'toto','FontSize',14) ; 
+    % set(htext,'units','pixels');
+    % 
+    set(hfig(ii),'Position',[pos_fig(1),pos_fig(2)-n,pos_fig(3)+n,pos_fig(4)]);
     set(hplot,'position',[pos_hp(1)+n,pos_hp(2),pos_hp(3),pos_hp(4)]);
     set(himage,'position',[pos_im(1)+n,pos_im(2),pos_im(3),pos_im(4)]);
     set(hleg,'Position',[10,pos_hl(2),pos_hl(3),pos_hl(4)]);
+    % set(htext,'Position',[10,pos_hl(2),0]);
     
+        % Position verticale fixe en haut à droite (dans la figure)
+btnY = 960; % adapte cette valeur selon ta résolution
+
+    % Bouton +
+    btnPlus = uicontrol('Parent', hfig(ii), ...
+        'Style', 'pushbutton', ...
+        'String', '+', ...
+        'FontSize', 10, ...
+        'FontWeight', 'bold', ...
+        'Units', 'pixels', ...
+        'Position', [hcol1.Position(1), hcol1.Position(2)+20, 20, 20], ...
+        'Callback', @(src,~) adjustYLim(hplot,himage, -0.5));
+    
+    % Bouton -
+    btnMinus = uicontrol('Parent', hfig(ii), ...
+        'Style', 'pushbutton', ...
+        'String', '-', ...
+        'FontSize', 10, ...
+        'FontWeight', 'bold', ...
+        'Units', 'pixels', ...
+        'Position', [hcol1.Position(1), hcol1.Position(2), 20, 20], ...
+        'Callback', @(src,~) adjustYLim(hplot,himage, +0.5));
+
+
+
 end
 end
+
+function [hcol2] = display_individual_channels_image(Fdisp, croi,OPTIONS)
+
+    h= imagesc(croi.t,1:size(Fdisp,2),Fdisp'); caxis([-OPTIONS.YLIM OPTIONS.YLIM ]); 
+    hcol2 = colorbar; xlim(OPTIONS.win_noedges)
+    colormap(jet);
+    
+    % Light grey color for middle of the scale 
+    cmap = colormap ; cmap(fix(length(cmap)/2),:) = OPTIONS.BCKGDCOLOR ; colormap(cmap) ;
+    
+    set(gca,'YTick',1:size(croi.Fmask,2),'YTickLabel', strrep(croi.labels,'_','\_'),'XTick',xticks); grid on ;
+    % Change fontsize spearately for xtick and ytick 
+    ax = gca;
+    ax.XAxis.FontSize = OPTIONS.FONTSZ;
+    ax.YAxis.FontSize = 10; %Smaller font for channel labels (which can be long)
+    
+    title(sprintf('[R_p = %0.3f]  [R_c = %0.3f]',croi.corrPt,croi.corrChan), 'FontSize', OPTIONS.FONTSZ);
+    xlabel('Time(s)','FontSize',OPTIONS.FONTSZ);
+
+end
+
 
 function hPatch = plotHaloPatchMAD(hAxes, vTime, Y, color)
 
@@ -132,4 +192,12 @@ hPatch = patch([vTime fliplr(vTime)], [Llow'  fliplr(Lhi')], [0.6 0.6 0.6],...
 % Skip the name of the previous plot from the legend
 hPatch.Annotation.LegendInformation.IconDisplayStyle = 'off';
 
+end
+
+function adjustYLim(ax, himage, delta)
+    yL = ylim(ax);
+    newLim = max(abs(yL)) + delta;
+    newLim = max(newLim, 0.5);  % limite minimale
+    ylim(ax, [-newLim newLim]);
+    caxis(himage,[-newLim newLim]);
 end
