@@ -1,4 +1,4 @@
-function [hfig] = mia_display_roi(roi,OPTIONS) 
+function varargout = mia_display_roi(roi, OPTIONS)
 %
 % ========================================================================
 % This file is part of MIA.
@@ -122,8 +122,8 @@ for ii=1:length(roi)
     set(hleg,'Position',[10,pos_hl(2),pos_hl(3),pos_hl(4)]);
     % set(htext,'Position',[10,pos_hl(2),0]);
     
-        % Position verticale fixe en haut à droite (dans la figure)
-btnY = 960; % adapte cette valeur selon ta résolution
+    % Position verticale fixe en haut à droite (dans la figure)
+    btnY = 960; % adapte cette valeur selon ta résolution
 
     % Bouton +
     btnPlus = uicontrol('Parent', hfig(ii), ...
@@ -148,6 +148,12 @@ btnY = 960; % adapte cette valeur selon ta résolution
 
 
 end
+
+% Set output if the function was called with an outupt variable
+if nargout >= 1
+    varargout{1} = hfig;
+end
+
 end
 
 function [hcol2] = display_individual_channels_image(Fdisp, croi,OPTIONS)
