@@ -34,7 +34,7 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.Category    = 'Custom';
     sProcess.SubGroup    = 'Frequency';
     sProcess.Index       = 506;
-    sProcess.Description = '';
+    sProcess.Description = 'https://www.neurotrack.fr/mia/';
     % Definition of the input accepted by this process
     sProcess.InputTypes  = {'data', 'results', 'matrix'};
     sProcess.OutputTypes = {'data', 'results', 'matrix'};
@@ -54,10 +54,11 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.options.ncycle.Type    = 'text';
     sProcess.options.ncycle.Value   = '7';
 
-    % === Process description
-    sProcess.options.label1.Comment = ['Warning: Edges should be removed from baseline <BR>' ...
-                                       'Wavelet length <BR>'...
-                                       '&nbsp; <B>&d;</B> = &nbsp;&nbsp;&nbsp;<FONT color=#7F7F7F>nCycles./(pi*[lower freq bound])</FONT><BR><BR>'];
+     % === Process description
+    sProcess.options.label1.Comment = ['<BR>'...
+                                       'Warning: Edges should be removed from baseline <BR>' ...
+                                       '<BR>'...
+                                       '&nbsp; <B>&Delta;</B> = &nbsp;&nbsp;&nbsp;nCycles &divide; (&pi; &times; Lower Frequency Bound)<FONT color=#7F7F7F> (Wavelet length)</FONT><BR><BR>'];
     sProcess.options.label1.Type = 'label';
     
     % === Baseline time window
@@ -97,7 +98,9 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
         sBands = eval(sProcess.options.freqb.Value);
         sFreq = 1 ./ (sMat.Time(2) - sMat.Time(1));
 
+        % ===== EXTRACT TF =====
         [TF,zs] = compute_miawavelet(sMat.Time,sMat.F,sFreq,sBands,sProcess.options.baseline.Value{1}, str2num(sProcess.options.ncycle.Value)) ;   
+       
         sMat.F = zs;
         sMat.Comment = [sMat.Comment ' ' '| MIA'];
         fileTag = '_mia';
@@ -118,21 +121,25 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<DEFNU>
     end
 end
 
-
+%% ===== MIA: extract HFA and bandwise normalize trial-by-trial =====
 function [s, zs] = compute_miawavelet(vTime, F, sFreq, sBands, zbaseline, nCycle) 
    
     % Initialize results
     s = zeros(size(F));
     zs = zeros(size(F));
   
+    % Loop through electrode/contact
     for contactidx=1:size(F,1)
-        % Compute TF decompo
+        
+        % Compute TF decompo ; wt is a matrix nFreqsBands x Time
         wt = mia_awt_freqlist(F(contactidx,:)',sFreq, sBands,'Gabor',nCycle);
-        %Z-score against baseline 
+        
+        % Z-score against baseline 
         st = abs(wt)'; 
         baseline = st(:,(vTime>zbaseline(1))&(vTime<=zbaseline(2)))' ;
         wtz =  (st - repmat(mean(baseline),length(st),1)')./repmat(std(baseline),length(st),1)';
-        % sum abs values of all freq bins for this freq range 
+        
+        % Sum abs values of all freq bins for this freq range 
         s(contactidx,:)=sum(st);
         zs(contactidx,:)=sum(wtz);
        
