@@ -112,15 +112,19 @@ for iSubj = 1:length(subidxs)
     % Load current subject's channel structure:
     % Get all studies for this subject
     sStudy = bst_get('StudyWithSubject', subs.Subject(subidxs(iSubj)).FileName) ; 
-    chanfilename = sStudy(contains({sStudy.Name},'Implantation')).Channel.FileName;
+    chanfilename = sStudy(contains({sStudy.Name},'Implantation')).Channel.FileName; % 'Implantation' may not work in all cases and may need adapting
 
     % chanfilename = bst_get('StudyWithSubject', subs.Subject(subidxs(iSubj)).FileName).Channel.FileName;
 
     chandata = load(fullfile(datadir, chanfilename));
     
     % Find current subject's MRI file (expects 1 and only 1):
-    mrifileidx = find(cellfun(@(x) contains(x, {'subjectimage_s'})&~contains(x, {'volct'}), {subs.Subject(subidxs(iSubj)).Anatomy.FileName}));
+    mrifileidx = find(cellfun(@(x) contains(x, {'subjectimage_s'})&~contains(x, {'volct'}), {subs.Subject(subidxs(iSubj)).Anatomy.FileName})); 
+    % Note that criteria for finding MRI file may change depending on your own naming conventions and the names of files that were imported in BST
+    % Alternative looking for MRI file that has been renamed for each subject as SubX_MRI
+    % mrifileidx = find(cellfun(@(x) contains(x, {'_MRI'}), {subs.Subject(subidxs(iSubj)).Anatomy.Comment}));
 
+    
     % Skip if no MRI found
     if isempty(mrifileidx); continue ; end 
 
@@ -149,19 +153,12 @@ for iSubj = 1:length(subidxs)
         temp(iChan).Name = strcat(subs.Subject(subidxs(iSubj)).Name, '_',temp(iChan).Name);
         temp(iChan).Group= strcat(subs.Subject(subidxs(iSubj)).Name, '_',temp(iChan).Group);
 
-    %     % Set comment to subject's name for later identification:
-    %     temp(j).Comment = subs.Subject(subidxs(iSubj)).Name;
-    % 
-    %     % % Convert to left hemisphere:
-    %     % if (temp(j).Loc(2) < 0)
-    %     %     temp(j).Loc(2) = -temp(j).Loc(2); 
-    %     % end
-    %     % 
-    %     % Get MNI coordinates:
-    %     temp(j).Loc = cs_convert(mridata, 'scs', 'mni', temp(j).Loc')';
-    % 
-    %     % Convert to local coordinates of ICBM152:
-    %     temp(j).Loc = cs_convert(coregmridata, 'mni', 'scs', temp(j).Loc')';
+
+    % Get MNI coordinates:
+    temp(j).Loc = cs_convert(mridata, 'scs', 'mni', temp(j).Loc')';
+    
+    % Convert to local coordinates of ICBM152:
+    temp(j).Loc = cs_convert(coregmridata, 'mni', 'scs', temp(j).Loc')';
 
     end
     
