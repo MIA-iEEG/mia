@@ -1,34 +1,43 @@
+% ========================================================================
+% This file is part of MIA.
+%
+% MIA is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% MIA is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with MIA.  If not, see <https://www.gnu.org/licenses/>.
+%
+% Copyright (C) 2016-2022 CNRS - Université Aix-Marseille
+%
+% ========================================================================
 
-% 
-% % List subject in the current BST protocol 
-% subjects_bst = bst_get('ProtocolSubjects'); 
-% SubjectNames = {subjects_bst.Subject.Name};
-% 
-% ProtocolInfo = bst_get('ProtocolInfo') ;
-% 
-% % Process: Select PSD files on each participant
-% for iSubj=1:length(SubjectNames)
-% 
-%          % Process: Select data files in: Subject01/*/Avg: deviant
-%             sFiles = bst_process('CallProcess', 'process_select_files_data', [], [], ...
-%                     'subjectname',   SubjectNames{iSubj}, ...
-%                     'condition',     '', ...
-%                     'tag',           '', ...
-%                     'includebad',    0, ...
-%                     'includeintra',  0, ...
-%                     'includecommon', 0);
-% 
-%         % Load channel file
-%         ChannelMat = in_bst_channel(sFiles.ChannelFile);
-% 
-% end
-% 
-% 
-% 
+% Note to the user: At this point you need to create a subject in 
+% BST database called COREG subject and use with template MNI > ICBM152
+% (Tab Anatomy> Right Click on COREG > Use template > MNI > ICMB152) 
+
+%% User-defined parameters
+% Name of the synthetic subject that will gather all electrode coordinates
+COREG_SUBJECT_NAME = 'COREG';  
+% → Change this if you want to use another name for the aggregated subject.
+%   Must match exactly the subject name you created in Brainstorm
+%   with the ICBM152 MRI and cortex.
+
+% Keyword used to identify the implantation study containing electrode channels
+IMPLANTATION_KEYWORD = 'Implantation';  
+% → Change this if your protocol uses another naming convention for the study 
+%   that holds the implanted electrode channels (e.g., 'SEEG', 'StereoEEG').
 
 
-% CREATE a COREG subject with templatye MNI > ICBM152
-
+% ========================================================================
+% Channel structure template initialization 
+% ========================================================================
 %% Channel structure template:
 chanstruct = struct('Comment', [], ...  
                     'MegRefCoef', [], ...
@@ -37,7 +46,7 @@ chanstruct = struct('Comment', [], ...
                     'TransFMegLabels', [], ...
                     'TransfEeg', [], ...
                     'TransfEegLabels', [], ...
-                    'HeadPoints', [], ...
+                    'HeadPoints', struct('Loc', [], 'Label', [], 'Type', []), ...
                     'Channel', [], ...
                     'IntraElectrodes', [], ...
                     'History', []);
@@ -50,23 +59,28 @@ chanstruct.Projector = struct('Comment', [], ...
                               'Status', [], ...
                               'SingVal', []);
 
-chanstruct.HeadPoints = struct('Loc', [], ...
-                               'Label', [], ...
-                               'Type', []);
 chanstruct.History = {};
 
-chanstruct.IntraElectrodes = struct('Name', [], ...
-                                    'Type', 'SEEG', ...
-                                    'Model', 'DIXI ', ...
-                                    'Loc', [], ...
-                                    'Color', [0 .8 0], ...
-                                    'ContactNumber', 6, ...
-                                    'ContactSpacing', .01, ...
-                                    'ContactDiameter', .004, ...
-                                    'ContactLength', 8e-4, ...
-                                    'ElecDiameter', 5e-4, ...
-                                    'ElecLength', 0, ...
-                                    'Visible', 1);
+% ========================================================================
+% Initialize IntraElectrodes separately: user can adapt depending on the
+% model of electrodes
+% ========================================================================
+
+chanstruct.IntraElectrodes = struct(...
+    'Name', [], ...
+    'Type', 'SEEG', ...
+    'Model', 'DIXI ', ...
+    'Loc', [], ...
+    'Color', [0 .8 0], ...
+    'ContactNumber', 6, ...
+    'ContactSpacing', 0.01, ...
+    'ContactDiameter', 0.004, ...
+    'ContactLength', 8e-4, ...
+    'ElecDiameter', 5e-4, ...
+    'ElecLength', 0, ...
+    'Visible', 1 ...
+);
+
 
 %% Load and convert all subjects' channels to ICBM152 space:
 
@@ -82,22 +96,23 @@ subs = bst_get('ProtocolSubjects');
 subnames = {subs.Subject.Name};
 
 % Remove any other COREG...
-subs.Subject(~strcmp(subnames, 'COREG') & contains(subnames, 'COREG')) = [];
-subnames(~strcmp(subnames, 'COREG') & contains(subnames, 'COREG')) = [];
+subs.Subject(~strcmp(subnames, COREG_SUBJECT_NAME) | ~contains(subnames, COREG_SUBJECT_NAME)) = [];
+subnames(~strcmp(subnames, COREG_SUBJECT_NAME) | ~contains(subnames, COREG_SUBJECT_NAME)) = [];
 
 % Find a subject called 'COREG' (expects this subject to already exist):
 coregsubidx = find(cellfun(@(x) strcmp(x, 'COREG'), subnames));
-if (isempty(coregsubidx))
+if isempty(coregsubidx)
     error('Add a new subject to the protol names ''COREG'', with a copy of the ICBM152 MRI and cortex');
 end
 
 % Find the MRI file for COREG (expects this to already exist):
 mrifileidx = find(cellfun(@(x) contains(x, {'MRI', 'T1'}), {subs.Subject(coregsubidx).Anatomy.FileName}));
 if (length(mrifileidx) ~= 1)
-    error('Either no or multiple MRI files found for subject %s - cannot proceed', subs.Subject(coregsubidx).Name);
+    error('Please add a subject named ''%s'' with ICBM152 MRI and cortex.', COREG_SUBJECT_NAME);
 end
-mrifilename = subs.Subject(coregsubidx).Anatomy(mrifileidx).FileName;
-coregmridata = load(fullfile(anatdir, mrifilename));
+
+% Load COREG MRI once
+coregmridata = load(fullfile(anatdir, subs.Subject(coregsubidx).Anatomy(mrifileidx).FileName));
 
 % Expand the IntraElectrodes field to the number of existing subjects:
 chanstruct.IntraElectrodes = repmat(chanstruct.IntraElectrodes, 1, length(subnames)-1);
@@ -109,11 +124,9 @@ chanstruct.Channel = [];
 
 for iSubj = 1:length(subidxs)
     
-    % Load current subject's channel structure:
-    % Get all studies for this subject
+    % Load current subject's Implantation channel 
     sStudy = bst_get('StudyWithSubject', subs.Subject(subidxs(iSubj)).FileName) ; 
-    chanfilename = sStudy(contains({sStudy.Name},'Implantation')).Channel.FileName; % 'Implantation' may not work in all cases and may need adapting
-
+    chanfilename = sStudy(contains({sStudy.Name},IMPLANTATION_KEYWORD)).Channel.FileName; % 'Implantation' may not work in all cases and may need adapting
     chandata = load(fullfile(datadir, chanfilename));
     
     % Find current subject's MRI file (expects 1 and only 1):
@@ -128,14 +141,16 @@ for iSubj = 1:length(subidxs)
     if (length(mrifileidx) ~= 1)
         error('Either no or multiple MRI files found for subject %s - cannot proceed', subs.Subject(subidxs(iSubj)).Name);
     end
+
     mrifilename = subs.Subject(subidxs(iSubj)).Anatomy(mrifileidx).FileName;
     mridata = load(fullfile(anatdir, mrifilename));
-
+  
+    % Prefix electrode names with subject name
     for k = 1:length(chandata.IntraElectrodes)
         chandata.IntraElectrodes(k).Name = strcat(subs.Subject(subidxs(iSubj)).Name, '_', chandata.IntraElectrodes(k).Name);
     end
     
-    % Copy over IntraElectrodes field:
+    % Accumulate IntraElectrodes
     if iSubj==1
         chanstruct.IntraElectrodes = chandata.IntraElectrodes; % initializae at first patient
     else 
@@ -159,11 +174,9 @@ for iSubj = 1:length(subidxs)
    end
     
     % % Add these channels:
-    chanstruct.Channel = [chanstruct.Channel, temp]; %#ok
+    chanstruct.Channel = [chanstruct.Channel, temp]; 
     
 end
-
-% Update COREG channel data:
 
 % Save combined channel file: 
 bst_save(fullfile(datadir, 'COREG/@intra/channel.mat'), chanstruct, 'v7');
