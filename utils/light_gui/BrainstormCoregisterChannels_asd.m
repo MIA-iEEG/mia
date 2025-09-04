@@ -1,31 +1,22 @@
-
-% 
-% % List subject in the current BST protocol 
-% subjects_bst = bst_get('ProtocolSubjects'); 
-% SubjectNames = {subjects_bst.Subject.Name};
-% 
-% ProtocolInfo = bst_get('ProtocolInfo') ;
-% 
-% % Process: Select PSD files on each participant
-% for iSubj=1:length(SubjectNames)
-% 
-%          % Process: Select data files in: Subject01/*/Avg: deviant
-%             sFiles = bst_process('CallProcess', 'process_select_files_data', [], [], ...
-%                     'subjectname',   SubjectNames{iSubj}, ...
-%                     'condition',     '', ...
-%                     'tag',           '', ...
-%                     'includebad',    0, ...
-%                     'includeintra',  0, ...
-%                     'includecommon', 0);
-% 
-%         % Load channel file
-%         ChannelMat = in_bst_channel(sFiles.ChannelFile);
-% 
-% end
-% 
-% 
-% 
-
+% ========================================================================
+% This file is part of MIA.
+%
+% MIA is free software: you can redistribute it and/or modify
+% it under the terms of the GNU General Public License as published by
+% the Free Software Foundation, either version 3 of the License, or
+% (at your option) any later version.
+%
+% MIA is distributed in the hope that it will be useful,
+% but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with MIA.  If not, see <https://www.gnu.org/licenses/>.
+%
+% Copyright (C) 2016-2022 CNRS - Université Aix-Marseille
+%
+% ========================================================================
 
 % CREATE a COREG subject with templatye MNI > ICBM152
 
