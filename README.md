@@ -15,14 +15,23 @@ We are happy to give you access to <a href="http://www.neurotrack.fr/mia/tutoria
 
  
 <h2>Publications</h2>
-Estimating Parallel Processing in a Language Task Using Single-Trial Intracerebral Electroencephalography. <strong><em>Psychological Science</em>,</strong> <em>28</em>(4), 414–426. <a href="http://doi.org/10.1177/0956797616681296">[doi]</a>
+
+Revealing the co-existence of written and spoken language coding neural populations in the visual word form area. <strong><em>Imaging Neuroscience</em>,</strong> <a href="https://www.neurotrack.fr/mia/_wp_link_placeholder">[doi]</a> 2025. 
+Shuai Wang, Anne-Sophie Dubarry, Valérie Chanoine, Julien Sein, Jean-Luc Anton, Bruno Nazarian, Manuel R. Mercier, Agnès Trébuchon, Chotiga Pattamadilok.
+
+An open-source toolbox for Multi-patient Intracranial EEG Analysis (MIA). <strong><em>NeuroImage</em>,</strong>, <em>2022</em>;257: 119251 <a href="http://doi.org/10.1016/j.neuroimage.2022.119251">[doi]</a> 
+AS Dubarry,  C Liégeois-Chauvel, A Trébuchon-Da Fonsesca, C Bénar, F.-X Alario.
+
+Inter‐individual variability in dorsal stream dynamics during word production. <strong><em>European Journal of Neuroscience</em>,</strong> <em>56</em>(7): 5070-5089. <a href="https://hal.science/hal-03765812">[doi]</a> 
+Liégeois‐Chauvel C, Dubarry A, Wang I, Chauvel P, Gonzalez‐Martinez JA, Alario F ‐Xavier.
+
+Estimating Parallel Processing in a Language Task Using Single-Trial Intracerebral Electroencephalography. <strong><em>Psychological Science</em>,</strong> <em>28</em>(4), 414–426. 2017. <a href="http://doi.org/10.1177/0956797616681296">[doi]</a>
 AS Dubarry,  A Llorens, A Trébuchon-Da Fonsesca, R Carron, C Liégeois-Chauvel, C Bénar, F.-X Alario.
 
+Cortical Dynamics of Semantic Priming and Interference during Word Production: An Intracerebral Study. <strong><em>Journal of Cognitive Neuroscience</em>,</strong> <em>31</em>(7), 978–1001. 2019. <a href="https://doi.org/10.1162/jocn_a_01406">[doi]</a>
+Anders, R., Llorens, A., Dubarry, A., Trébuchon, A., Liégeois-chauvel, C., & Alario, F.-X
 
-Cortical Dynamics of Semantic Priming and Interference during Word Production : An Intracerebral Study. <strong><em> Journal of Cognitive Neuroscience</em>,</strong> <em>31</em>(7), 978–1001. <a href="https://doi.org/10.1162/jocn">[doi]</a>
-Anders, R., Llorens, A., Dubarry, A., Trébuchon, A., Liégeois-chauvel, C., & Alario, F.
-
-Contributions of Electrophysiology for Identifying Cortical Language Systems in Patients with Epilepsy. <strong><em> Journal of Cognitive Neuroscience</em>,</strong> <em>31</em>(7), 978–1001. <a href="https://doi.org/10.1016/j.yebeh.2020.107407">[doi]</a>
+Contributions of Electrophysiology for Identifying Cortical Language Systems in Patients with Epilepsy. <strong><em>Epilepsy & Behavior</em>,</strong> <em>33</em>. 2020. <a href="https://doi.org/10.1016/j.yebeh.2020.107407">[doi]</a>
 Trébuchon, A., Liegeois-Chauvel, C., Martinez, J.G., Alario F.-X.
 &nbsp;
 <h2>Presentations</h2>
