@@ -33,6 +33,13 @@ for jj=1:length(bilabels)
     % Extract first and second tokens from the bipolar channel label 
     tokens = regexp(bilabels{jj}, '^([^_]+)_([^_]+)', 'tokens');
   
+    % Monopolar case but label contains "_"
+    if ~isempty(tokens)
+        if sum(contains(contacts,tokens{1}{1}))==0
+            tokens = []; 
+        end
+    end
+
     %Monoplolar case: We just check that the canal has been located in
     %m_table_as
     if isempty(tokens)
