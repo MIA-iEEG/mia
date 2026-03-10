@@ -91,9 +91,21 @@ for ii = 1:length(roi)
     % Set title, grid, axis limits, and labels
     title(strrep(tmp, '_', '\_'), 'FontSize', OPTIONS.FONTSZ);
     grid on;
+
+    % Compute one consistent X window for this ROI (intersection with
+    % requested window, if provided).
+    iTime = [croi.t(1), croi.t(end)];
+    myXLim = iTime;
     if isfield(OPTIONS, 'win_noedges')
-        xlim(OPTIONS.win_noedges);
+        iTime_noedges = OPTIONS.win_noedges;
+        myXLim = [max(iTime(1), iTime_noedges(1)), ...
+                  min(iTime(2), iTime_noedges(2))];
+        if myXLim(1) >= myXLim(2)
+            myXLim = iTime;
+        end
     end
+    xlim(myXLim);
+
     ylim([-OPTIONS.YLIM, OPTIONS.YLIM]);
     
     % Add (hidden) colorbar for alignment purposes
@@ -113,9 +125,9 @@ for ii = 1:length(roi)
     himage = subplot(5,1, [2 5]);
     
     if isfield(croi, 'F')
-        hcol2 = display_individual_channels_image(croi.F, croi, OPTIONS, xticks);
+        hcol2 = display_individual_channels_image(croi.F, croi, OPTIONS, xticks, myXLim);
     else
-        hcol2 = display_individual_channels_image(croi.Fmask, croi, OPTIONS, xticks);
+        hcol2 = display_individual_channels_image(croi.Fmask, croi, OPTIONS, xticks, myXLim);
     end
     
     % Get figure position for later adjustments
@@ -171,13 +183,33 @@ end
 end
 
 
-function hcol2 = display_individual_channels_image(Fdisp, croi, OPTIONS, xticks)
+function hcol2 = display_individual_channels_image(Fdisp, croi, OPTIONS, xticks, myXLim)
 % Displays individual channel data as an image with colorbar and labels
 
-imagesc(croi.t, 1:size(Fdisp, 2), Fdisp');
+% Crop to requested time window so out-of-window values are not rendered.
+t = croi.t(:)';
+if nargin < 5 || isempty(myXLim)
+    myXLim = [t(1), t(end)];
+end
+tMask = (t >= myXLim(1)) & (t <= myXLim(2));
+if ~any(tMask)
+    tMask = true(size(t));
+    myXLim = [t(1), t(end)];
+end
+
+if size(Fdisp,1) == numel(t)
+    Fplot = Fdisp(tMask,:);
+elseif size(Fdisp,2) == numel(t)
+    Fplot = Fdisp(:,tMask)';
+else
+    Fplot = Fdisp;
+end
+tplot = t(tMask);
+
+imagesc(tplot, 1:size(Fplot, 2), Fplot');
 caxis([-OPTIONS.YLIM OPTIONS.YLIM]);
 hcol2 = colorbar;
-xlim(OPTIONS.win_noedges);
+xlim(myXLim);
 colormap(jet);
 
 % Modify colormap to set middle color to background color for better visualization
@@ -187,8 +219,9 @@ cmap(midIdx, :) = OPTIONS.BCKGDCOLOR;
 colormap(cmap);
 
 % Set y-axis ticks and labels (channels)
-set(gca, 'YTick', 1:size(croi.Fmask, 2), 'YTickLabel', strrep(croi.labels, '_', '\_'), 'XTick', xticks);
+set(gca, 'YTick', 1:size(Fplot, 2), 'YTickLabel', strrep(croi.labels, '_', '\_'), 'XTick', xticks);
 grid on;
+set(gca, 'Color', OPTIONS.BCKGDCOLOR);
 
 % Adjust font sizes for axes
 ax = gca;
