@@ -102,7 +102,7 @@ for iPt=1:length(u_pt)
     idx = cell2mat(cellfun(@isnumeric, roi,'UniformOutput', false));
     roi(idx) = cellstr(num2str(cell2mat(roi(idx)))) ;
     
-    % Clean text (no ' or coma or anything else but char and digits)
+    % Clean text (no "'" or coma or anything else but char and digits)
     lat = strrep(lat,'''',''); lat = strrep(lat,',','');  lat = strrep(lat,'"','');
     roi = strrep(roi,'''',''); roi = strrep(roi,',',''); roi = strrep(roi,'"','');
     elec = strrep(elec,'''',''); elec = strrep(elec,',',''); elec = strrep(elec,'"','');
