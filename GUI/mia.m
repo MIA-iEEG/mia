@@ -793,12 +793,8 @@ selected_atlas = list_altas(idx_selected);
 
 load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
 
-% ASD : add message expliciting the atlas that was taken for group GUI
-
-%% ASD : HERE work on the possibility to call the study gui in a "stand alone" mode" 
-
-% Start group GUI
-mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS.outdir, handles.list_studies);
+% Start the new light GUI from the selected legacy study
+mia_legacy_display_bridge(m_table_all, maindir, handles.list_studies);
 
 
 % --- Executes when figure1 is resized.
