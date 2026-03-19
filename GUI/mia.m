@@ -794,7 +794,8 @@ selected_atlas = list_altas(idx_selected);
 load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
 
 % Start the new light GUI from the selected legacy study
-mia_legacy_display_bridge(m_table_all, maindir, handles.list_studies);
+%mia_legacy_display_bridge(m_table_all, maindir, handles.list_studies);
+mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS.outdir, handles.list_studies);
 
 
 % --- Executes when figure1 is resized.
