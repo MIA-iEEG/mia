@@ -91,7 +91,8 @@ for jj = 1:length(bilabels)
     %   A'_1_B'_2
     %
     % The regex extracts the first and second contact tokens.
-    tokens = regexp(current_label, '^([A-Za-z'']+_?\d+)_([A-Za-z'']+_?\d+)$', 'tokens', 'once');
+    tokens = regexp(current_label, '^([A-Za-z'']+(?:_?p)?_?\d+)_([A-Za-z'']+(?:_?p)?_?\d+)$', 'tokens', 'once');
+
 
     % If the label cannot be parsed as bipolar, skip it
     if isempty(tokens)
