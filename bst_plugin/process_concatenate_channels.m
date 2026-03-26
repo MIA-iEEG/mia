@@ -1,4 +1,4 @@
-function varargout = process_create_grand_subj( varargin )
+function varargout = process_concatenate_channels( varargin )
 % PROCESS_SIMULATE_MATRIX: Simulate source signals and saves them as a matrix file.
 %
 % USAGE:   OutputFiles = process_simulate_sources('Run', sProcess, sInputA)
