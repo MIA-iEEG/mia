@@ -96,8 +96,10 @@ subs = bst_get('ProtocolSubjects');
 subnames = {subs.Subject.Name};
 
 % Remove any other COREG...
-subs.Subject(~strcmp(subnames, COREG_SUBJECT_NAME) | ~contains(subnames, COREG_SUBJECT_NAME)) = [];
-subnames(~strcmp(subnames, COREG_SUBJECT_NAME) | ~contains(subnames, COREG_SUBJECT_NAME)) = [];
+%subs.Subject(strcmp(subnames, COREG_SUBJECT_NAME) | contains(subnames, COREG_SUBJECT_NAME)) = [];
+%subnames(strcmp(subnames, COREG_SUBJECT_NAME) | contains(subnames, COREG_SUBJECT_NAME)) = [];
+
+%subcoreg = subs.Subject(contains(subnames, COREG_SUBJECT_NAME));
 
 % Find a subject called 'COREG' (expects this subject to already exist):
 coregsubidx = find(cellfun(@(x) strcmp(x, 'COREG'), subnames));
