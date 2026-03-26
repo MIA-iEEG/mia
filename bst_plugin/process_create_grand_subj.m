@@ -1,4 +1,4 @@
-function varargout = process_create_grand_subj_test( varargin )
+function varargout = process_create_grand_subj( varargin )
 % PROCESS_SIMULATE_MATRIX: Simulate source signals and saves them as a matrix file.
 %
 % USAGE:   OutputFiles = process_simulate_sources('Run', sProcess, sInputA)
@@ -31,10 +31,10 @@ end
 %% ===== GET DESCRIPTION =====
 function sProcess = GetDescription() %#ok<DEFNU>
     % Description the process
-    sProcess.Comment     = 'MIA: Create Grand Subject Test';
+    sProcess.Comment     = 'MIA: Concatenate Channels';
     sProcess.Category    = 'Custom';
-    sProcess.SubGroup    = 'Simulate';
-    sProcess.Index       = 902;
+    sProcess.SubGroup    = 'Standardize';
+    sProcess.Index       = 306;
     sProcess.Description = '';
 
     % Definition of the input accepted by this process
@@ -44,30 +44,21 @@ function sProcess = GetDescription() %#ok<DEFNU>
     sProcess.nMinFiles   = 0;
 
     % === SUBJECT NAME
-    sProcess.options.subjectname.Comment = 'Subject name:';
-    sProcess.options.subjectname.Type    = 'subjectname';
+    sProcess.options.subjectname.Comment = 'New subject name:';
+    sProcess.options.subjectname.Type    = 'text';
     sProcess.options.subjectname.Value   = 'COREG';
 
-    % Event name: to remove
-    sProcess.options.subskip.Comment = 'Subject to skip: ';
+    % === SUBJECT TO SKIP
+    sProcess.options.subskip.Comment = 'Subjects to skip:';
     sProcess.options.subskip.Type    = 'text';
     sProcess.options.subskip.Value   = '';
 
-    % === TSV FILE SELECTION
-    SelectOptions = { ...
-        '', ...                           % Filename
-        '', ...                           % FileFormat
-        'open', ...                       % Dialog type
-        'Select TSV file...', ...         % Window title
-        'ImportData', ...                 % Last used directory key
-        'single', ...                     % Selection mode
-        'files', ...                      % Select files
-        {{'.tsv', 'TSV files (*.tsv)'}, {'.tsv'}}, ...   % File filters
-        'DataIn'};                        % Default output variable
-    sProcess.options.tsvfile.Comment = 'Labeling Table TSV File: ';
-    sProcess.options.tsvfile.Type    = 'filename';
-    sProcess.options.tsvfile.Value   = SelectOptions;
-
+    % === HELP TEXT AT THE BOTTOM
+    sProcess.options.label1.Comment = [ ...
+        '<BR>Copies the channels from multiple subject files into a single matrix and creates a new subject.<BR>' ...
+        'Subjects which need to be skipped can be listed separated by commas.' ...
+    ];
+    sProcess.options.label1.Type = 'label';
 end
 
 
@@ -166,7 +157,7 @@ function OutputFiles = Run(sProcess, sInputA) %#ok<DEFNU>
         for iChan = 1:length(temp)
             temp(iChan).Comment = subs.Subject(subidxs(iSubj)).Name ;  
             temp(iChan).Name = strcat(subs.Subject(subidxs(iSubj)).Name, '_',temp(iChan).Name) ;
-            temp(iChan).Group= strcat(subs.Subject(subidxs(iSubj)).Name, '_',temp(iChan).Group) ;
+            temp(iChan).Group= subs.Subject(subidxs(iSubj)).Name ;
             % 
             % % Get MNI coordinates:
             % temp(iChan).Loc = cs_convert(mridata, 'scs', 'mni', temp(iChan).Loc')';
