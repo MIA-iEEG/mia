@@ -56,6 +56,10 @@ elseif ~iscell(SubjectsToSkip)
     error('SubjectsToSkip must be a cell array, a string, or empty');
 end
 
+if isempty(GroupChannelFile) || ~exist(GroupChannelFile, 'file')
+    error('GroupChannelFile does not exist: %s', GroupChannelFile);
+end
+
 % Input parsing for optional parameters (Subjects)
 p = inputParser;
 addParameter(p, 'Subjects', {}, @(x) iscell(x) || isempty(x));
@@ -91,7 +95,7 @@ end
 % =========================================================================
 % PREPARE OUTPUT DIRECTORY
 % =========================================================================
-roiSaveDir = "Path/for/rois/to/be/saved"; % Update this path as needed for the system till generalized
+roiSaveDir = fullfile(fileparts(fileparts(GroupChannelFile)), 'ROIS');
 if ~exist(roiSaveDir, 'dir')
     mkdir(roiSaveDir);
 end
