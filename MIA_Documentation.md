@@ -1,18 +1,83 @@
+# Using MIA concatenate channel function
 
+Path: `MIA/bst_plugin/process_concatenate_channels.m`
 
-# Using MIA concatenate channel function 
+This process creates one new grand subject that contains the channels of the selected subjects in the current Brainstorm protocol. This makes the later ROI-based MIA analysis easier to run on a common channel space.
 
-path: MIA/bst_plugin/process_concatenate_channels.m
-
-- This functionis used to create one new subject which contains all the channels of the original subjects. This is done in oder for the MIA pipeline to adapt to analsyis ROI wise.
-
-Run → Add process icon → Standardized → MIA: Concatenate Channels
+Brainstorm menu:
+`Run -> Add process icon -> Standardize -> MIA: Concatenate Channels`
 
 It contains 2 input fields:
 
-1) **New Subject name**: Which is the custom name that could be given to the new grand subject that will be created. Default name ```COREG```.
-2) **Subjects to skip**: Here the user could specify the subjects that they want to exclude from the concatenation. The default is empty, meaning that all subjects will be included in the concatenation.
+1. **New subject name**
+The custom name of the grand subject that will be created. Default name: `COREG`.
 
-   - The subjects to skip can be written eg. as ```Subject01, Subject02```.
+2. **Subjects to skip**
+Comma-separated list of subjects that should not be included in the concatenation. Leave empty to include all subjects.
 
-Then hit ```Run``` to execute.
+Example:
+`Subject01, Subject02`
+
+Then click `Run`.
+
+
+# Using MIA: Convert from BST to MIA function
+
+Path: `MIA/bst_plugin/process_mia_bst2mia.m`
+
+This process converts Brainstorm data to MIA ROI data using the current Brainstorm protocol, the condition dropped in `Process1`, the selected subject channel file, and the labeling table.
+
+Brainstorm menu:
+`Run -> Add process icon -> Test -> MIA: Convert from BST to MIA`
+
+## Current inputs
+
+The process now contains 3 user-facing inputs:
+
+1. **Files in Process1**
+Drop one condition from the Brainstorm database. The process reads the condition automatically from the first dropped input with:
+`sInputs(1).Condition`
+
+1. **Labeling table (TSV)**
+Path to the `.tsv` file containing the labeling information.
+
+1. **Channel subject**
+Dropdown listing the subjects in the current Brainstorm protocol. The selected subject is used to resolve the `channel.mat` file automatically from the protocol studies directory.
+
+1. **Subjects to skip**
+Comma-separated list of subjects to exclude from the conversion. Leave empty to use all eligible subjects.
+
+Example:
+`Subject01, Subject02`
+
+Then click `Run`.
+
+
+## Updated workflow in `process_mia_bst2mia.m`
+
+The process now works as follows:
+
+1. Read the current Brainstorm protocol automatically:
+`prot = bst_get('ProtocolInfo');`
+
+2. Read the condition automatically from the first dropped input:
+`Condition = strtrim(sInputs(1).Condition);`
+
+3. Read the selected channel subject from the dropdown.
+
+4. Resolve the corresponding `channel.mat` automatically inside the current protocol studies directory.
+
+5. Pass the resolved channel-file path to `mia_bst2mia(...)`.
+
+6. Pause at `keyboard` during debugging so the dragged conditions, selected subject, and resolved channel file can be inspected in MATLAB.
+
+
+# Opening MIA GUI after the ROI calculations
+
+Path: `MIA/utils/light_gui/mia_group_gui.m`
+
+Single-condition ROI visualization:
+`mia_group_gui(cond_1_ROIS, "cond_1")`
+
+Multiple-condition ROI visualization:
+`mia_group_gui(cond_1_ROIS, cond_2_ROIS, "cond_1-cond_2")`
