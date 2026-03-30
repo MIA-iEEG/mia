@@ -53,31 +53,3 @@ Example:
 Then click `Run`.
 
 
-## Updated workflow in `process_mia_bst2mia.m`
-
-The process now works as follows:
-
-1. Read the current Brainstorm protocol automatically:
-`prot = bst_get('ProtocolInfo');`
-
-2. Read the condition automatically from the first dropped input:
-`Condition = strtrim(sInputs(1).Condition);`
-
-3. Read the selected channel subject from the dropdown.
-
-4. Resolve the corresponding `channel.mat` automatically inside the current protocol studies directory.
-
-5. Pass the resolved channel-file path to `mia_bst2mia(...)`.
-
-6. Pause at `keyboard` during debugging so the dragged conditions, selected subject, and resolved channel file can be inspected in MATLAB.
-
-
-# Opening MIA GUI after the ROI calculations
-
-Path: `MIA/utils/light_gui/mia_group_gui.m`
-
-Single-condition ROI visualization:
-`mia_group_gui(cond_1_ROIS, "cond_1")`
-
-Multiple-condition ROI visualization:
-`mia_group_gui(cond_1_ROIS, cond_2_ROIS, "cond_1-cond_2")`
