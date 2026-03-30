@@ -92,6 +92,16 @@ function sProcess = GetDescription() %#ok<DEFNU>
         'Subjects to exclude (comma-separated, leave blank = use all): ';  % Label with usage hint
     sProcess.options.excludesubs.Type  = 'text';     % UI element type
     sProcess.options.excludesubs.Value = '';         % Default: empty (process all subjects)
+
+    % === HELP TEXT AT THE BOTTOM
+    sProcess.options.label1.Comment = [ ...
+        '<BR>This process converts Brainstorm data to MIA format for analysis. <BR>' ...
+        'Please specify the protocol, condition for analysis, corresponding .tsv file of the labelling table and .mat file of the COREG channel file. <BR>' ...
+        'Subjects to exclude can be listed separated by commas. <BR>' ...
+    ];
+
+    sProcess.options.label1.Type = 'label';
+
 end
 
 
