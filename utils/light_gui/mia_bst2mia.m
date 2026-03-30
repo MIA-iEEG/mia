@@ -89,6 +89,14 @@ if ~isempty(Subjects)
 end
 
 % =========================================================================
+% PREPARE OUTPUT DIRECTORY
+% =========================================================================
+roiSaveDir = "Path/for/rois/to/be/saved"; % Update this path as needed for the system till generalized
+if ~exist(roiSaveDir, 'dir')
+    mkdir(roiSaveDir);
+end
+
+% =========================================================================
 % READ INPUT FILES
 % =========================================================================
 coregTable = readtable(LabelingTable, "FileType", "text", 'Delimiter', '\t');
@@ -236,6 +244,13 @@ significanceMask = zeros(size(groupFdata));
 
 % Generate ROI data structure
 rois = mia_get_roi_bst(groupChanTable, stat.Time(timeMask), groupFdata, significanceMask, {'freqs'}, options);
+
+% Save final ROI structure to disk
+roiSaveFile = fullfile(roiSaveDir, sprintf('%s_rois.mat', Condition));
+save(roiSaveFile, 'rois', 'groupChanTable', 'groupFdata', 'stat', '-v7.3');
+
+fprintf('ROI file saved to: %s\n', roiSaveFile);
+
 
 % =========================================================================
 % ASSIGN OPTIONAL OUTPUTS
