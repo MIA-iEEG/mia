@@ -73,18 +73,35 @@ function OutputFiles = Run(sProcess, sInputA) %#ok<DEFNU>
     OutputFiles = {};
     % ===== GET OPTIONS =====
     % Get subject name
-    SubjectName = file_standardize(sProcess.options.subjectname.Value);
-    if isempty(SubjectName)
+    NewSubjectName = file_standardize(sProcess.options.subjectname.Value);
+    if isempty(NewSubjectName) 
         bst_report('Error', sProcess, sInputs, 'Subject name is empty.');
         return
     end
+
     
-    % Get condition name
+    % Get protocol name
     subs = bst_get('ProtocolSubjects');
     subskip= strtrim(sProcess.options.subskip.Value);
 
+    % Get the names of all the subjects into an array
     subnames = {subs.Subject.Name};
 
+    % Handle the case of the new subject already exist --> raise an
+    % error
+
+    if ismember(NewSubjectName,subnames)
+        error('Subject "%s" already exists. Please choose a different name.', NewSubjectName);
+    end
+
+    % Add subskip variable with subject names which startes with 'COREG'
+    subskip = strjoin([(subnames(startsWith(subnames, 'COREG'))), subskip], ', ');
+
+    % Make sure teh skipped subject names are not repeated
+    subskip = unique(subskip, 'stable');
+
+
+    % Initialize channel structure
     chanstruct.Channel = [];
     
     % Currently loaded protocol:
@@ -94,6 +111,7 @@ function OutputFiles = Run(sProcess, sInputA) %#ok<DEFNU>
     datadir = prot.STUDIES;
     anatdir = prot.SUBJECTS;
 
+    
     % coregsubidx = find(cellfun(@(x) strcmp(x, 'COREG'), subnames));
     % if isempty(coregsubidx)
     %     error('Add a new subject to the protol names ''COREG'', with a copy of the ICBM152 MRI and cortex');
@@ -113,12 +131,17 @@ function OutputFiles = Run(sProcess, sInputA) %#ok<DEFNU>
     % Here check that the subject the user wants to create does not existat
     % already 
 
+
+
+
     % Then for all other subjects (excpetect the ones we skip)
     for iSubj = 1:length(subidxs)
         
         % Load current subject's Implantation channel 
         sStudy = bst_get('StudyWithSubject', subs.Subject(subidxs(iSubj)).FileName) ; 
-        chanfilename = sStudy(find(contains({sStudy.Name},'rawsub'),1)).Channel.FileName; % 'Implantation' may not work in all cases and may need adapting
+        if isempty(sStudy) ; fprintf(strcat('Skipping : ', subs.Subject(subidxs(iSubj)).FileName,'\n')) ; continue ; end 
+        chanfilename = sStudy(1).Channel.FileName; 
+        %chanfilename = sStudy(find(contains({sStudy.Name},'rawsub'),1)).Channel.FileName; 
         chandata = load(fullfile(datadir, chanfilename));
         
         % % Find current subject's MRI file (expects 1 and only 1):
@@ -174,7 +197,7 @@ function OutputFiles = Run(sProcess, sInputA) %#ok<DEFNU>
 
 chanstruct.Comment = sprintf('Grand Subject (%d)',size(chanstruct.Channel,2));
 
-[sSubject, iSubject] = db_add_subject(SubjectName, [], 0, 0) ; 
+[sSubject, iSubject] = db_add_subject(NewSubjectName, [], 0, 0) ; 
 
 % 
 % % Color code by patient 
@@ -190,7 +213,7 @@ chanstruct.Comment = sprintf('Grand Subject (%d)',size(chanstruct.Channel,2));
 
 % Process: Simulate generic signals
 sFiles = bst_process('CallProcess', 'process_simulate_matrix', [], [], ...
-    'subjectname', SubjectName, ...
+    'subjectname', NewSubjectName, ...
     'condition',   '', ...
     'samples',     10, ...
     'srate',       1000, ...
@@ -199,7 +222,7 @@ sFiles = bst_process('CallProcess', 'process_simulate_matrix', [], [], ...
 OutputFiles = import_raw(bst_fullfile(datadir,sFiles.FileName),'BST-MATRIX',iSubject);
 
 % Save combined channel file: 
-%bst_save(fullfile(datadir, SubjectName, '@intra/channel.mat'), chanstruct, 'v7');
+%bst_save(fullfile(datadir, NewSubjectName, '@intra/channel.mat'), chanstruct, 'v7');
 bst_save(fullfile(fileparts(OutputFiles{1}),'channel.mat'), chanstruct, 'v7');
 
 panel_protocols('UpdateTree');
