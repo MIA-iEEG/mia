@@ -104,6 +104,12 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<INUSD,DEFNU>
                 sprintf('File does not contain a "rois" variable: %s', selectedPaths{iSel}));
             return
         end
+        if isempty(roiData.rois)
+            bst_report('Error', sProcess, [], ...
+                sprintf('ROI file for condition "%s" contains no displayable ROIs: %s', ...
+                selectedConditionNames{iSel}, selectedPaths{iSel}));
+            return
+        end
         selectedRois{iSel} = roiData.rois;
     end
 
@@ -111,14 +117,7 @@ function OutputFiles = Run(sProcess, sInputs) %#ok<INUSD,DEFNU>
     assignin('base', 'mia_visualize_roi_paths', selectedPaths);
     assignin('base', 'mia_visualize_conditions', selectedConditionNames);
 
-    % Match the mia_group_gui API:
-    %   single condition  -> mia_group_gui(rois, 'Condition')
-    %   multiple conditions -> mia_group_gui(rois1, rois2, ..., 'Cond1-Cond2')
-    if numel(selectedRois) == 1
-        mia_group_gui(selectedRois{1}, selectedConditionNames{1});
-    else
-        mia_group_gui(selectedRois{:}, strjoin(selectedConditionNames, '-'));
-    end
+    mia_group_gui(selectedRois{:}, selectedConditionNames);
 
     bst_report('Info', sProcess, [], ...
         sprintf('Opened MIA visualization for subject "%s": %s', ...
