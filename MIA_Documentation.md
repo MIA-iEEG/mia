@@ -1,4 +1,4 @@
-# Using MIA concatenate channel function
+# 1) Using MIA concatenate channel function
 
 Path: `MIA/bst_plugin/process_concatenate_channels.m`
 
@@ -25,7 +25,7 @@ Example:
 
 Then click `Run`.
 
-# Calculating time/frequency with Morlet method
+# 2) Calculating time/frequency with Morlet method
 
 Path: `Mia/bst_plugin/process_mia_extract_tf.m`
 
@@ -52,7 +52,7 @@ The number of cycles for the central frequency of the Morlet wavelet (e.g., `7`)
 Then click `Run`.
 
 
-# Using MIA: Convert from BST to MIA function
+# 3) Using MIA: Convert from BST to MIA function
 
 Path: `MIA/bst_plugin/process_mia_bst2mia.m`
 
@@ -91,7 +91,7 @@ Then click `Run`.
 At the end this will create an ROI file `ConditionName_rois.mat` in the `brainsrtoem_protocol_dir/data/group_subject(COREG)/ROIS` folder for each converted condition, where `ConditionName` is the name of the condition dropped in Process1.
 
    
-# Using MIA: Visualize Averages function
+# 4) Using MIA: Visualize Averages function
 
 Path: `MIA/bst_plugin/process_mia_group_gui.m`
 
@@ -215,7 +215,11 @@ This helper scans the selected subject ROI folder, finds all `*_rois.mat` files,
 This helper opens the checkbox dialog displayed after clicking `Run`. It lets the user choose which available ROI conditions should be passed to `mia_group_gui(...)`.
 
 
-## Stats
+## 5) Run Stats
+
+<p float="left">
+  <img src="Media/6 Contrast Condition.png" height="600" />
+</p>
 
 need to install the packages:
 1) signal processing toolbox (for filtfilt)
