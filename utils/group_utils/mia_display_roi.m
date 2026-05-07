@@ -162,7 +162,7 @@ for ii = 1:length(roi)
         'FontWeight', 'bold', ...
         'Units', 'pixels', ...
         'Position', [hcol1.Position(1), hcol1.Position(2)+20, 20, 20], ...
-        'Callback', @(~, ~) adjustYLim(hplot, himage, -0.5));
+        'Callback', @(~, ~) adjustYLim(hplot, himage, 0.5));
     
     btnMinus = uicontrol('Parent', hfig(ii), ...
         'Style', 'pushbutton', ...
@@ -171,7 +171,7 @@ for ii = 1:length(roi)
         'FontWeight', 'bold', ...
         'Units', 'pixels', ...
         'Position', [hcol1.Position(1), hcol1.Position(2), 20, 20], ...
-        'Callback', @(~, ~) adjustYLim(hplot, himage, +0.5));
+        'Callback', @(~, ~) adjustYLim(hplot, himage, 2));
     
 end
 
@@ -261,11 +261,12 @@ hPatch.Annotation.LegendInformation.IconDisplayStyle = 'off';
 end
 
 
-function adjustYLim(ax, himage, delta)
+function adjustYLim(ax, himage, scaleFactor)
     % Adjusts the Y axis limits of the mean signal plot and corresponding color limits
     yL = ylim(ax);
-    newLim = max(abs(yL)) + delta;
-    newLim = max(newLim, 0.5);  % enforce minimum limit
+    minLim = 0.01;
+    newLim = max(abs(yL)) * scaleFactor;
+    newLim = max(newLim, minLim);
     ylim(ax, [-newLim, newLim]);
     caxis(himage, [-newLim, newLim]);
 end
