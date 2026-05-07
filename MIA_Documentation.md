@@ -88,24 +88,8 @@ Example:
 
 Then click `Run`.
 
+At the end this will create an ROI file `ConditionName_rois.mat` in the `brainsrtoem_protocol_dir/data/group_subject(COREG)/ROIS` folder for each converted condition, where `ConditionName` is the name of the condition dropped in Process1.
 
-## Updated workflow in `process_mia_bst2mia.m`
-
-The process now works as follows:
-
-1. Read the current Brainstorm protocol automatically:
-`prot = bst_get('ProtocolInfo');`
-
-2. Read the condition automatically from the first dropped input:
-`Condition = strtrim(sInputs(1).Condition);`
-
-3. Read the selected channel subject from the dropdown.
-
-4. Resolve the corresponding `channel.mat` automatically inside the current protocol studies directory.
-
-5. Pass the resolved channel-file path to `mia_bst2mia(...)`.
-   
-6. The mia_bst2mia function then reads all subjects in the current protocol, excluding any specified in the "Subjects to skip" input, and converts their Brainstorm data for the selected condition into MIA ROI data and saves the resulting ROI fies in the 'data/group_subject(COREG)/ROIS' folder of the current protocol.
    
 # Using MIA: Visualize Averages function
 
