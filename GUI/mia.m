@@ -97,6 +97,9 @@ if directoryname~=0
     % Set the new working directory
     handles = set_workingdirectory(handles,directoryname);
 
+    % Add runtime-only controls that are safer outside the GUIDE .fig file.
+    handles = add_new_gui_button(handles);
+
     % Initialize the GUI
     handles = initialize_gui(hObject, handles, false);
 
@@ -133,7 +136,9 @@ function handles = initialize_gui(fig_handle, handles, isreset)
 
 % Turn off warning about javacomponents
 warning('off', 'MATLAB:ui:javacomponent:FunctionToBeRemoved');
- 
+warning('off', 'MATLAB:ui:javacomponent:LimitedSupport');
+warning('off', 'MATLAB:ui:javacomponent:DeprecatedFunction');
+  
 % initialize the whole interface 
 handles = update_patientlist(handles) ;
 handles = update_studies_list(handles) ;
@@ -798,6 +803,97 @@ load(cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas))));
 mia_ganalysis_gui(m_table_all,maindir,selected_atlas, handles.extOPTIONS.outdir, handles.list_studies);
 
 
+% --- Executes on button press in New_GUI.
+function New_GUI_Callback(hObject, eventdata, handles) %#ok<INUSD>
+
+if ~isfield(handles,'extOPTIONS') || ~isfield(handles.extOPTIONS,'outdir') || isempty(handles.extOPTIONS.outdir)
+    warndlg('You must pick up a working directory first') ;
+    return ;
+end
+
+[PATH,~,~]=fileparts(handles.extOPTIONS.outdir);
+maindir=char(fullfile(PATH,'GA_Results'));
+
+if ~exist(maindir,'dir')
+    warndlg('You must create a study first') ;
+    return ;
+else
+    d = dir(maindir);
+    study = {d.name}';
+    study(ismember(study,{'.','..','.DS_Store'})) = [];
+    if isempty(study)
+        warndlg('You must create a study first') ;
+        return ;
+    end
+end
+
+% Read selected labelling Atlas
+idx_selected = get(handles.list_atlas,'Value');
+
+% Get selected labelling atlas
+list_altas = get(handles.list_atlas,'String');
+
+% There is no m_table (no Atlas)
+if isempty(list_altas)
+     warndlg('You must create an atlas first') ;
+        return ;
+end
+
+if ischar(list_altas)
+    selected_atlas = {list_altas};
+else
+    selected_atlas = list_altas(idx_selected);
+end
+
+atlas_file = cell2mat(fullfile(maindir, strcat('m_table_',selected_atlas,'.mat')));
+if ~exist(atlas_file, 'file')
+    errordlg(sprintf('Atlas file not found: %s', atlas_file), 'Display Error');
+    return ;
+end
+
+atlas_data = load(atlas_file, 'm_table_all');
+if ~isfield(atlas_data, 'm_table_all')
+    errordlg(sprintf('Atlas file does not contain m_table_all: %s', atlas_file), 'Display Error');
+    return ;
+end
+
+mia_legacy_display_bridge(atlas_data.m_table_all, maindir, handles.list_studies);
+mia_cmd_history('MIA GUI action : Open light GUI display');
+
+
+% Add the new light GUI launcher at runtime instead of storing it in the
+% GUIDE .fig, which keeps the old GUI startup compatible across MATLABs.
+function handles = add_new_gui_button(handles)
+
+if ~isfield(handles, 'GO') || ~ishandle(handles.GO)
+    return
+end
+
+oldButton = findobj(get(handles.GO, 'Parent'), 'Tag', 'New_GUI');
+if ~isempty(oldButton)
+    handles.New_GUI = oldButton(1);
+    return
+end
+
+handles.New_GUI = uicontrol( ...
+    'Parent', get(handles.GO, 'Parent'), ...
+    'Style', 'pushbutton', ...
+    'Units', 'normalized', ...
+    'Position', [0.806 0.9357 0.130 0.0519], ...
+    'String', 'New GUI', ...
+    'Tag', 'New_GUI', ...
+    'FontUnits', get(handles.GO, 'FontUnits'), ...
+    'FontSize', get(handles.GO, 'FontSize'), ...
+    'FontName', get(handles.GO, 'FontName'), ...
+    'FontAngle', get(handles.GO, 'FontAngle'), ...
+    'FontWeight', get(handles.GO, 'FontWeight'), ...
+    'BackgroundColor', get(handles.GO, 'BackgroundColor'), ...
+    'ForegroundColor', get(handles.GO, 'ForegroundColor'), ...
+    'Enable', 'on', ...
+    'Visible', 'on', ...
+    'Callback', @(hObject,eventdata)mia('New_GUI_Callback',hObject,eventdata,guidata(hObject)));
+
+
 % --- Executes when figure1 is resized.
 function [handles] = figure1_SizeChangedFcn(hObject, eventdata, handles)
 
@@ -819,7 +915,10 @@ set(handles.uipanel_listdata,'Units','Pixels');
 y = get(handles.uipanel_listdata,'Position');
 
 % Fits the jtable on the panel
-[handles.hjtable,handles.hjcontainer] = javacomponent(handles.table.jScrollPane,[0,0,y(3),y(4)],handles.uipanel_listdata);
+warnState = warning('off','all');
+warnCleanup = onCleanup(@() warning(warnState));
+[handles.hjtable,handles.hjcontainer] = javacomponent(handles.table.jScrollPane,[0,0,y(3),y(4)],handles.uipanel_listdata); %#ok<JAVCM>
+clear warnCleanup
 
 % Sets back the panel in normalized units
 set(handles.uipanel_listdata,'Units','normalized');
