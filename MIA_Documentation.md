@@ -112,6 +112,11 @@ Brainstorm menu:
   <img src="Media/5_3 Individual condition.png" height="700" />
   <img src="Media/table legend.png" height="200" />
 </div>
+
+The interface opens one tab for each selected condition, plus a `Group` tab when multiple conditions are selected. Each table row is one ROI. The columns summarize the number of patients (`NPt`), number of contacts (`Nc`), correlation across patients (`R_p`), and correlation across contacts (`R_c`).
+
+Select one or more ROI rows, then use `ROI panel` to open the detailed ROI view or `ROIs Gd Ave` to display the average ROI activity. `Close figs` closes the figures opened from this window.
+
 <br>
 <div>
   <img src="Media/5_3_1.png" width="700" />
@@ -122,6 +127,11 @@ Brainstorm menu:
   <img src="Media/5_4 group_avg.png" height="700" />
   <img src="Media/table legend.png" height="200" />
 </div>
+
+The `Group` tab compares the selected conditions using ROIs that are present across conditions. Select an ROI row and click `Group ROI Timeseries` to display the time series for each condition together.
+
+In the generated figures, the line plots show z-scored activity over time. The heatmap summarizes activity across contacts or subjects, with the color bar indicating z-score values.
+
 <br>
 <div>
   <img src="Media/5_4_1.png" width="700" />
