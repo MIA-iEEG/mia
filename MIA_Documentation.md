@@ -7,6 +7,11 @@ This process creates one new grand subject that contains the channels of the sel
 Brainstorm menu:
 `Run -> Add process icon -> Standardize -> MIA: Concatenate Channels`
 
+<p float="left">
+  <img src="Media/2 Grand subject.png" height="300" />
+  <img src="Media/2_1.png" height="300" />
+</p>
+
 It contains 2 input fields:
 
 1. **New subject name**
@@ -20,6 +25,32 @@ Example:
 
 Then click `Run`.
 
+# Calculating time/frequency with Morlet method
+
+Path: `Mia/bst_plugin/process_mia_extract_tf.m`
+
+This process calculates time/frequency representations of Brainstorm data using the Morlet wavelet method. It uses the current Brainstorm protocol, the condition dropped in `Process1`.
+
+Brainstorm menu: `Frequency -> MIA: Time-frequency (Morlet by band + 1/f norm)`
+
+<p float="left">
+  <img src="Media/3 Calculating time frequency.png" height="300" />
+  <img src="Media/3_1 .png" height="300" />
+</p>
+
+It contains the following input fields:
+
+1. **Baseline**
+The time window (in milliseconds) used as the baseline for 1/f normalization. You can specify a start and end time (e.g., `-400.0` to `-1.0` ms) or check the `All file` box to use the entire file as baseline.
+
+2. **Frequency bands**
+The frequency range and steps to extract. Follows the MATLAB array format `start:step:end` (e.g., `50:10:170` to extract frequencies from 50Hz to 170Hz with a 10Hz step).
+
+3. **Number of cycles**
+The number of cycles for the central frequency of the Morlet wavelet (e.g., `7`), which defines the time-frequency resolution trade-off.
+
+Then click `Run`.
+
 
 # Using MIA: Convert from BST to MIA function
 
@@ -29,6 +60,11 @@ This process converts Brainstorm data to MIA ROI data using the current Brainsto
 
 Brainstorm menu:
 `Run -> Add process icon -> Test -> MIA: Convert from BST to MIA`
+
+<p float="left">
+  <img src="Media/4 Converting to MIA.png" height="300" />
+  <img src="Media/4_1.png" height="300" />
+</p>
 
 ## Current inputs
 
@@ -79,6 +115,15 @@ This process opens `mia_group_gui` directly from ROI files already saved in the 
 
 Brainstorm menu:
 `Run -> Add process icon -> Test -> MIA: Visualize Averages`
+
+<p float="left">
+  <img src="Media/5 Visualizing avg.png" height="200" />
+  <img src="Media/5_1.png" height="200" />
+  <img src="Media/5_2.png" height="200" />
+  <img src="Media/5_3.png" height="200" />
+  <img src="Media/5_4.png" height="200" />
+  <img src="Media/5_5.png" height="200" />
+</p>
 
 ## Current inputs
 
@@ -164,3 +209,10 @@ This helper scans the selected subject ROI folder, finds all `*_rois.mat` files,
 ### `select_roi_conditions(conditionNames, subjectName)`
 
 This helper opens the checkbox dialog displayed after clicking `Run`. It lets the user choose which available ROI conditions should be passed to `mia_group_gui(...)`.
+
+
+## Stats
+
+need to install the packages:
+1) signal processing toolbox (for filtfilt)
+2) statistics and machine learning toolbox (for tinv)
