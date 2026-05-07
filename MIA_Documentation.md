@@ -237,6 +237,3 @@ This process performs statistical contrast between two conditions.
    - Generate statistical results including p-values and effect sizes
    - Save the results for visualization and further analysis
 
-need to install the packages:
-1) signal processing toolbox (for filtfilt)
-2) statistics and machine learning toolbox (for tinv)
