@@ -42,7 +42,7 @@ for pp=1:OPTIONS.nperm
 
         
     % Compute unpaired ttest 
-    [tvals,~]=compute_ttest2distrib(cat(3,ff1{:}),cat(3,ff2{:}));
+    [tvals,~]=mia_compute_ttest2distrib(cat(3,ff1{:}),cat(3,ff2{:}));
    
     % Smooth the tvalues
     tvalsf = filtfilt(ones(1,OPTIONS.smoth)/OPTIONS.smoth,1,tvals);
@@ -51,13 +51,13 @@ for pp=1:OPTIONS.nperm
     thresht = tinv(1-OPTIONS.threshp/2,size(cat(3,ff1{:}),3)+size(cat(3,ff2{:}),3)-2);
     
     % Get the positive segment on tvalues vector
-    [seg_p,r_edge_p] = get_significant_segments(tvalsf>thresht); 
+    [seg_p,r_edge_p] = mia_get_significant_segments(tvalsf>thresht); 
     
     % Get the negative segment on tvalues vector
-    [seg_n,r_edge_n] = get_significant_segments(tvalsf<-thresht); 
+    [seg_n,r_edge_n] = mia_get_significant_segments(tvalsf<-thresht); 
     
     % Get all segment (positive and negative)
-    [seg,r_edge] = get_significant_segments(abs(tvalsf)>thresht); 
+    [seg,r_edge] = mia_get_significant_segments(abs(tvalsf)>thresht); 
         
        % For positive clusters
     if isempty(seg_p) 
