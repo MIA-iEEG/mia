@@ -8,8 +8,8 @@ Brainstorm menu:
 `Run -> Add process icon -> Standardize -> MIA: Concatenate Channels`
 
 <p float="left">
-  <img src="Media/2 Grand subject.png" height="300" />
-  <img src="Media/2_1.png" height="300" />
+  <img src="Media/2 Grand subject.png" height="600" />
+  <img src="Media/2_1.png" height="200" />
 </p>
 
 It contains 2 input fields:
@@ -34,7 +34,7 @@ This process calculates time/frequency representations of Brainstorm data using 
 Brainstorm menu: `Frequency -> MIA: Time-frequency (Morlet by band + 1/f norm)`
 
 <p float="left">
-  <img src="Media/3 Calculating time frequency.png" height="300" />
+  <img src="Media/3 Calculating time frequency.png" height="600" />
   <img src="Media/3_1 .png" height="300" />
 </p>
 
@@ -62,7 +62,7 @@ Brainstorm menu:
 `Run -> Add process icon -> Test -> MIA: Convert from BST to MIA`
 
 <p float="left">
-  <img src="Media/4 Converting to MIA.png" height="300" />
+  <img src="Media/4 Converting to MIA.png" height="600" />
   <img src="Media/4_1.png" height="300" />
 </p>
 
@@ -101,13 +101,33 @@ Brainstorm menu:
 `Run -> Add process icon -> Test -> MIA: Visualize Averages`
 
 <p float="left">
-  <img src="Media/5 Visualizing avg.png" height="200" />
+  <img src="Media/5 Visualizing avg.png" height="600" />
   <img src="Media/5_1.png" height="200" />
-  <img src="Media/5_2.png" height="200" />
-  <img src="Media/5_3.png" height="200" />
-  <img src="Media/5_4.png" height="200" />
-  <img src="Media/5_5.png" height="200" />
+  <img src="Media/5_2.png" height="300" />
 </p>
+
+
+## Individual condition visualization:
+<div style="display: flex; align-items: flex-start; gap: 20px;">
+  <img src="Media/5_3 Individual condition.png" height="700" />
+  <img src="Media/table legend.png" height="200" />
+</div>
+<br>
+<div>
+  <img src="Media/5_3_1.png" width="700" />
+</div>
+
+## Group comparison visualization:
+<div style="display: flex; align-items: flex-start; gap: 20px;">
+  <img src="Media/5_4 group_avg.png" height="700" />
+  <img src="Media/table legend.png" height="200" />
+</div>
+<br>
+<div>
+  <img src="Media/5_4_1.png" width="700" />
+</div>
+
+
 
 ## Current inputs
 
