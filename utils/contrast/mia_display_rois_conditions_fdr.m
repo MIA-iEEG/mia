@@ -66,7 +66,7 @@ for ii=1:length(roi)
     croi = roi{ii};
     
     % Duration
-    [seg,r_edge] = get_significant_segments(abs(croi.tvalsf)>croi.thresht); 
+    [seg,r_edge] = mia_get_significant_segments(abs(croi.tvalsf)>croi.thresht); 
     hdur = zeros(1,length(croi.tvalsf));
 
     for ss=1:length(seg)
@@ -78,8 +78,8 @@ for ii=1:length(roi)
     end
     
     % Sum Tvals
-    [seg_p,r_edge_p] = get_significant_segments(croi.tvalsf>croi.thresht);
-    [seg_n,r_edge_n] = get_significant_segments(croi.tvalsf<-croi.thresht); 
+    [seg_p,r_edge_p] = mia_get_significant_segments(croi.tvalsf>croi.thresht);
+    [seg_n,r_edge_n] = mia_get_significant_segments(croi.tvalsf<-croi.thresht); 
 
     hsumt = zeros(1,length(croi.tvalsf));
      

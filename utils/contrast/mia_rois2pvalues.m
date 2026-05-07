@@ -33,13 +33,13 @@ for ii=1:length(roi)
     sig2cat = cat(3,sig2{:});
    
     % Compute TTEST
-    [tvals,~]=compute_ttest2distrib(sig1cat,sig2cat);
+    [tvals,~]=mia_compute_ttest2distrib(sig1cat,sig2cat);
     
     tvalsf = filtfilt(ones(1,OPTIONS.smoth)/OPTIONS.smoth,1,tvals);
     thresht = tinv(1-OPTIONS.threshp/2,size(sig1cat,3)+size(sig2cat,3)-2);    
     
     % Duration
-    [seg,r_edge] = get_significant_segments(abs(tvalsf)>thresht); 
+    [seg,r_edge] = mia_get_significant_segments(abs(tvalsf)>thresht); 
   
     [Y,I] = sort(croi.dur);
     pv = [] ;
@@ -52,8 +52,8 @@ for ii=1:length(roi)
     stats.pdur{ii}= pv ;
     
     %% Get clusters of positive and negative t-values (separately)
-    [seg_p,r_edge_p] = get_significant_segments(tvalsf>thresht); 
-    [seg_n,r_edge_n] = get_significant_segments(tvalsf<-thresht); 
+    [seg_p,r_edge_p] = mia_get_significant_segments(tvalsf>thresht); 
+    [seg_n,r_edge_n] = mia_get_significant_segments(tvalsf<-thresht); 
     [Ypos,I] = sort(croi.sumtp);
     [Yneg,I] = sort(croi.sumtn);
     

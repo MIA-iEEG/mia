@@ -1,6 +1,6 @@
 function [seg,r_edge] = mia_get_significant_segments(h) 
 % ***********************************************************************
-%  [] = get_significant_segments(h) 
+%  [] = mia_get_significant_segments(h) 
 % Returns the lengths of consecutive significant samples in h
 % 
 % ***********************************************************************
