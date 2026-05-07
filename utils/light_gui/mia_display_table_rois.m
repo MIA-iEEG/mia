@@ -24,8 +24,12 @@ MainLayout = varargin{1};
 
 rois = varargin{2};
 Condition = varargin{3};
+ConditionLabel = condition_label(Condition);
 rois_cond = [];
-if size(rois,1) ~= 1
+if isempty(rois)
+    error('mia_display_table_rois:EmptyRois', 'No displayable ROIs were provided.');
+end
+if size(rois,1) > 1
     rois_cond = rois;
     rois = rois(1,:);
 end
@@ -34,7 +38,7 @@ end
 if isstruct(rois)
     roisData = {rois};
 else
-    roisData = rois;
+    roisData = rois(:)';
 end
 
 hdispAll = [];  % Store all figure handles to be closed later
@@ -61,12 +65,12 @@ ButtonLayout.ColumnWidth = {'1x', '1x', '1x', '1x', '1x'};
 if ~isempty(roisData)
     numROIs = length(roisData);
     tableData = cell(numROIs, 5);
-    for i = 1:numROIs
-        tableData{i,1} = roisData{i}.name;
-        tableData{i,2} = length(roisData{i}.namePt);
-        tableData{i,3} = size(roisData{i}.Fmask,2);
-        tableData{i,4} = roisData{i}.corrPt;
-        tableData{i,5} = roisData{i}.corrChan;
+    for iRoi = 1:numROIs
+        tableData{iRoi,1} = roisData{iRoi}.name;
+        tableData{iRoi,2} = length(roisData{iRoi}.namePt);
+        tableData{iRoi,3} = size(roisData{iRoi}.Fmask,2);
+        tableData{iRoi,4} = roisData{iRoi}.corrPt;
+        tableData{iRoi,5} = roisData{iRoi}.corrChan;
     end
     UITable.Data = cell2table(tableData, 'VariableNames', {'ROI Name', 'Npt', 'Nelec','Rp', 'Rc'});
     UITable.ColumnSortable = true;
@@ -134,15 +138,14 @@ function showROIInfo()
     selectedRows = unique(idx(:,1));
 
     if ~isempty(rois_cond)
-        selectedROIs = mia_n_to_one_roi(rois_cond(:,selectedRows), strjoin(Condition, '-'));
-        dOPTIONS.Condition = strjoin(Condition, '-');
+        selectedROIs = mia_n_to_one_roi(rois_cond(:,selectedRows), ConditionLabel);
+        dOPTIONS.Condition = ConditionLabel;
     else
          selectedROIs = cell(1, length(selectedRows));
-         dOPTIONS.Condition = Condition;
-   
-    end
-     for i = 1:length(selectedRows)
-        selectedROIs{i} = roisData{selectedRows(i)};
+         dOPTIONS.Condition = ConditionLabel;
+         for iSel = 1:length(selectedRows)
+            selectedROIs{iSel} = roisData{selectedRows(iSel)};
+         end
     end
     maxNbPt = max(cellfun(@(x) max(x.idPt), roisData));
     dOPTIONS.clr = jet(maxNbPt);
@@ -159,8 +162,8 @@ function showROIavg()
     end
     selectedRows = unique(idx(:,1));
     selectedROIs = cell(1, length(selectedRows));
-    for i = 1:length(selectedRows)
-        selectedROIs{i} = roisData{selectedRows(i)};
+    for iSel = 1:length(selectedRows)
+        selectedROIs{iSel} = roisData{selectedRows(iSel)};
     end
     dOPTIONS.clr = jet(length(selectedRows));
     dOPTIONS.win_noedges = [-0.2, 0.6];
@@ -178,8 +181,8 @@ function display_avg_conditions()
         return;
     end
     selectedRows = unique(idx(:,1));
-    selectedROIs = mia_n_to_one_roi(rois_cond(:,selectedRows), strjoin(Condition, '-'));
-    dOPTIONS.Condition = strjoin(Condition, '-');
+    selectedROIs = mia_n_to_one_roi(rois_cond(:,selectedRows), ConditionLabel);
+    dOPTIONS.Condition = ConditionLabel;
     maxNbPt = max(cellfun(@(x) max(x.idPt), roisData));
     dOPTIONS.clr = jet(maxNbPt);
     dOPTIONS.win_noedges = [-0.2, 0.6];
@@ -194,14 +197,25 @@ function display_various_conditions()
         return;
     end
     selectedRows = unique(idx(:,1));
-    selectedROIs = mia_n_to_one_roi(rois_cond(:,selectedRows), strjoin(Condition, '-'));
+    selectedROIs = mia_n_to_one_roi(rois_cond(:,selectedRows), ConditionLabel);
     maxCond = size(selectedROIs{1}.signmoyAll, 1);
     dOPTIONS.clr = jet(maxCond);
     dOPTIONS.win_noedges = [-0.2, 0.6];
-    dOPTIONS.Condition = strjoin(Condition, '-');
+    dOPTIONS.Condition = ConditionLabel;
     h = mia_display_roi_conditions(selectedROIs, dOPTIONS);
     hdispAll = [hdispAll; h(:)];
 end
 
 end
 
+function label = condition_label(Condition)
+
+if iscell(Condition)
+    label = strjoin(Condition, '-');
+elseif isstring(Condition)
+    label = char(Condition);
+else
+    label = Condition;
+end
+
+end
