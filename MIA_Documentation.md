@@ -217,9 +217,25 @@ This helper opens the checkbox dialog displayed after clicking `Run`. It lets th
 
 ## 5) Run Stats
 
+This process performs statistical contrast between two conditions. 
+
+**Steps:**
+
+1. **Drag and drop the 2 conditions** needed for statistical contrast into the process.
+   - You need to select exactly 2 conditions that you want to compare statistically
+   - These conditions should be from your processed data
+
+2. **Follow the process menu as shown in the image:**
+
 <p float="left">
   <img src="Media/6 Contrast Condition.png" height="600" />
 </p>
+
+3. The process will:
+   - Load the data from both conditions
+   - Compute statistical contrasts between them
+   - Generate statistical results including p-values and effect sizes
+   - Save the results for visualization and further analysis
 
 need to install the packages:
 1) signal processing toolbox (for filtfilt)
